@@ -9,21 +9,16 @@ RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt
 COPY package.json yarn.lock .yarnrc ./
 
 # Install all dependencies (including devDependencies for the build step)
-# Using --network-timeout to prevent slow connection issues
 RUN yarn install --no-frozen-lockfile --network-timeout 100000
 
 # Copy the rest of the application
 COPY . .
 
-# IMPORTANT: Copy the locally built admin files
-# This relies on 'npx medusa build' having been run locally before push
-COPY .medusa .medusa
-
-# We skip 'npx medusa build' here because we copied the artifacts
-# RUN npx medusa build
+# Build inside the container so .medusa/server/public/admin/index.html exists on Koyeb
+RUN yarn build
 
 # Expose the correct port
 EXPOSE 9000
 
-# Start the application
-CMD ["npx", "medusa", "start"]
+# Run migrations then start (production)
+CMD ["sh", "-lc", "npx medusa db:migrate && npx medusa start"]
