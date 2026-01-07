@@ -16,9 +16,10 @@ ENV NODE_ENV=production
 ENV ADMIN_CORS=/^https:\/\/.*$/
 
 # Build the application (backend + admin) explicitly using npx
+# Force admin build by setting env var if needed, though config handles it
 RUN npx medusa build
 
-# Debug: List all files in .medusa to see where things are
+# Debug: List all files in .medusa to see where things are (for logs)
 RUN echo "Listing .medusa directory structure:" && ls -R .medusa || echo ".medusa directory not found"
 
 # Start the application
