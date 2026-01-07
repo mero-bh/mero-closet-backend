@@ -15,12 +15,11 @@ COPY . .
 ENV NODE_ENV=production
 ENV ADMIN_CORS=/^https:\/\/.*$/
 
-# Build the application (backend + admin)
-RUN yarn build
+# Build the application (backend + admin) explicitly using npx
+RUN npx medusa build
 
-# Debug: Check if admin build exists
-RUN ls -la .medusa/server/public/admin || echo "Admin build directory not found!"
-
+# Debug: List all files in .medusa to see where things are
+RUN echo "Listing .medusa directory structure:" && ls -R .medusa || echo ".medusa directory not found"
 
 # Start the application
 CMD ["npx", "medusa", "start"]
