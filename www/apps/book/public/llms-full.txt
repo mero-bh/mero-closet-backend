@@ -30447,7 +30447,7 @@ function PasswordResetEmailComponent({ reset_url, email }: PasswordResetEmailPro
 
             <Section className="text-center mt-[32px] mb-[32px]">
               <Button
-                className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
+                className="bg-[#000000] rounded text-foreground text-[12px] font-semibold no-underline text-center px-5 py-3"
                 href={reset_url}
               >
                 Reset Password
@@ -43720,7 +43720,7 @@ function UserInvitedEmailComponent({ invite_url, email }: UserInvitedEmailProps)
 
             <Section className="text-center mt-[32px] mb-[32px]">
               <Button
-                className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
+                className="bg-[#000000] rounded text-foreground text-[12px] font-semibold no-underline text-center px-5 py-3"
                 href={invite_url}
               >
                 Accept Invitation
@@ -72735,7 +72735,7 @@ const DiscountPopup = () => {
         
         <div className="relative">
           {/* Sale tag */}
-          <div className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs font-bold px-3 py-1 rounded-full transform rotate-12 shadow-md">
+          <div className="absolute -top-2 -right-2 bg-rose-500 text-foreground text-xs font-bold px-3 py-1 rounded-full transform rotate-12 shadow-md">
             SAVE 10%
           </div>
 
@@ -110830,7 +110830,7 @@ function OrderPlacedEmailComponent({ order, email_banner }: OrderPlacedEmailProp
         <Preview>Thank you for your order from Medusa</Preview>
         <Body className="bg-white my-10 mx-auto w-full max-w-2xl">
           {/* Header */}
-          <Section className="bg-[#27272a] text-white px-6 py-4">
+          <Section className="bg-[#27272a] text-foreground px-6 py-4">
             <svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.2447 3.92183L12.1688 1.57686C10.8352 0.807712 9.20112 0.807712 7.86753 1.57686L3.77285 3.92183C2.45804 4.69098 1.63159 6.11673 1.63159 7.63627V12.345C1.63159 13.8833 2.45804 15.2903 3.77285 16.0594L7.84875 18.4231C9.18234 19.1923 10.8165 19.1923 12.15 18.4231L16.2259 16.0594C17.5595 15.2903 18.3672 13.8833 18.3672 12.345V7.63627C18.4048 6.11673 17.5783 4.69098 16.2447 3.92183ZM10.0088 14.1834C7.69849 14.1834 5.82019 12.3075 5.82019 10C5.82019 7.69255 7.69849 5.81657 10.0088 5.81657C12.3191 5.81657 14.2162 7.69255 14.2162 10C14.2162 12.3075 12.3379 14.1834 10.0088 14.1834Z" fill="currentColor"></path></svg>
           </Section>
 
@@ -110855,13 +110855,13 @@ function OrderPlacedEmailComponent({ order, email_banner }: OrderPlacedEmailProp
               <Section>
                 <Row>
                   <Column align="left">
-                    <Heading className="text-white text-xl font-semibold">
+                    <Heading className="text-foreground text-xl font-semibold">
                       {email_banner.title}
                     </Heading>
-                    <Text className="text-white mt-2">{email_banner.body}</Text>
+                    <Text className="text-foreground mt-2">{email_banner.body}</Text>
                   </Column>
                   <Column align="right">
-                    <Link href={email_banner.url} className="font-semibold px-2 text-white underline">
+                    <Link href={email_banner.url} className="font-semibold px-2 text-foreground underline">
                       Shop Now
                     </Link>
                   </Column>
@@ -160557,7 +160557,7 @@ return (
       <div className="bg-gradient-to-b from-ui-bg-subtle to-ui-bg-subtle rounded-lg p-4 shadow-elevation-card-rest overflow-y-auto max-h-[500px]">
         {/* Stage Area */}
         <div className="text-center mb-6">
-          <div className="bg-gradient-to-b from-ui-fg-base to-ui-fg-base text-white px-8 py-4 rounded-lg shadow-xl relative">
+          <div className="bg-gradient-to-b from-ui-fg-base to-ui-fg-base text-foreground px-8 py-4 rounded-lg shadow-xl relative">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-lg"></div>
             <div className="relative">
               <div className="txt-large-plus mb-1">STAGE</div>

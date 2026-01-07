@@ -1,27 +1,27 @@
 export const notification = [
   {
     "title": "Reset Password Email",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/auth/reset-password"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\auth\\reset-password\\page.mdx"
   },
   {
     "title": "Invite User Email",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/user/invite-user-subscriber"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\user\\invite-user-subscriber\\page.mdx"
   },
   {
     "title": "Abandoned Cart Notification",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/abandoned-cart"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\abandoned-cart\\page.mdx"
   },
   {
     "title": "Send Notification",
-    "path": "https://docs.medusajs.com/resources/infrastructure-modules/notification/send-notification"
+    "path": "https://docs.medusajs.com/resources\\infrastructure-modules\\notification\\send-notification\\page.mdx"
   },
   {
     "title": "Integrate Mailchimp",
-    "path": "https://docs.medusajs.com/resources/integrations/guides/mailchimp"
+    "path": "https://docs.medusajs.com/resources\\integrations\\guides\\mailchimp\\page.mdx"
   },
   {
     "title": "Integrate Slack",
-    "path": "https://docs.medusajs.com/resources/integrations/guides/slack"
+    "path": "https://docs.medusajs.com/resources\\integrations\\guides\\slack\\page.mdx"
   },
   {
     "title": "notifyOnFailureStep",

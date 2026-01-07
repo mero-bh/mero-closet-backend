@@ -1,23 +1,23 @@
 export const user = [
   {
     "title": "Reset Password",
-    "path": "https://docs.medusajs.com/user-guide/reset-password"
+    "path": "https://docs.medusajs.com/user-guide\\reset-password\\page.mdx"
   },
   {
     "title": "Manage Profile",
-    "path": "https://docs.medusajs.com/user-guide/settings/profile"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\profile\\page.mdx"
   },
   {
     "title": "Manage Invites",
-    "path": "https://docs.medusajs.com/user-guide/settings/users/invites"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\users\\invites\\page.mdx"
   },
   {
     "title": "Manage Users",
-    "path": "https://docs.medusajs.com/user-guide/settings/users"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\users\\page.mdx"
   },
   {
     "title": "How to Add Custom Authentication in Medusa Admin",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/how-to/admin/auth"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\how-to\\admin\\auth\\page.mdx"
   },
   {
     "title": "createInviteStep",

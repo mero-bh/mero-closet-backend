@@ -1,7 +1,7 @@
 export const workflow = [
   {
     "title": "Workflow Executions",
-    "path": "https://docs.medusajs.com/user-guide/settings/developer/workflows"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\developer\\workflows\\page.mdx"
   },
   {
     "title": "createApiKeysWorkflow",
@@ -500,10 +500,6 @@ export const workflow = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createExchangeShippingMethodWorkflow"
   },
   {
-    "title": "createOrUpdateOrderPaymentCollectionWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createOrUpdateOrderPaymentCollectionWorkflow"
-  },
-  {
     "title": "createOrderChangeActionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createOrderChangeActionsWorkflow"
   },
@@ -534,6 +530,10 @@ export const workflow = [
   {
     "title": "createOrderWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createOrderWorkflow"
+  },
+  {
+    "title": "createOrUpdateOrderPaymentCollectionWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createOrUpdateOrderPaymentCollectionWorkflow"
   },
   {
     "title": "createReturnShippingMethodWorkflow",
@@ -712,12 +712,12 @@ export const workflow = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateOrderChangeActionsWorkflow"
   },
   {
-    "title": "updateOrderChangeWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateOrderChangeWorkflow"
-  },
-  {
     "title": "updateOrderChangesWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateOrderChangesWorkflow"
+  },
+  {
+    "title": "updateOrderChangeWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateOrderChangeWorkflow"
   },
   {
     "title": "updateOrderEditAddItemWorkflow",
@@ -764,12 +764,12 @@ export const workflow = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/processPaymentWorkflow"
   },
   {
-    "title": "refundPaymentWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentWorkflow"
-  },
-  {
     "title": "refundPaymentsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentsWorkflow"
+  },
+  {
+    "title": "refundPaymentWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentWorkflow"
   },
   {
     "title": "createPaymentSessionsWorkflow",
@@ -844,12 +844,12 @@ export const workflow = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchLinkProductsToCollectionWorkflow"
   },
   {
-    "title": "batchProductVariantsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchProductVariantsWorkflow"
-  },
-  {
     "title": "batchProductsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchProductsWorkflow"
+  },
+  {
+    "title": "batchProductVariantsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchProductVariantsWorkflow"
   },
   {
     "title": "batchVariantImagesWorkflow",
@@ -864,6 +864,10 @@ export const workflow = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductOptionsWorkflow"
   },
   {
+    "title": "createProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
+  },
+  {
     "title": "createProductTagsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductTagsWorkflow"
   },
@@ -876,16 +880,16 @@ export const workflow = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
   },
   {
-    "title": "createProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
-  },
-  {
     "title": "deleteCollectionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteCollectionsWorkflow"
   },
   {
     "title": "deleteProductOptionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductOptionsWorkflow"
+  },
+  {
+    "title": "deleteProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
   },
   {
     "title": "deleteProductTagsWorkflow",
@@ -898,10 +902,6 @@ export const workflow = [
   {
     "title": "deleteProductVariantsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductVariantsWorkflow"
-  },
-  {
-    "title": "deleteProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
   },
   {
     "title": "exportProductsWorkflow",
@@ -924,6 +924,10 @@ export const workflow = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductOptionsWorkflow"
   },
   {
+    "title": "updateProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductsWorkflow"
+  },
+  {
     "title": "updateProductTagsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductTagsWorkflow"
   },
@@ -934,10 +938,6 @@ export const workflow = [
   {
     "title": "updateProductVariantsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductVariantsWorkflow"
-  },
-  {
-    "title": "updateProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductsWorkflow"
   },
   {
     "title": "upsertVariantPricesWorkflow",

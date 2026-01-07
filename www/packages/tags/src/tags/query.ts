@@ -1,11 +1,11 @@
 export const query = [
   {
     "title": "Get Variant Prices",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\price\\page.mdx"
   },
   {
     "title": "Get Variant Price with Taxes",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price-with-taxes"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\price-with-taxes\\page.mdx"
   },
   {
     "title": "prepareAdjustmentsFromPromotionActionsStep",
@@ -200,12 +200,12 @@ export const query = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchProductVariantsWorkflow"
   },
   {
-    "title": "deleteProductVariantsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductVariantsWorkflow"
-  },
-  {
     "title": "deleteProductsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
+  },
+  {
+    "title": "deleteProductVariantsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductVariantsWorkflow"
   },
   {
     "title": "deleteShippingProfileWorkflow",

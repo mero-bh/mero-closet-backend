@@ -1,18 +1,18 @@
 export const productCategory = [
   {
     "title": "Show Product Categories in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/categories/list"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\categories\\list\\page.mdx"
   },
   {
     "title": "Retrieve Nested Categories in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/categories/nested-categories"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\categories\\nested-categories\\page.mdx"
   },
   {
     "title": "Retrieve a Category's Products in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/categories/products"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\categories\\products\\page.mdx"
   },
   {
     "title": "Retrieve a Category in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/categories/retrieve"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\categories\\retrieve\\page.mdx"
   }
 ]

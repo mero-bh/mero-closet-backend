@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+
+@plugin "@tailwindcss/container-queries";
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  :root {
+    --background: #fff0e4;
+    --foreground: #0e0e0e;
+    --accent: #6754b9;
+    --selection: rgba(67, 67, 67, 0.305);
+    --border-hover: #6352ad;
+    --muted: #5f5f5f3f;
+  }
+
+.button {
+    @apply cursor-pointer;
+}
+
+.a {
+    @apply cursor-pointer;
+}
+
+  .dark {
+    --background: #0a0a0a;
+    --foreground: #ffffff;
+    --accent: hsl(301, 100%, 89%);
+    --selection: rgba(255, 255, 255, 0.311);
+    --border-hover: #ffb5ec; 
+    --muted: #5f5f5f3f;
+  }
+
+  
+
+/* theme inline */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-selection: var(--selection);
+  --color-border-hover: var(--border-hover);
+  --color-muted: var(--muted);
+}
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  img[loading='lazy'] {
+    clip-path: inset(0.6px);
+  }
+}
+
+a,
+input,
+button {
+  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+}
+
+
+
+/* Theme Toggle Animation styles */
+/* Theme Toggle Animation styles */
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  z-index: 9999;
+}

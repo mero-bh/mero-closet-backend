@@ -1,19 +1,19 @@
 export const stockLocation = [
   {
     "title": "Manage Locations",
-    "path": "https://docs.medusajs.com/user-guide/settings/locations-and-shipping/locations"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\locations-and-shipping\\locations\\page.mdx"
   },
   {
     "title": "Locations & Shipping Overview",
-    "path": "https://docs.medusajs.com/user-guide/settings/locations-and-shipping"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\locations-and-shipping\\page.mdx"
   },
   {
     "title": "Inventory Kits",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/inventory/inventory-kit"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\inventory\\inventory-kit\\page.mdx"
   },
   {
     "title": "Product Variant Inventory",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/variant-inventory"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\variant-inventory\\page.mdx"
   },
   {
     "title": "createStockLocations",

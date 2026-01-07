@@ -1,35 +1,35 @@
 export const payment = [
   {
     "title": "Manage Order Payments",
-    "path": "https://docs.medusajs.com/user-guide/orders/payments"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\payments\\page.mdx"
   },
   {
     "title": "Saved Payment Methods",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/saved-payment-methods"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\saved-payment-methods\\page.mdx"
   },
   {
     "title": "Customize Stripe in Next.js Starter",
-    "path": "https://docs.medusajs.com/resources/nextjs-starter/guides/customize-stripe"
+    "path": "https://docs.medusajs.com/resources\\nextjs-starter\\guides\\customize-stripe\\page.mdx"
   },
   {
     "title": "Checkout Step 5: Complete Cart",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/complete-cart"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\complete-cart\\page.mdx"
   },
   {
     "title": "Checkout Step 4: Choose Payment Provider",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/payment"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\payment\\page.mdx"
   },
   {
     "title": "Payment with Stripe in React Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/payment/stripe"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\payment\\stripe\\page.mdx"
   },
   {
     "title": "Implement Express Checkout with Medusa",
-    "path": "https://docs.medusajs.com/resources/storefront-development/guides/express-checkout"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\guides\\express-checkout\\page.mdx"
   },
   {
     "title": "Implement Mobile App with React Native, Expo, and Medusa",
-    "path": "https://docs.medusajs.com/resources/storefront-development/guides/react-native-expo"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\guides\\react-native-expo\\page.mdx"
   },
   {
     "title": "createPaymentCollectionsStep",
@@ -120,12 +120,12 @@ export const payment = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/confirmReturnRequestWorkflow"
   },
   {
-    "title": "createOrUpdateOrderPaymentCollectionWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createOrUpdateOrderPaymentCollectionWorkflow"
-  },
-  {
     "title": "createOrderPaymentCollectionWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createOrderPaymentCollectionWorkflow"
+  },
+  {
+    "title": "createOrUpdateOrderPaymentCollectionWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createOrUpdateOrderPaymentCollectionWorkflow"
   },
   {
     "title": "markPaymentCollectionAsPaid",
@@ -144,24 +144,24 @@ export const payment = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/capturePaymentStep"
   },
   {
-    "title": "refundPaymentStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/refundPaymentStep"
-  },
-  {
     "title": "refundPaymentsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/refundPaymentsStep"
+  },
+  {
+    "title": "refundPaymentStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/refundPaymentStep"
   },
   {
     "title": "capturePaymentWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/capturePaymentWorkflow"
   },
   {
-    "title": "refundPaymentWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentWorkflow"
-  },
-  {
     "title": "refundPaymentsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentsWorkflow"
+  },
+  {
+    "title": "refundPaymentWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentWorkflow"
   },
   {
     "title": "createPaymentAccountHolderStep",

@@ -1,51 +1,51 @@
 export const howTo = [
   {
     "title": "Create Actor Type",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/auth/create-actor-type"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\auth\\create-actor-type\\page.mdx"
   },
   {
     "title": "Reset Password Email",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/auth/reset-password"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\auth\\reset-password\\page.mdx"
   },
   {
     "title": "Retrieve Cart Totals",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/cart/cart-totals"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\cart\\cart-totals\\page.mdx"
   },
   {
     "title": "Retrieve Order Totals",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/order/order-totals"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\order\\order-totals\\page.mdx"
   },
   {
     "title": "Get Variant Prices",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\price\\page.mdx"
   },
   {
     "title": "Get Variant Price with Taxes",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price-with-taxes"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\price-with-taxes\\page.mdx"
   },
   {
     "title": "Get Variant Inventory",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/variant-inventory"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\variant-inventory\\page.mdx"
   },
   {
     "title": "Invite User Email",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/user/invite-user-subscriber"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\user\\invite-user-subscriber\\page.mdx"
   },
   {
     "title": "Create Cache Module",
-    "path": "https://docs.medusajs.com/resources/infrastructure-modules/cache/create"
+    "path": "https://docs.medusajs.com/resources\\infrastructure-modules\\cache\\create\\page.mdx"
   },
   {
     "title": "Create Event Module",
-    "path": "https://docs.medusajs.com/resources/infrastructure-modules/event/create"
+    "path": "https://docs.medusajs.com/resources\\infrastructure-modules\\event\\create\\page.mdx"
   },
   {
     "title": "Send Notification",
-    "path": "https://docs.medusajs.com/resources/infrastructure-modules/notification/send-notification"
+    "path": "https://docs.medusajs.com/resources\\infrastructure-modules\\notification\\send-notification\\page.mdx"
   },
   {
     "title": "Use Workflow Engine Module",
-    "path": "https://docs.medusajs.com/resources/infrastructure-modules/workflow-engine/how-to-use"
+    "path": "https://docs.medusajs.com/resources\\infrastructure-modules\\workflow-engine\\how-to-use\\page.mdx"
   },
   {
     "title": "Use Analytics Module",

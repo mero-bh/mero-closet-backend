@@ -308,12 +308,12 @@ export const remoteQuery = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchProductVariantsWorkflow"
   },
   {
-    "title": "createProductVariantsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
-  },
-  {
     "title": "createProductsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
+  },
+  {
+    "title": "createProductVariantsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
   },
   {
     "title": "exportProductsWorkflow",

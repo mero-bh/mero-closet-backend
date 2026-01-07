@@ -1,15 +1,15 @@
 export const translation = [
   {
     "title": "Manage Store Locales",
-    "path": "https://docs.medusajs.com/user-guide/settings/store"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\store\\page.mdx"
   },
   {
     "title": "Manage Translations",
-    "path": "https://docs.medusajs.com/user-guide/settings/translations"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\translations\\page.mdx"
   },
   {
     "title": "Storefront Localization",
-    "path": "https://docs.medusajs.com/resources/storefront-development/localization"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\localization\\page.mdx"
   },
   {
     "title": "createTranslationsStep",

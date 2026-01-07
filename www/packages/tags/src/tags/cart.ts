@@ -1,103 +1,103 @@
 export const cart = [
   {
     "title": "Retrieve Cart Totals using Query",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/cart/cart-totals"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\cart\\cart-totals\\page.mdx"
   },
   {
     "title": "Extend Cart",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/cart/extend"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\cart\\extend\\page.mdx"
   },
   {
     "title": "Implement Custom Line Item Pricing in Medusa",
-    "path": "https://docs.medusajs.com/resources/examples/guides/custom-item-price"
+    "path": "https://docs.medusajs.com/resources\\examples\\guides\\custom-item-price\\page.mdx"
   },
   {
     "title": "Implement Quote Management",
-    "path": "https://docs.medusajs.com/resources/examples/guides/quote-management"
+    "path": "https://docs.medusajs.com/resources\\examples\\guides\\quote-management\\page.mdx"
   },
   {
     "title": "Send Abandoned Cart Notification",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/abandoned-cart"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\abandoned-cart\\page.mdx"
   },
   {
     "title": "Agentic Commerce",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/agentic-commerce"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\agentic-commerce\\page.mdx"
   },
   {
     "title": "Implement First-Purchase Discount",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/first-purchase-discounts"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\first-purchase-discounts\\page.mdx"
   },
   {
     "title": "Add Gift Message",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/gift-message"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\gift-message\\page.mdx"
   },
   {
     "title": "Implement Loyalty Points",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/loyalty-points"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\loyalty-points\\page.mdx"
   },
   {
     "title": "Implement Bundled Products",
-    "path": "https://docs.medusajs.com/resources/recipes/bundled-products/examples/standard"
+    "path": "https://docs.medusajs.com/resources\\recipes\\bundled-products\\examples\\standard\\page.mdx"
   },
   {
     "title": "Create Cart Context in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/cart/context"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\cart\\context\\page.mdx"
   },
   {
     "title": "Create Cart in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/cart/create"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\cart\\create\\page.mdx"
   },
   {
     "title": "Manage Cart's Items in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/cart/manage-items"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\cart\\manage-items\\page.mdx"
   },
   {
     "title": "Manage Cart Promotions in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/cart/manage-promotions"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\cart\\manage-promotions\\page.mdx"
   },
   {
     "title": "Retrieve Cart in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/cart/retrieve"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\cart\\retrieve\\page.mdx"
   },
   {
     "title": "Show Cart Totals",
-    "path": "https://docs.medusajs.com/resources/storefront-development/cart/totals"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\cart\\totals\\page.mdx"
   },
   {
     "title": "Update Cart in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/cart/update"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\cart\\update\\page.mdx"
   },
   {
     "title": "Checkout Step 2: Set Address",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/address"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\address\\page.mdx"
   },
   {
     "title": "Checkout Step 5: Complete Cart",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/complete-cart"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\complete-cart\\page.mdx"
   },
   {
     "title": "Checkout Step 1: Enter Email",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/email"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\email\\page.mdx"
   },
   {
     "title": "Checkout Step 4: Choose Payment Provider",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/payment"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\payment\\page.mdx"
   },
   {
     "title": "Payment with Stripe in React Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/payment/stripe"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\payment\\stripe\\page.mdx"
   },
   {
     "title": "Checkout Step 3: Choose Shipping Method",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/shipping"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\shipping\\page.mdx"
   },
   {
     "title": "Implement Express Checkout with Medusa",
-    "path": "https://docs.medusajs.com/resources/storefront-development/guides/express-checkout"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\guides\\express-checkout\\page.mdx"
   },
   {
     "title": "Implement Mobile App with React Native, Expo, and Medusa",
-    "path": "https://docs.medusajs.com/resources/storefront-development/guides/react-native-expo"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\guides\\react-native-expo\\page.mdx"
   },
   {
     "title": "addShippingMethodToCartStep",

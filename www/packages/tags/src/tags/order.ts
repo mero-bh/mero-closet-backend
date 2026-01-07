@@ -1,111 +1,111 @@
 export const order = [
   {
     "title": "Manage Order Claims",
-    "path": "https://docs.medusajs.com/user-guide/orders/claims"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\claims\\page.mdx"
   },
   {
     "title": "Create Draft Order",
-    "path": "https://docs.medusajs.com/user-guide/orders/draft-orders/create"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\draft-orders\\create\\page.mdx"
   },
   {
     "title": "Manage Draft Order",
-    "path": "https://docs.medusajs.com/user-guide/orders/draft-orders/manage"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\draft-orders\\manage\\page.mdx"
   },
   {
     "title": "Draft Orders",
-    "path": "https://docs.medusajs.com/user-guide/orders/draft-orders"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\draft-orders\\page.mdx"
   },
   {
     "title": "Edit Order Items",
-    "path": "https://docs.medusajs.com/user-guide/orders/edit"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\edit\\page.mdx"
   },
   {
     "title": "Manage Order Exchanges",
-    "path": "https://docs.medusajs.com/user-guide/orders/exchanges"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\exchanges\\page.mdx"
   },
   {
     "title": "Export Orders",
-    "path": "https://docs.medusajs.com/user-guide/orders/export"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\export\\page.mdx"
   },
   {
     "title": "Manage Order Fulfillments",
-    "path": "https://docs.medusajs.com/user-guide/orders/fulfillments"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\fulfillments\\page.mdx"
   },
   {
     "title": "Manage Order Details",
-    "path": "https://docs.medusajs.com/user-guide/orders/manage"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\manage\\page.mdx"
   },
   {
     "title": "Orders Overview",
-    "path": "https://docs.medusajs.com/user-guide/orders"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\page.mdx"
   },
   {
     "title": "Manage Order Payments",
-    "path": "https://docs.medusajs.com/user-guide/orders/payments"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\payments\\page.mdx"
   },
   {
     "title": "Manage Order Returns",
-    "path": "https://docs.medusajs.com/user-guide/orders/returns"
+    "path": "https://docs.medusajs.com/user-guide\\orders\\returns\\page.mdx"
   },
   {
     "title": "Manage Refund Reasons",
-    "path": "https://docs.medusajs.com/user-guide/settings/refund-reasons"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\refund-reasons\\page.mdx"
   },
   {
     "title": "Manage Return Reasons",
-    "path": "https://docs.medusajs.com/user-guide/settings/return-reasons"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\return-reasons\\page.mdx"
   },
   {
     "title": "Retrieve Order Totals Using Query",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/order/order-totals"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\order\\order-totals\\page.mdx"
   },
   {
     "title": "Implement Quote Management",
-    "path": "https://docs.medusajs.com/resources/examples/guides/quote-management"
+    "path": "https://docs.medusajs.com/resources\\examples\\guides\\quote-management\\page.mdx"
   },
   {
     "title": "Agentic Commerce",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/agentic-commerce"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\agentic-commerce\\page.mdx"
   },
   {
     "title": "Add Gift Message",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/gift-message"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\gift-message\\page.mdx"
   },
   {
     "title": "Generate Invoices",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/invoice-generator"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\invoice-generator\\page.mdx"
   },
   {
     "title": "Implement Loyalty Points",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/loyalty-points"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\loyalty-points\\page.mdx"
   },
   {
     "title": "Implement Pre-Orders",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/preorder"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\preorder\\page.mdx"
   },
   {
     "title": "Implement Re-Order",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/re-order"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\re-order\\page.mdx"
   },
   {
     "title": "Return Request - Order #",
-    "path": "https://docs.medusajs.com/resources/nextjs-starter/guides/storefront-returns"
+    "path": "https://docs.medusajs.com/resources\\nextjs-starter\\guides\\storefront-returns\\page.mdx"
   },
   {
     "title": "Checkout Step 5: Complete Cart",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/complete-cart"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\complete-cart\\page.mdx"
   },
   {
     "title": "Order Confirmation in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/checkout/order-confirmation"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\checkout\\order-confirmation\\page.mdx"
   },
   {
     "title": "Implement Express Checkout with Medusa",
-    "path": "https://docs.medusajs.com/resources/storefront-development/guides/express-checkout"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\guides\\express-checkout\\page.mdx"
   },
   {
     "title": "Implement Mobile App with React Native, Expo, and Medusa",
-    "path": "https://docs.medusajs.com/resources/storefront-development/guides/react-native-expo"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\guides\\react-native-expo\\page.mdx"
   },
   {
     "title": "completeCartWorkflow",
@@ -620,12 +620,12 @@ export const order = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateOrderChangeActionsWorkflow"
   },
   {
-    "title": "updateOrderChangeWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateOrderChangeWorkflow"
-  },
-  {
     "title": "updateOrderChangesWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateOrderChangesWorkflow"
+  },
+  {
+    "title": "updateOrderChangeWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateOrderChangeWorkflow"
   },
   {
     "title": "updateOrderEditAddItemWorkflow",
@@ -668,12 +668,12 @@ export const order = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/capturePaymentWorkflow"
   },
   {
-    "title": "refundPaymentWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentWorkflow"
-  },
-  {
     "title": "refundPaymentsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentsWorkflow"
+  },
+  {
+    "title": "refundPaymentWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/refundPaymentWorkflow"
   },
   {
     "title": "createReturnReasonsStep",

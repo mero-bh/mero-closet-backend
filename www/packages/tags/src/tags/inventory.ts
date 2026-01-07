@@ -1,31 +1,31 @@
 export const inventory = [
   {
     "title": "Manage Inventory Items",
-    "path": "https://docs.medusajs.com/user-guide/inventory/inventory"
+    "path": "https://docs.medusajs.com/user-guide\\inventory\\inventory\\page.mdx"
   },
   {
     "title": "Inventory Overview",
-    "path": "https://docs.medusajs.com/user-guide/inventory"
+    "path": "https://docs.medusajs.com/user-guide\\inventory\\page.mdx"
   },
   {
     "title": "Manage Reservations",
-    "path": "https://docs.medusajs.com/user-guide/inventory/reservations"
+    "path": "https://docs.medusajs.com/user-guide\\inventory\\reservations\\page.mdx"
   },
   {
     "title": "Inventory Kits",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/inventory/inventory-kit"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\inventory\\inventory-kit\\page.mdx"
   },
   {
     "title": "Get Variant Inventory",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/variant-inventory"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\variant-inventory\\page.mdx"
   },
   {
     "title": "Product Variant Inventory",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/variant-inventory"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\variant-inventory\\page.mdx"
   },
   {
     "title": "Retrieve Product Variant's Inventory in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/inventory"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\inventory\\page.mdx"
   },
   {
     "title": "confirmInventoryStep",
@@ -176,20 +176,20 @@ export const inventory = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchProductVariantsWorkflow"
   },
   {
-    "title": "createProductVariantsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
-  },
-  {
     "title": "createProductsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
   },
   {
-    "title": "deleteProductVariantsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductVariantsWorkflow"
+    "title": "createProductVariantsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
   },
   {
     "title": "deleteProductsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
+  },
+  {
+    "title": "deleteProductVariantsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductVariantsWorkflow"
   },
   {
     "title": "createReservationsStep",

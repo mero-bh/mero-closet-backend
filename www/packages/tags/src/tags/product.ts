@@ -1,207 +1,207 @@
 export const product = [
   {
     "title": "Manage Product Categories",
-    "path": "https://docs.medusajs.com/user-guide/products/categories"
+    "path": "https://docs.medusajs.com/user-guide\\products\\categories\\page.mdx"
   },
   {
     "title": "Manage Product Collections",
-    "path": "https://docs.medusajs.com/user-guide/products/collections"
+    "path": "https://docs.medusajs.com/user-guide\\products\\collections\\page.mdx"
   },
   {
     "title": "Create Bundle Product",
-    "path": "https://docs.medusajs.com/user-guide/products/create/bundle"
+    "path": "https://docs.medusajs.com/user-guide\\products\\create\\bundle\\page.mdx"
   },
   {
     "title": "Create Multi-Part Product",
-    "path": "https://docs.medusajs.com/user-guide/products/create/multi-part"
+    "path": "https://docs.medusajs.com/user-guide\\products\\create\\multi-part\\page.mdx"
   },
   {
     "title": "Create Product",
-    "path": "https://docs.medusajs.com/user-guide/products/create"
+    "path": "https://docs.medusajs.com/user-guide\\products\\create\\page.mdx"
   },
   {
     "title": "Edit Product",
-    "path": "https://docs.medusajs.com/user-guide/products/edit"
+    "path": "https://docs.medusajs.com/user-guide\\products\\edit\\page.mdx"
   },
   {
     "title": "Export Products",
-    "path": "https://docs.medusajs.com/user-guide/products/export"
+    "path": "https://docs.medusajs.com/user-guide\\products\\export\\page.mdx"
   },
   {
     "title": "Import Products",
-    "path": "https://docs.medusajs.com/user-guide/products/import"
+    "path": "https://docs.medusajs.com/user-guide\\products\\import\\page.mdx"
   },
   {
     "title": "Products Overview",
-    "path": "https://docs.medusajs.com/user-guide/products"
+    "path": "https://docs.medusajs.com/user-guide\\products\\page.mdx"
   },
   {
     "title": "Manage Product Variants",
-    "path": "https://docs.medusajs.com/user-guide/products/variants"
+    "path": "https://docs.medusajs.com/user-guide\\products\\variants\\page.mdx"
   },
   {
     "title": "Manage Product Tags",
-    "path": "https://docs.medusajs.com/user-guide/settings/product-tags"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\product-tags\\page.mdx"
   },
   {
     "title": "Manage Product Types",
-    "path": "https://docs.medusajs.com/user-guide/settings/product-types"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\product-types\\page.mdx"
   },
   {
     "title": "Inventory Kits",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/inventory/inventory-kit"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\inventory\\inventory-kit\\page.mdx"
   },
   {
     "title": "Variant Price Rules",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/pricing/price-rules"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\pricing\\price-rules\\page.mdx"
   },
   {
     "title": "Extend Product",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/extend"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\extend\\page.mdx"
   },
   {
     "title": "Get Variant Prices",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\price\\page.mdx"
   },
   {
     "title": "Get Variant Price with Taxes",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price-with-taxes"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\price-with-taxes\\page.mdx"
   },
   {
     "title": "Get Variant Inventory",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/variant-inventory"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\variant-inventory\\page.mdx"
   },
   {
     "title": "Implement Custom Line Item Pricing in Medusa",
-    "path": "https://docs.medusajs.com/resources/examples/guides/custom-item-price"
+    "path": "https://docs.medusajs.com/resources\\examples\\guides\\custom-item-price\\page.mdx"
   },
   {
     "title": "Product Category Images",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/category-images"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\category-images\\page.mdx"
   },
   {
     "title": "Implement Pre-Order Products",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/preorder"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\preorder\\page.mdx"
   },
   {
     "title": "Implement Product Builder",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/product-builder"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\product-builder\\page.mdx"
   },
   {
     "title": "Implement Meta Product Feed",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/product-feed"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\product-feed\\page.mdx"
   },
   {
     "title": "Implement Product Rentals",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/product-rentals"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\product-rentals\\page.mdx"
   },
   {
     "title": "Implement Product Reviews",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/product-reviews"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\product-reviews\\page.mdx"
   },
   {
     "title": "Localization with Contentful",
-    "path": "https://docs.medusajs.com/resources/integrations/guides/contentful"
+    "path": "https://docs.medusajs.com/resources\\integrations\\guides\\contentful\\page.mdx"
   },
   {
     "title": "Integrate Payload",
-    "path": "https://docs.medusajs.com/resources/integrations/guides/payload"
+    "path": "https://docs.medusajs.com/resources\\integrations\\guides\\payload\\page.mdx"
   },
   {
     "title": "Integrate Strapi",
-    "path": "https://docs.medusajs.com/resources/integrations/guides/strapi"
+    "path": "https://docs.medusajs.com/resources\\integrations\\guides\\strapi\\page.mdx"
   },
   {
     "title": "Build Wishlist Plugin",
-    "path": "https://docs.medusajs.com/resources/plugins/guides/wishlist"
+    "path": "https://docs.medusajs.com/resources\\plugins\\guides\\wishlist\\page.mdx"
   },
   {
     "title": "Implement Bundled Products",
-    "path": "https://docs.medusajs.com/resources/recipes/bundled-products/examples/standard"
+    "path": "https://docs.medusajs.com/resources\\recipes\\bundled-products\\examples\\standard\\page.mdx"
   },
   {
     "title": "Implement Personalized Products",
-    "path": "https://docs.medusajs.com/resources/recipes/personalized-products/example"
+    "path": "https://docs.medusajs.com/resources\\recipes\\personalized-products\\example\\page.mdx"
   },
   {
     "title": "Implement Ticket Booking",
-    "path": "https://docs.medusajs.com/resources/recipes/ticket-booking/example"
+    "path": "https://docs.medusajs.com/resources\\recipes\\ticket-booking\\example\\page.mdx"
   },
   {
     "title": "Implement Express Checkout with Medusa",
-    "path": "https://docs.medusajs.com/resources/storefront-development/guides/express-checkout"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\guides\\express-checkout\\page.mdx"
   },
   {
     "title": "Implement Mobile App with React Native, Expo, and Medusa",
-    "path": "https://docs.medusajs.com/resources/storefront-development/guides/react-native-expo"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\guides\\react-native-expo\\page.mdx"
   },
   {
     "title": "Show Product Categories in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/categories/list"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\categories\\list\\page.mdx"
   },
   {
     "title": "Retrieve Nested Categories in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/categories/nested-categories"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\categories\\nested-categories\\page.mdx"
   },
   {
     "title": "Retrieve a Category's Products in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/categories/products"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\categories\\products\\page.mdx"
   },
   {
     "title": "Retrieve a Category in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/categories/retrieve"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\categories\\retrieve\\page.mdx"
   },
   {
     "title": "List Product Collections in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/collections/list"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\collections\\list\\page.mdx"
   },
   {
     "title": "Retrieve a Collection's Products in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/collections/products"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\collections\\products\\page.mdx"
   },
   {
     "title": "Retrieve a Collection in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/collections/retrieve"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\collections\\retrieve\\page.mdx"
   },
   {
     "title": "Retrieve Product Variant's Inventory in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/inventory"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\inventory\\page.mdx"
   },
   {
     "title": "Show Products in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/list"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\list\\page.mdx"
   },
   {
     "title": "Example: Show Sale Price",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/price/examples/sale-price"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\price\\examples\\sale-price\\page.mdx"
   },
   {
     "title": "Example: Show Variant's Price",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/price/examples/show-price"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\price\\examples\\show-price\\page.mdx"
   },
   {
     "title": "Example: Show Price with Taxes",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/price/examples/tax-price"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\price\\examples\\tax-price\\page.mdx"
   },
   {
     "title": "Retrieve Product Variant's Prices in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/price"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\price\\page.mdx"
   },
   {
     "title": "Retrieve a Product in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/retrieve"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\retrieve\\page.mdx"
   },
   {
     "title": "Select Product Variants in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/variants"
-  },
-  {
-    "title": "addImageToVariantsStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/addImageToVariantsStep"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\variants\\page.mdx"
   },
   {
     "title": "addImagesToVariantStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/addImagesToVariantStep"
+  },
+  {
+    "title": "addImageToVariantsStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/addImageToVariantsStep"
   },
   {
     "title": "batchLinkProductsToCategoryStep",
@@ -220,6 +220,10 @@ export const product = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductOptionsStep"
   },
   {
+    "title": "createProductsStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductsStep"
+  },
+  {
     "title": "createProductTagsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductTagsStep"
   },
@@ -232,16 +236,16 @@ export const product = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductVariantsStep"
   },
   {
-    "title": "createProductsStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductsStep"
-  },
-  {
     "title": "deleteCollectionsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteCollectionsStep"
   },
   {
     "title": "deleteProductOptionsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductOptionsStep"
+  },
+  {
+    "title": "deleteProductsStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductsStep"
   },
   {
     "title": "deleteProductTagsStep",
@@ -254,10 +258,6 @@ export const product = [
   {
     "title": "deleteProductVariantsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductVariantsStep"
-  },
-  {
-    "title": "deleteProductsStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductsStep"
   },
   {
     "title": "getProductsStep",
@@ -280,6 +280,10 @@ export const product = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductOptionsStep"
   },
   {
+    "title": "updateProductsStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductsStep"
+  },
+  {
     "title": "updateProductTagsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductTagsStep"
   },
@@ -290,10 +294,6 @@ export const product = [
   {
     "title": "updateProductVariantsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductVariantsStep"
-  },
-  {
-    "title": "updateProductsStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductsStep"
   },
   {
     "title": "batchImageVariantsWorkflow",
@@ -324,6 +324,10 @@ export const product = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductOptionsWorkflow"
   },
   {
+    "title": "createProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
+  },
+  {
     "title": "createProductTagsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductTagsWorkflow"
   },
@@ -336,16 +340,16 @@ export const product = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
   },
   {
-    "title": "createProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
-  },
-  {
     "title": "deleteCollectionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteCollectionsWorkflow"
   },
   {
     "title": "deleteProductOptionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductOptionsWorkflow"
+  },
+  {
+    "title": "deleteProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
   },
   {
     "title": "deleteProductTagsWorkflow",
@@ -360,16 +364,16 @@ export const product = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductVariantsWorkflow"
   },
   {
-    "title": "deleteProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
-  },
-  {
     "title": "updateCollectionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateCollectionsWorkflow"
   },
   {
     "title": "updateProductOptionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductOptionsWorkflow"
+  },
+  {
+    "title": "updateProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductsWorkflow"
   },
   {
     "title": "updateProductTagsWorkflow",
@@ -382,10 +386,6 @@ export const product = [
   {
     "title": "updateProductVariantsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductVariantsWorkflow"
-  },
-  {
-    "title": "updateProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductsWorkflow"
   },
   {
     "title": "createProductCategoriesStep",

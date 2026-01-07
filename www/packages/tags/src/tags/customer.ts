@@ -1,71 +1,71 @@
 export const customer = [
   {
     "title": "Manage Customer Groups",
-    "path": "https://docs.medusajs.com/user-guide/customers/groups"
+    "path": "https://docs.medusajs.com/user-guide\\customers\\groups\\page.mdx"
   },
   {
     "title": "Manage Customers",
-    "path": "https://docs.medusajs.com/user-guide/customers/manage"
+    "path": "https://docs.medusajs.com/user-guide\\customers\\manage\\page.mdx"
   },
   {
     "title": "Customers Overview",
-    "path": "https://docs.medusajs.com/user-guide/customers"
+    "path": "https://docs.medusajs.com/user-guide\\customers\\page.mdx"
   },
   {
     "title": "Extend Customer",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/customer/extend"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\customer\\extend\\page.mdx"
   },
   {
     "title": "Implement Customer Tiers",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/customer-tiers"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\customer-tiers\\page.mdx"
   },
   {
     "title": "Implement First-Purchase Discount",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/first-purchase-discounts"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\first-purchase-discounts\\page.mdx"
   },
   {
     "title": "Implement Loyalty Points",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/loyalty-points"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\loyalty-points\\page.mdx"
   },
   {
     "title": "Implement Phone Authentication",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/phone-auth"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\phone-auth\\page.mdx"
   },
   {
     "title": "Manage Customer Addresses in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/addresses"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\addresses\\page.mdx"
   },
   {
     "title": "Customer Context in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/context"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\context\\page.mdx"
   },
   {
     "title": "Log-out Customer in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/log-out"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\log-out\\page.mdx"
   },
   {
     "title": "Login Customer in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/login"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\login\\page.mdx"
   },
   {
     "title": "Edit Customer Profile in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/profile"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\profile\\page.mdx"
   },
   {
     "title": "Register Customer in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/register"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\register\\page.mdx"
   },
   {
     "title": "Reset Customer Password in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/reset-password"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\reset-password\\page.mdx"
   },
   {
     "title": "Retrieve Logged-In Customer in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/retrieve"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\retrieve\\page.mdx"
   },
   {
     "title": "Third-Party or Social Login in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/customers/third-party-login"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\customers\\third-party-login\\page.mdx"
   },
   {
     "title": "findOrCreateCustomerStep",

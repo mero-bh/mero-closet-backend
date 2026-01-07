@@ -148,12 +148,12 @@ export const link = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchProductVariantsWorkflow"
   },
   {
-    "title": "createProductVariantsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
-  },
-  {
     "title": "createProductsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
+  },
+  {
+    "title": "createProductVariantsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
   },
   {
     "title": "deleteCollectionsWorkflow",
@@ -164,16 +164,16 @@ export const link = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductOptionsWorkflow"
   },
   {
+    "title": "deleteProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
+  },
+  {
     "title": "deleteProductTypesWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductTypesWorkflow"
   },
   {
     "title": "deleteProductVariantsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductVariantsWorkflow"
-  },
-  {
-    "title": "deleteProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
   },
   {
     "title": "updateProductsWorkflow",

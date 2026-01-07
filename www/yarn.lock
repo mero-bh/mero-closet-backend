@@ -5615,6 +5615,7 @@ __metadata:
     swr: ^2.2.0
     tailwind: "*"
     tailwindcss: 3.3.3
+    tsconfig: "*"
     types: "*"
     typescript: 5.1.6
     yaml: ^2.3.1

@@ -1,39 +1,39 @@
 export const promotion = [
   {
     "title": "Manage Campaigns",
-    "path": "https://docs.medusajs.com/user-guide/promotions/campaigns"
+    "path": "https://docs.medusajs.com/user-guide\\promotions\\campaigns\\page.mdx"
   },
   {
     "title": "Create a Promotion",
-    "path": "https://docs.medusajs.com/user-guide/promotions/create"
+    "path": "https://docs.medusajs.com/user-guide\\promotions\\create\\page.mdx"
   },
   {
     "title": "Manage Promotions",
-    "path": "https://docs.medusajs.com/user-guide/promotions/manage"
+    "path": "https://docs.medusajs.com/user-guide\\promotions\\manage\\page.mdx"
   },
   {
     "title": "Promotions Overview",
-    "path": "https://docs.medusajs.com/user-guide/promotions"
+    "path": "https://docs.medusajs.com/user-guide\\promotions\\page.mdx"
   },
   {
     "title": "Extend Promotion",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/promotion/extend"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\promotion\\extend\\page.mdx"
   },
   {
     "title": "Implement Customer Tiers",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/customer-tiers"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\customer-tiers\\page.mdx"
   },
   {
     "title": "Implement First-Purchase Discount",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/first-purchase-discounts"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\first-purchase-discounts\\page.mdx"
   },
   {
     "title": "Implement Loyalty Points",
-    "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/loyalty-points"
+    "path": "https://docs.medusajs.com/resources\\how-to-tutorials\\tutorials\\loyalty-points\\page.mdx"
   },
   {
     "title": "Manage Cart Promotions in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/cart/manage-promotions"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\cart\\manage-promotions\\page.mdx"
   },
   {
     "title": "getActionsToComputeFromPromotionsStep",

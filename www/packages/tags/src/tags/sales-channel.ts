@@ -1,19 +1,19 @@
 export const salesChannel = [
   {
     "title": "Manage Sales Channels",
-    "path": "https://docs.medusajs.com/user-guide/settings/sales-channels"
+    "path": "https://docs.medusajs.com/user-guide\\settings\\sales-channels\\page.mdx"
   },
   {
     "title": "Get Variant Inventory",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/variant-inventory"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\variant-inventory\\page.mdx"
   },
   {
     "title": "Product Variant Inventory",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/variant-inventory"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\variant-inventory\\page.mdx"
   },
   {
     "title": "Use a Publishable API Key in the Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/publishable-api-keys"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\publishable-api-keys\\page.mdx"
   },
   {
     "title": "validateSalesChannelsExistStep",

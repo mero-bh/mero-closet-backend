@@ -168,6 +168,10 @@ export const eventBus = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductOptionsWorkflow"
   },
   {
+    "title": "createProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
+  },
+  {
     "title": "createProductTagsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductTagsWorkflow"
   },
@@ -180,16 +184,16 @@ export const eventBus = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
   },
   {
-    "title": "createProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
-  },
-  {
     "title": "deleteCollectionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteCollectionsWorkflow"
   },
   {
     "title": "deleteProductOptionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductOptionsWorkflow"
+  },
+  {
+    "title": "deleteProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
   },
   {
     "title": "deleteProductTagsWorkflow",
@@ -204,16 +208,16 @@ export const eventBus = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductVariantsWorkflow"
   },
   {
-    "title": "deleteProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/deleteProductsWorkflow"
-  },
-  {
     "title": "updateCollectionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateCollectionsWorkflow"
   },
   {
     "title": "updateProductOptionsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductOptionsWorkflow"
+  },
+  {
+    "title": "updateProductsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductsWorkflow"
   },
   {
     "title": "updateProductTagsWorkflow",
@@ -226,10 +230,6 @@ export const eventBus = [
   {
     "title": "updateProductVariantsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductVariantsWorkflow"
-  },
-  {
-    "title": "updateProductsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductsWorkflow"
   },
   {
     "title": "createProductCategoriesWorkflow",

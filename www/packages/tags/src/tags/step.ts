@@ -900,12 +900,12 @@ export const step = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/capturePaymentStep"
   },
   {
-    "title": "refundPaymentStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/refundPaymentStep"
-  },
-  {
     "title": "refundPaymentsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/refundPaymentsStep"
+  },
+  {
+    "title": "refundPaymentStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/refundPaymentStep"
   },
   {
     "title": "validatePaymentsRefundStep",
@@ -1004,12 +1004,12 @@ export const step = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updatePriceSetsStep"
   },
   {
-    "title": "addImageToVariantsStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/addImageToVariantsStep"
-  },
-  {
     "title": "addImagesToVariantStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/addImagesToVariantStep"
+  },
+  {
+    "title": "addImageToVariantsStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/addImageToVariantsStep"
   },
   {
     "title": "batchLinkProductsToCategoryStep",
@@ -1028,6 +1028,10 @@ export const step = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductOptionsStep"
   },
   {
+    "title": "createProductsStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductsStep"
+  },
+  {
     "title": "createProductTagsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductTagsStep"
   },
@@ -1038,10 +1042,6 @@ export const step = [
   {
     "title": "createProductVariantsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductVariantsStep"
-  },
-  {
-    "title": "createProductsStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/createProductsStep"
   },
   {
     "title": "createVariantPricingLinkStep",
@@ -1056,6 +1056,10 @@ export const step = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductOptionsStep"
   },
   {
+    "title": "deleteProductsStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductsStep"
+  },
+  {
     "title": "deleteProductTagsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductTagsStep"
   },
@@ -1066,10 +1070,6 @@ export const step = [
   {
     "title": "deleteProductVariantsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductVariantsStep"
-  },
-  {
-    "title": "deleteProductsStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/deleteProductsStep"
   },
   {
     "title": "generateProductCsvStep",
@@ -1112,6 +1112,10 @@ export const step = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductOptionsStep"
   },
   {
+    "title": "updateProductsStep",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductsStep"
+  },
+  {
     "title": "updateProductTagsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductTagsStep"
   },
@@ -1122,10 +1126,6 @@ export const step = [
   {
     "title": "updateProductVariantsStep",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductVariantsStep"
-  },
-  {
-    "title": "updateProductsStep",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/steps/updateProductsStep"
   },
   {
     "title": "waitConfirmationProductImportStep",

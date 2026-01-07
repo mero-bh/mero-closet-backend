@@ -1,43 +1,43 @@
 export const pricing = [
   {
     "title": "Create a Price List",
-    "path": "https://docs.medusajs.com/user-guide/price-lists/create"
+    "path": "https://docs.medusajs.com/user-guide\\price-lists\\create\\page.mdx"
   },
   {
     "title": "Manage Price Lists",
-    "path": "https://docs.medusajs.com/user-guide/price-lists/manage"
+    "path": "https://docs.medusajs.com/user-guide\\price-lists\\manage\\page.mdx"
   },
   {
     "title": "Price Lists Overview",
-    "path": "https://docs.medusajs.com/user-guide/price-lists"
+    "path": "https://docs.medusajs.com/user-guide\\price-lists\\page.mdx"
   },
   {
     "title": "Get Variant Prices",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\price\\page.mdx"
   },
   {
     "title": "Get Variant Price with Taxes",
-    "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price-with-taxes"
+    "path": "https://docs.medusajs.com/resources\\commerce-modules\\product\\guides\\price-with-taxes\\page.mdx"
   },
   {
     "title": "Implement Custom Line Item Pricing in Medusa",
-    "path": "https://docs.medusajs.com/resources/examples/guides/custom-item-price"
+    "path": "https://docs.medusajs.com/resources\\examples\\guides\\custom-item-price\\page.mdx"
   },
   {
     "title": "Example: Show Sale Price",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/price/examples/sale-price"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\price\\examples\\sale-price\\page.mdx"
   },
   {
     "title": "Example: Show Variant's Price",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/price/examples/show-price"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\price\\examples\\show-price\\page.mdx"
   },
   {
     "title": "Example: Show Price with Taxes",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/price/examples/tax-price"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\price\\examples\\tax-price\\page.mdx"
   },
   {
     "title": "Retrieve Product Variant's Prices in Storefront",
-    "path": "https://docs.medusajs.com/resources/storefront-development/products/price"
+    "path": "https://docs.medusajs.com/resources\\storefront-development\\products\\price\\page.mdx"
   },
   {
     "title": "createShippingOptionsPriceSetsStep",
@@ -152,20 +152,20 @@ export const pricing = [
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/batchProductVariantsWorkflow"
   },
   {
-    "title": "createProductVariantsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
-  },
-  {
     "title": "createProductsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductsWorkflow"
   },
   {
-    "title": "updateProductVariantsWorkflow",
-    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductVariantsWorkflow"
+    "title": "createProductVariantsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/createProductVariantsWorkflow"
   },
   {
     "title": "updateProductsWorkflow",
     "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductsWorkflow"
+  },
+  {
+    "title": "updateProductVariantsWorkflow",
+    "path": "https://docs.medusajs.com/resources/references/medusa-workflows/updateProductVariantsWorkflow"
   },
   {
     "title": "upsertVariantPricesWorkflow",
