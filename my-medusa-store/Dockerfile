@@ -15,11 +15,12 @@ RUN yarn install --no-frozen-lockfile --network-timeout 100000
 # Copy the rest of the application
 COPY . .
 
-# Increase memory limit for the build process to avoid crashes on limited instances
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+# IMPORTANT: Copy the locally built admin files
+# This relies on 'npx medusa build' having been run locally before push
+COPY .medusa .medusa
 
-# Run the build
-RUN npx medusa build
+# We skip 'npx medusa build' here because we copied the artifacts
+# RUN npx medusa build
 
 # Expose the correct port
 EXPOSE 9000

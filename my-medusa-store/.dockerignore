@@ -1,0 +1,7 @@
+node_modules
+.git
+.env
+.cache
+dist/
+# Allow .medusa folder to be copied
+!.medusa/server/public/admin
