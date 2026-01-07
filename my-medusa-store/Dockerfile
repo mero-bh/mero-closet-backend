@@ -14,8 +14,12 @@ RUN yarn install --no-frozen-lockfile --network-timeout 100000
 # Copy the rest of the application
 COPY . .
 
-# Build inside the container so .medusa/server/public/admin/index.html exists on Koyeb
-RUN yarn build
+# Copy the locally built artifacts (Admin + Server)
+# This bypasses the need to build on the limited server instance
+COPY .medusa .medusa
+
+# Build step skipped (artifacts are copied)
+# RUN yarn build
 
 # Expose the correct port
 EXPOSE 9000
