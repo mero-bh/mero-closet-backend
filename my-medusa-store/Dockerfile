@@ -29,5 +29,5 @@ ENV NODE_OPTIONS="--max-old-space-size=460"
 # Expose the correct port
 EXPOSE 9000
 
-# Debug: Check if admin files exist, then start
-CMD ["sh", "-lc", "echo 'Checking Admin Files:' && ls -la .medusa/server/public/admin && npx medusa start"]
+# Start the application directly
+CMD ["npx", "medusa", "start"]
