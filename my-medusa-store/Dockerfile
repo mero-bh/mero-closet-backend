@@ -13,9 +13,13 @@ COPY . .
 
 # Set environment variables for build time
 ENV NODE_ENV=production
+ENV ADMIN_CORS=/^https:\/\/.*$/
 
 # Build the application (backend + admin)
 RUN yarn build
+
+# Debug: Check if admin build exists
+RUN ls -la .medusa/server/public/admin || echo "Admin build directory not found!"
 
 
 # Start the application

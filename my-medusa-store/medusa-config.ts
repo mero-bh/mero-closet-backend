@@ -14,6 +14,6 @@ module.exports = defineConfig({
     }
   },
   admin: {
-    disable: process.env.DISABLE_ADMIN_BUILD === "true",
+    disable: false,
   }
 })
