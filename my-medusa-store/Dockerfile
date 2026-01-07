@@ -21,6 +21,9 @@ COPY .medusa .medusa
 # Build step skipped (artifacts are copied)
 # RUN yarn build
 
+# Limit Node memory to fit within 512MB instance (leaving ~50MB for OS overhead)
+ENV NODE_OPTIONS="--max-old-space-size=460"
+
 # Expose the correct port
 EXPOSE 9000
 
