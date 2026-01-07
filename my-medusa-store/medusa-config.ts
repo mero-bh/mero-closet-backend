@@ -6,9 +6,9 @@ module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     http: {
-      storeCors: process.env.STORE_CORS || "",
-      adminCors: process.env.ADMIN_CORS || "",
-      authCors: process.env.AUTH_CORS || "",
+      storeCors: process.env.STORE_CORS || "http://localhost:8000,https://mero-closet.vercel.app,https://mero-closet-frontend-ui.vercel.app",
+      adminCors: process.env.ADMIN_CORS || "http://localhost:5173,http://localhost:9000,https://essential-clarey-merocloset-8214c1dd.koyeb.app",
+      authCors: process.env.AUTH_CORS || "http://localhost:5173,http://localhost:9000,https://mero-closet.vercel.app,https://mero-closet-frontend-ui.vercel.app,https://essential-clarey-merocloset-8214c1dd.koyeb.app",
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     }
