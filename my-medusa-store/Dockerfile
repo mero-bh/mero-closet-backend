@@ -15,8 +15,10 @@ RUN yarn install --no-frozen-lockfile --network-timeout 100000
 COPY . .
 
 # Copy the locally built artifacts (Admin + Server)
-# This bypasses the need to build on the limited server instance
 COPY .medusa .medusa
+
+# DEBUG: List files to verify they are copied correctly
+RUN ls -R .medusa/server/public/admin || echo "Admin folder not found!"
 
 # Build step skipped (artifacts are copied)
 # RUN yarn build
