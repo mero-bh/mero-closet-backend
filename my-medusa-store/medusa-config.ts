@@ -9,6 +9,10 @@ module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     http: {
+      // @ts-ignore
+      host: process.env.HOST || "0.0.0.0",
+      // @ts-ignore
+      port: Number(process.env.PORT || 9000),
       storeCors:
         process.env.STORE_CORS ||
         "http://localhost:8000,https://mero-closet.vercel.app,https://mero-closet-frontend-ui.vercel.app",
