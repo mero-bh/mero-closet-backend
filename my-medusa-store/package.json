@@ -13,7 +13,7 @@
     "medusa"
   ],
   "scripts": {
-    "heroku-postbuild": "yarn install --no-frozen-lockfile && medusa build",
+    "heroku-postbuild": "medusa build",
     "build": "medusa build",
     "seed": "medusa exec ./src/scripts/seed.ts",
     "start": "medusa start",
@@ -48,6 +48,6 @@
     "yalc": "^1.0.0-pre.53"
   },
   "engines": {
-    "node": ">=20"
+    "node": "20.x"
   }
 }
