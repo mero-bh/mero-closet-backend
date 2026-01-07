@@ -6,13 +6,17 @@ WORKDIR /app
 COPY package.json yarn.lock .yarnrc ./
 
 # Install dependencies with loose lockfile checking
-RUN yarn install --no-frozen-lockfile
+RUN yarn install --no-frozen-lockfile --network-timeout 100000
 
 # Copy the rest of the application
 COPY . .
 
-# Build the application
+# Set environment variables for build time
+ENV NODE_ENV=production
+
+# Build the application (backend + admin)
 RUN yarn build
+
 
 # Start the application
 CMD ["npx", "medusa", "start"]
