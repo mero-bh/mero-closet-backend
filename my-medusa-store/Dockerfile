@@ -2,25 +2,27 @@ FROM node:20-slim
 
 WORKDIR /app
 
+# Install system dependencies (Python/Build tools often needed for native modules)
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+
 # Copy package files first for caching
 COPY package.json yarn.lock .yarnrc ./
 
-# Install dependencies with loose lockfile checking
+# Install all dependencies (including devDependencies for the build step)
+# Using --network-timeout to prevent slow connection issues
 RUN yarn install --no-frozen-lockfile --network-timeout 100000
 
 # Copy the rest of the application
 COPY . .
 
-# Set environment variables for build time
-ENV NODE_ENV=production
-ENV ADMIN_CORS=/^https:\/\/.*$/
+# Increase memory limit for the build process to avoid crashes on limited instances
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-# Build the application (backend + admin) explicitly using npx
-# Force admin build by setting env var if needed, though config handles it
+# Run the build
 RUN npx medusa build
 
-# Debug: List all files in .medusa to see where things are (for logs)
-RUN echo "Listing .medusa directory structure:" && ls -R .medusa || echo ".medusa directory not found"
+# Expose the correct port
+EXPOSE 9000
 
 # Start the application
 CMD ["npx", "medusa", "start"]
