@@ -1,6 +1,5 @@
-<p align="center">
-  <img alt="MERO CLOSET Logo" src="./my-medusa-store/static/logo.png" width="200">
-</p>
+
+![mero logo](image.png)
 <h1 align="center">
   MERO CLOSET
 </h1>
