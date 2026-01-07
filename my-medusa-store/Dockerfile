@@ -29,6 +29,5 @@ ENV NODE_OPTIONS="--max-old-space-size=460"
 # Expose the correct port
 EXPOSE 9000
 
-# Start the application directly (migrations assumed done manually or previously)
-# This saves memory and startup time on Free Tier
-CMD ["npx", "medusa", "start"]
+# Debug: Check if admin files exist, then start
+CMD ["sh", "-lc", "echo 'Checking Admin Files:' && ls -la .medusa/server/public/admin && npx medusa start"]
