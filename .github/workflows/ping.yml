@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Ping service
         env:
-          PING_URL: ${{ secrets.PING_URL }}
+          PING_URL: '${{ secrets.PING_URL }}'
         run: |
           if [ -n "$PING_URL" ]; then
             curl -fsS "$PING_URL" >/dev/null
