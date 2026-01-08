@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  ? `https://essential-clarey-merocloset-8214c1dd.koyeb.app`
   : 'http://localhost:3000';
 
 export const createUrl = (

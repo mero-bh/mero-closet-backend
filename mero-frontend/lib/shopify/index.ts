@@ -11,7 +11,7 @@ import type { Cart, Collection, Menu, Money, Page, Product, ProductVariant } fro
 // so the UI components keep working.
 
 const backendUrl = (process.env.MEDUSA_BACKEND_URL || 'https://essential-clarey-merocloset-8214c1dd.koyeb.app').replace(/\/$/, '');
-const publishableKey = process.env.MEDUSA_PUBLISHABLE_KEY || 'pk_dummy_placeholder';
+const publishableKey = process.env.MEDUSA_PUBLISHABLE_KEY || 'pk_448ea0ce3b5b682802ce8ba6bec567782e3a88a9eec38b5d3693ae4123ce2d31';
 
 const storeBase = backendUrl ? `${backendUrl}/store` : '';
 

@@ -22,5 +22,7 @@ module.exports = defineConfig({
   },
   admin: {
     disable: false,
+    // @ts-ignore
+    favicon: "./static/favicon.ico",
   },
 })
