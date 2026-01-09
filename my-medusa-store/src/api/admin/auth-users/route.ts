@@ -1,4 +1,5 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { getPgPool } from "../../../utils/pg"
 
 export const GET = async (
     req: MedusaRequest,
@@ -8,9 +9,9 @@ export const GET = async (
     const query = `SELECT * FROM "auth_user" ORDER BY "createdAt" DESC`
 
     try {
-        const dbConnection = req.scope.resolve("pg_connection") as any
+        const pool = getPgPool()
         console.log("Admin API: Fetching auth users from auth_user table...")
-        const result = await dbConnection.query(query)
+        const result = await pool.query(query)
 
         res.json({
             users: result.rows,
@@ -35,11 +36,19 @@ export const DELETE = async (
         return res.status(400).json({ message: "User ID is required" })
     }
 
-    const query = `DELETE FROM "auth_user" WHERE id = $1`
+    const getRoleQuery = `SELECT role FROM "auth_user" WHERE id = $1`
+    const deleteQuery = `DELETE FROM "auth_user" WHERE id = $1`
 
     try {
-        const dbConnection = req.scope.resolve("pg_connection") as any
-        await dbConnection.query(query, [id])
+        const pool = getPgPool()
+
+        const roleResult = await pool.query(getRoleQuery, [id])
+        const role = roleResult.rows?.[0]?.role
+        if (role === "admin") {
+            return res.status(403).json({ message: "Refusing to delete an admin user" })
+        }
+
+        await pool.query(deleteQuery, [id])
 
         res.json({
             message: "User deleted successfully"

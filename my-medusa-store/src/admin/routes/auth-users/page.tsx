@@ -11,6 +11,8 @@ interface AuthUser {
     role: string
     country: string | null
     isOnline: boolean
+    lastSeen?: string | null
+    createdAt?: string | null
 }
 
 const UsersPage = () => {
@@ -53,9 +55,9 @@ const UsersPage = () => {
             <div className="flex items-center justify-between px-6 py-4 bg-ui-bg-base">
                 <div>
                     <Heading level="h1" className="flex items-center gap-x-2">
-                        <Users /> Auth Users
+                        <Users /> User Auth
                     </Heading>
-                    <p className="text-ui-fg-subtle txt-small">Manage users from NextAuth social login</p>
+                    <p className="text-ui-fg-subtle txt-small">Basic user data (NextAuth/Prisma tables) + delete from dashboard</p>
                 </div>
                 <div className="flex items-center gap-x-2">
                     <Button
@@ -77,13 +79,15 @@ const UsersPage = () => {
                             <Table.HeaderCell>Role</Table.HeaderCell>
                             <Table.HeaderCell>Country</Table.HeaderCell>
                             <Table.HeaderCell>Status</Table.HeaderCell>
+                            <Table.HeaderCell>Last Seen</Table.HeaderCell>
+                            <Table.HeaderCell>Created</Table.HeaderCell>
                             <Table.HeaderCell className="text-right">Actions</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {isLoading ? (
                             <Table.Row>
-                                <Table.Cell className="text-center py-10 text-ui-fg-subtle">
+                                <Table.Cell colSpan={8} className="text-center py-10 text-ui-fg-subtle">
                                     Loading users...
                                 </Table.Cell>
                             </Table.Row>
@@ -111,12 +115,20 @@ const UsersPage = () => {
                                         {user.isOnline ? "Online" : "Offline"}
                                     </StatusBadge>
                                 </Table.Cell>
+                                <Table.Cell>
+                                    {user.lastSeen ? new Date(user.lastSeen).toLocaleString() : "-"}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}
+                                </Table.Cell>
                                 <Table.Cell className="text-right">
                                     <Button
                                         variant="transparent"
                                         size="small"
                                         className="text-ui-fg-error"
                                         onClick={() => handleDelete(user.id)}
+                                        disabled={user.role === "admin"}
+                                        title={user.role === "admin" ? "Don't delete admins from here" : "Delete user"}
                                     >
                                         <Trash />
                                     </Button>
@@ -125,7 +137,7 @@ const UsersPage = () => {
                         ))}
                         {!isLoading && data?.users.length === 0 && (
                             <Table.Row>
-                                <Table.Cell className="text-center py-10 text-ui-fg-subtle">
+                                <Table.Cell colSpan={8} className="text-center py-10 text-ui-fg-subtle">
                                     No users found.
                                 </Table.Cell>
                             </Table.Row>
@@ -138,8 +150,9 @@ const UsersPage = () => {
 }
 
 export const config = defineRouteConfig({
-    label: "Users",
+    label: "User Auth",
     icon: Users,
+    rank: 45,
 })
 
 export default UsersPage
