@@ -11,11 +11,20 @@ COPY package.json yarn.lock .yarnrc ./
 # Install all dependencies (including devDependencies for the build step)
 RUN yarn install --no-frozen-lockfile --network-timeout 100000
 
+# Increase memory limit for build and runtime (Crucial for Koyeb)
+ENV NODE_OPTIONS="--max-old-space-size=1024"
+
 # Copy the rest of the application
 COPY . .
 
-# Build the application (Server + Admin) inside Docker
+# Build the application
+# We use --admin-only if needed, but 'medusa build' should cover it.
 RUN yarn build
+
+# Ensure the admin build is in the correct location for Medusa v2
+# Medusa v2 usually looks in .medusa/admin, but some setups use different paths.
+# This ensures it's available where the server expects it.
+RUN ls -la .medusa/admin/index.html || (echo "Admin build failed to produce index.html" && exit 1)
 
 # Expose the correct port
 EXPOSE 9000
