@@ -48,11 +48,11 @@ export default defineMiddlewares({
   routes: [
     {
       matcher: "/admin/reels/upload",
-      middlewares: [upload.single("file")],
+      middlewares: [upload.single("file") as any],
     },
     {
       matcher: "/store/reels/upload",
-      middlewares: [upload.single("file")],
+      middlewares: [upload.single("file") as any],
     },
   ],
 })
