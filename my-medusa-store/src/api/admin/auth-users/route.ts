@@ -8,7 +8,8 @@ export const GET = async (
     const query = `SELECT * FROM "auth_user" ORDER BY "createdAt" DESC`
 
     try {
-        const dbConnection = req.scope.resolve("pg_connection")
+        const dbConnection = req.scope.resolve("pg_connection") as any
+        console.log("Admin API: Fetching auth users from auth_user table...")
         const result = await dbConnection.query(query)
 
         res.json({
@@ -37,7 +38,7 @@ export const DELETE = async (
     const query = `DELETE FROM "auth_user" WHERE id = $1`
 
     try {
-        const dbConnection = req.scope.resolve("pg_connection")
+        const dbConnection = req.scope.resolve("pg_connection") as any
         await dbConnection.query(query, [id])
 
         res.json({
