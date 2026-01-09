@@ -15,6 +15,8 @@ coverage
 medusa-db.sql
 build
 .cache
+schema.md
+client_secret_1043468404870-u1a4d4f742o7t9kvke00d4faos1qakb0.apps.googleusercontent.com.json/*
 
 .yarn/*
 !.yarn/patches
