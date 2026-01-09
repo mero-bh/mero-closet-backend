@@ -12,7 +12,7 @@ COPY package.json yarn.lock .yarnrc ./
 RUN yarn install --no-frozen-lockfile --network-timeout 100000
 
 # Increase memory limit for build and runtime (Crucial for Koyeb)
-ENV NODE_OPTIONS="--max-old-space-size=1024"
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Copy the rest of the application
 COPY . .

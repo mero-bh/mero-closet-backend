@@ -25,4 +25,8 @@ client_secret_1043468404870-u1a4d4f742o7t9kvke00d4faos1qakb0.apps.googleusercont
 !.yarn/sdks
 !.yarn/versions
 
-!.medusa
+# Medusa build and temporary files
+.medusa/
+dist/
+node_modules/
+.env
