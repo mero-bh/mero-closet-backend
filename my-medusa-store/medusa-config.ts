@@ -17,7 +17,7 @@ module.exports = defineConfig({
   },
   admin: {
     disable: false,
-    // Note: In Medusa v2, we don't need a path property unless we want to change it from /app
+    path: "/app",
     backendUrl: process.env.MEDUSA_BACKEND_URL || adminUrl,
   },
 })
