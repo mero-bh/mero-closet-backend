@@ -5,7 +5,9 @@ import path from "path"
 
 /**
  * Reels upload (video/images) middleware.
- * This enables multipart/form-data handling for /admin/reels/upload.
+ * Enables multipart/form-data handling for both:
+ *   - /admin/reels/upload (Medusa Admin)
+ *   - /store/reels/upload (Frontend)
  */
 const reelsDir = path.join(process.cwd(), "static", "reels")
 fs.mkdirSync(reelsDir, { recursive: true })
@@ -25,7 +27,6 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: {
-    // 150MB should cover short reels without killing the server.
     fileSize: 150 * 1024 * 1024,
   },
   fileFilter: (_req, file, cb) => {
@@ -47,6 +48,10 @@ export default defineMiddlewares({
   routes: [
     {
       matcher: "/admin/reels/upload",
+      middlewares: [upload.single("file")],
+    },
+    {
+      matcher: "/store/reels/upload",
       middlewares: [upload.single("file")],
     },
   ],
