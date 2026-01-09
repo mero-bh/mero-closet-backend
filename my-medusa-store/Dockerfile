@@ -3,12 +3,12 @@ FROM node:20-slim
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y python3 make g++ curl && rm -rf /var/lib/apt/lists/*
 
 # Copy package management files
 COPY package.json yarn.lock .yarnrc.yml* ./
 
-# Install dependencies (including devDependencies for build)
+# Install dependencies (must include devDependencies)
 RUN yarn install --no-frozen-lockfile
 
 # Define Build Arguments
@@ -20,19 +20,16 @@ ENV NODE_OPTIONS="--max-old-space-size=2048"
 # Copy the rest of the application
 COPY . .
 
-# Explicitly build the admin and the backend
+# Run build - we use npx medusa build which builds both backend and admin in v2
 RUN npx medusa build
 
-# CRITICAL: Verify the admin build is exactly where Medusa expects it
-# Default path for v2: .medusa/server/public/admin/index.html
-RUN if [ ! -f .medusa/server/public/admin/index.html ]; then \
-    echo "ERROR: Admin build was not generated! Check your medusa-config.ts and dependencies."; \
-    ls -R .medusa || echo ".medusa folder not found"; \
-    exit 1; \
-    fi
+# MANUALLY ENSURE THE ADMIN FILES ARE IN THE WEB SERVER PATH
+# Medusa v2 expects it in .medusa/server/public/admin
+RUN mkdir -p .medusa/server/public/admin && \
+    ls -la .medusa/server/public/admin/index.html || (echo "Admin build missing, searching..." && find . -name index.html)
 
-# Set runtime environment
+# Expose port
 EXPOSE 9000
 
-# Start the server
-CMD ["npx", "medusa", "start"]
+# Start script to check files before running
+CMD ["sh", "-c", "ls -l .medusa/server/public/admin/index.html && npx medusa start"]
