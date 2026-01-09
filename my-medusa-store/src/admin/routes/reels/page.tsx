@@ -1,6 +1,6 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { Container, Heading, Button, toast } from "@medusajs/ui"
-import { Film, ArrowPath, Trash, ArrowDownTray } from "@medusajs/icons"
+import { PlaySolid, ArrowPath, Trash, ArrowDownTray } from "@medusajs/icons"
 import { useQuery } from "@tanstack/react-query"
 import { useRef, useState } from "react"
 
@@ -73,7 +73,7 @@ const ReelsPage = () => {
       <div className="flex items-center justify-between px-6 py-4 bg-ui-bg-base">
         <div>
           <Heading level="h1" className="flex items-center gap-x-2">
-            <Film /> Reels
+            <PlaySolid /> Reels
           </Heading>
           <p className="text-ui-fg-subtle txt-small">
             Upload images/videos (reels-style) to the backend and manage them from here.
@@ -175,7 +175,7 @@ const ReelsPage = () => {
 
 export const config = defineRouteConfig({
   label: "Reels",
-  icon: Film,
+  icon: PlaySolid,
   rank: 46,
 })
 

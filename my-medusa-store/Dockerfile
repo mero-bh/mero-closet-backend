@@ -14,28 +14,11 @@ RUN yarn install --no-frozen-lockfile --network-timeout 100000
 # Copy the rest of the application
 COPY . .
 
-# Copy the locally built artifacts (Admin + Server)
-COPY .medusa .medusa
-
-# DEBUG: List files to verify they are copied correctly
-RUN ls -R .medusa/server/public/admin || echo "Admin folder not found!"
-
-# Build step skipped (artifacts are copied)
-# RUN yarn build
-
-# Ensure Admin files are everywhere Medusa might look
-COPY .medusa/server/public/admin /app/build/admin
-COPY .medusa/server/public/admin /app/public/admin
-COPY .medusa/server/public/admin /app/.medusa/admin
-
-# Verify explicitly that index.html exists in the primary location before continuing
-RUN ls -la .medusa/server/public/admin/index.html || echo "Primary index.html missing!"
-
-# Increase memory limit for runtime
-ENV NODE_OPTIONS="--max-old-space-size=460"
+# Build the application (Server + Admin) inside Docker
+RUN yarn build
 
 # Expose the correct port
 EXPOSE 9000
 
-# Start the application directly
+# Start the application
 CMD ["npx", "medusa", "start"]
