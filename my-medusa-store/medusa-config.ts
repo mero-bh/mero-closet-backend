@@ -13,17 +13,15 @@ module.exports = defineConfig({
       host,
       // @ts-ignore
       port,
-      storeCors: process.env.STORE_CORS || "http://localhost:8000,https://mero-closet.vercel.app,https://mero-closet-frontend-ui.vercel.app",
-      adminCors: process.env.ADMIN_CORS || "http://localhost:5173,http://localhost:9000,https://essential-clarey-merocloset-8214c1dd.koyeb.app",
-      authCors: process.env.AUTH_CORS || "http://localhost:5173,http://localhost:9000,https://mero-closet.vercel.app,https://mero-closet-frontend-ui.vercel.app,https://essential-clarey-merocloset-8214c1dd.koyeb.app",
+      storeCors: process.env.STORE_CORS || "http://localhost:8000,https://mero-closet.vercel.app",
+      adminCors: process.env.ADMIN_CORS || "http://localhost:5173,http://localhost:9000,https://mero-admin.koyeb.app",
+      authCors: process.env.AUTH_CORS || "http://localhost:5173,http://localhost:9000,https://mero-closet.vercel.app,https://mero-admin.koyeb.app",
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
   },
   admin: {
     disable: false,
-    // @ts-ignore
-    favicon: "./static/favicon.ico",
-    backendUrl: process.env.MEDUSA_BACKEND_URL || "https://essential-clarey-merocloset-8214c1dd.koyeb.app",
+    backendUrl: process.env.MEDUSA_BACKEND_URL || "https://mero-admin.koyeb.app",
   },
 })
