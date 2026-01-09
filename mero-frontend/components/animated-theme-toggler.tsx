@@ -35,9 +35,11 @@ export function AnimatedThemeToggler({ className }: { className?: string }) {
             if (newThemeIsDark) {
                 document.documentElement.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
+                document.cookie = "theme=dark; path=/; max-age=31536000";
             } else {
                 document.documentElement.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
+                document.cookie = "theme=light; path=/; max-age=31536000";
             }
         };
 
@@ -88,7 +90,7 @@ export function AnimatedThemeToggler({ className }: { className?: string }) {
             ref={buttonRef}
             onClick={toggleTheme}
             className={clsx(
-                'relative flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-black dark:hover:bg-neutral-900',
+                'relative flex h-10 cursor-pointer w-10 items-center justify-center rounded-full border border-neutral-200 bg-white transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-black dark:hover:bg-neutral-900',
                 className
             )}
             aria-label="Toggle theme"

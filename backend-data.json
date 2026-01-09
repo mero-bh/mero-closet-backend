@@ -1,0 +1,23 @@
+{
+  "categories": [
+    {
+      "id": "pcat_01KEBA7ZNR5FY9G3KXMA6WXTVA"
+    },
+    {
+      "id": "pcat_01KEBA7ZVNBAZTA6CXP6Q8S6DA"
+    },
+    {
+      "id": "pcat_01KEBA801HYF1K0PWYDJXNJCDW"
+    },
+    {
+      "id": "pcat_01KEBA807EW32GXVMBRV955CNT"
+    }
+  ],
+  "collections": [
+    {
+      "title": "New Collections",
+      "handle": "new-collections",
+      "id": "pcol_01KEBA918K3VCB41HEY3FYENGD"
+    }
+  ]
+}

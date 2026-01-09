@@ -18,7 +18,7 @@ export function WelcomeToast() {
           <>
             this is a abaya shop by Shopify, Next.js, and Vercel.{' '}
             <a
-              href="https://mero-closet-frontend-ui.vercel.app/New-Collections"
+              href="https://mero-closet.vercel.app/search/new-collections"
               className="text-blue-600 hover:underline"
               target="_blank"
             >

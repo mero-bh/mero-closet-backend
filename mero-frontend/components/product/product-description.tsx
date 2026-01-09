@@ -3,7 +3,6 @@ import Price from 'components/price';
 import Prose from 'components/prose';
 import { Product } from 'lib/shopify/types';
 import { VariantSelector } from './variant-selector';
-
 import SizeGuide from './size-guide';
 
 export function ProductDescription({ product }: { product: Product }) {
@@ -18,7 +17,9 @@ export function ProductDescription({ product }: { product: Product }) {
           />
         </div>
       </div>
-      <SizeGuide />
+      <div className="mb-6 flex flex-col transition-all duration-300 ease-in-out hover:translate-y-1 hover:text-background cursor-pointer bg-[#48484a]/20 rounded-full  pb-6 ">
+        <SizeGuide />
+      </div>
       <VariantSelector options={product.options} variants={product.variants} />
       {product.descriptionHtml ? (
         <Prose

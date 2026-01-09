@@ -6,8 +6,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(...inputs));
 }
 
-export const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://essential-clarey-merocloset-8214c1dd.koyeb.app`
+export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+  ? process.env.NEXT_PUBLIC_BASE_URL
   : 'http://localhost:3000';
 
 export const createUrl = (

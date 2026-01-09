@@ -10,8 +10,12 @@ import type { Cart, Collection, Menu, Money, Page, Product, ProductVariant } fro
 // For Mero Closet we use Medusa v2 Store API instead, while keeping the same exports
 // so the UI components keep working.
 
-const backendUrl = (process.env.MEDUSA_BACKEND_URL || 'https://essential-clarey-merocloset-8214c1dd.koyeb.app').replace(/\/$/, '');
-const publishableKey = process.env.MEDUSA_PUBLISHABLE_KEY || 'pk_448ea0ce3b5b682802ce8ba6bec567782e3a88a9eec38b5d3693ae4123ce2d31';
+let rawUrl = process.env.MEDUSA_BACKEND_URL || 'https://mero-admin.koyeb.app';
+if (rawUrl && !rawUrl.startsWith('http')) {
+  rawUrl = `https://${rawUrl}`;
+}
+const backendUrl = rawUrl.replace(/\/$/, '').replace(/\/app$/, '');
+const publishableKey = process.env.MEDUSA_PUBLISHABLE_KEY || 'pk_1748d34ba703ac8b319ad6a11be402c32b7bce5f2f0b7e7614cdc7fba82731bf';
 
 const storeBase = backendUrl ? `${backendUrl}/store` : '';
 
@@ -26,12 +30,8 @@ type MedusaFetchOptions = {
 async function medusaFetch<T>(path: string, opts: MedusaFetchOptions = {}): Promise<T> {
   if (!storeBase) {
     console.warn('MEDUSA_BACKEND_URL is not set, returning empty.');
-    // Return empty object/array cast as T to avoid crash
     return {} as T;
   }
-
-  // Skip key check if we are just testing connection or want to fail gracefully
-  // if (!publishableKey) { ... }
 
   const url = new URL(`${storeBase}${path.startsWith('/') ? path : `/${path}`}`);
   if (opts.query) {
@@ -49,6 +49,9 @@ async function medusaFetch<T>(path: string, opts: MedusaFetchOptions = {}): Prom
   }
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
     const res = await fetch(url.toString(), {
       method: opts.method || 'GET',
       headers: {
@@ -57,21 +60,44 @@ async function medusaFetch<T>(path: string, opts: MedusaFetchOptions = {}): Prom
         'x-publishable-api-key': publishableKey
       },
       body: opts.body ? JSON.stringify(opts.body) : undefined,
-      next: {
-        tags: opts.tags,
-        revalidate: opts.cacheSeconds
-      }
+      signal: controller.signal,
+      ...(opts.cacheSeconds === 0 || opts.method !== 'GET'
+        ? { cache: 'no-store' }
+        : {
+          next: {
+            tags: opts.tags,
+            revalidate: opts.cacheSeconds
+          }
+        })
     });
 
+    clearTimeout(timeoutId);
+
     if (!res.ok) {
-      // Log error but don't crash
-      console.error(`Medusa request failed (${res.status}) ${url.pathname}`);
-      // Return empty structure based on expected type (heuristic)
+      if (res.status !== 404) {
+        console.error(`Medusa request failed (${res.status}) ${url.pathname}`);
+      }
       return {} as T;
     }
 
     return (await res.json()) as T;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === 'AbortError') {
+      console.error(`Medusa request timed out: ${url.toString()}`);
+      return {} as T;
+    }
+
+    // IMPORTANT: Next.js 15 PPR and Streaming depend on specific errors
+    // being thrown to bail out of static generation. We MUST not catch them.
+    if (
+      error.digest === 'DYNAMIC_USAGE' ||
+      error.message?.includes('bail out of prerendering') ||
+      error.constructor?.name === 'DynamicServerError' ||
+      error.constructor?.name === 'NextDynamicUsageError'
+    ) {
+      throw error;
+    }
+
     console.error(`Network error reaching Medusa: ${error} (${url.toString()})`);
     return {} as T;
   }
@@ -81,7 +107,11 @@ async function medusaFetch<T>(path: string, opts: MedusaFetchOptions = {}): Prom
 // Region + currency
 // ----------------------
 
+let cachedRegion: { id: string; currency_code: string } | null = null;
+
 async function getDefaultRegion(): Promise<{ id: string; currency_code: string }> {
+  if (cachedRegion) return cachedRegion;
+
   try {
     const data = await medusaFetch<{ regions: any[] }>(`/regions`, {
       query: { limit: 50 },
@@ -101,10 +131,11 @@ async function getDefaultRegion(): Promise<{ id: string; currency_code: string }
       return { id: 'reg_dummy', currency_code: 'bhd' };
     }
 
-    return {
+    cachedRegion = {
       id: region.id,
       currency_code: (region.currency_code || 'bhd').toLowerCase()
     };
+    return cachedRegion;
   } catch (e) {
     return { id: 'reg_dummy', currency_code: 'bhd' };
   }
@@ -384,8 +415,9 @@ export async function getCart(): Promise<Cart | undefined> {
         fields: '*items,*items.variant,*items.variant.product,*items.variant.options,*items.variant.prices,total,subtotal,tax_total,currency_code'
       },
       tags: [TAGS.cart],
-      cacheSeconds: 5
+      cacheSeconds: 0
     });
+    if (!data.cart || !data.cart.id) return undefined;
     return mapCart(data.cart, region.currency_code);
   } catch {
     // Old/invalid cart id.
@@ -422,86 +454,169 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
       fields: 'id,handle,title,description,metadata,updated_at,*images,*variants,*variants.prices,*options'
     },
     tags: [TAGS.products],
-    cacheSeconds: 60
+    cacheSeconds: 3600 // Products don't change often, 1 hour cache is safe
   });
 
   const p = (data.products || [])[0];
   if (p) return mapProduct(p, region.currency_code);
 
-  // Fallback if the backend doesn't support filtering by handle in query.
-  const all = await getProducts({});
-  return all.find((x) => x.handle === handle);
+  // Fallback: If handle lookup fails, only fetch enough products to find the match, not 100
+  const fallbackData = await medusaFetch<{ products: any[] }>(`/products`, {
+    query: {
+      limit: 20, // Reasonable subset
+      fields: 'id,handle'
+    },
+    cacheSeconds: 60
+  });
+
+  const found = (fallbackData.products || []).find((x) => x.handle === handle);
+  if (found) {
+    // If found in fallback, fetch the full details for it specifically
+    return getProductById(found.id);
+  }
+
+  return undefined;
+}
+
+async function getProductById(id: string): Promise<Product | undefined> {
+  const region = await getDefaultRegion();
+  const data = await medusaFetch<{ product: any }>(`/products/${id}`, {
+    query: {
+      fields: 'id,handle,title,description,metadata,updated_at,*images,*variants,*variants.prices,*options'
+    },
+    tags: [TAGS.products],
+    cacheSeconds: 3600
+  });
+
+  if (data.product) return mapProduct(data.product, region.currency_code);
+  return undefined;
 }
 
 export async function getProductRecommendations(productId: string): Promise<Product[]> {
   // Medusa doesn't provide recommendations out of the box.
-  // Return a small curated list (exclude the current product).
-  const all = await getProducts({});
-  return all.filter((p) => p.id !== productId).slice(0, 8);
-}
-
-// Collections are implemented using the CSV metadata (type: abaya/look/set).
-export async function getCollections(): Promise<Collection[]> {
-  // Fetch high-level categories
-  const data = await medusaFetch<{ product_categories: any[] }>('/product-categories', {
+  // Optimization: Fetch only the latest 8 products instead of the entire catalog (100 products).
+  const region = await getDefaultRegion();
+  const data = await medusaFetch<{ products: any[] }>(`/products`, {
     query: {
-      parent_category_id: 'null', // Only root categories
-      include_descendants_tree: 'false',
-      limit: 20
+      limit: 10, // Fetch slightly more to filter out current product
+      fields: 'id,handle,title,description,metadata,updated_at,*images,*variants,*variants.prices,*options'
     },
-    tags: ['collections'],
+    tags: [TAGS.products],
     cacheSeconds: 3600
   });
 
-  const categories = data.product_categories || [];
-  const collections: Collection[] = [];
+  return (data.products || [])
+    .filter((p) => p.id !== productId)
+    .slice(0, 8)
+    .map((p) => mapProduct(p, region.currency_code));
+}
 
-  for (const c of categories) {
-    // Attempt to fetch one product to get a featured image for the category
-    const productsData = await medusaFetch<{ products: any[] }>('/products', {
-      query: {
-        limit: 1,
-        category_id: [c.id],
-        fields: '*images'
-      },
+// Collections are implemented using both Medusa Collections and root Categories.
+export async function getCollections(): Promise<Collection[]> {
+  // Fetch both Medusa Collections and root Categories
+  const [collData, catData] = await Promise.all([
+    medusaFetch<{ collections: any[] }>('/collections', {
+      query: { limit: 20 },
+      tags: ['collections'],
       cacheSeconds: 3600
-    });
+    }),
+    medusaFetch<{ product_categories: any[] }>('/product-categories', {
+      query: {
+        parent_category_id: 'null',
+        limit: 20
+      },
+      tags: ['collections'],
+      cacheSeconds: 3600
+    })
+  ]);
 
-    const product = productsData.products?.[0];
-    const imgUrl = product?.images?.[0]?.url || product?.thumbnail || '';
+  const rawCollections = collData.collections || [];
+  const rawCategories = catData.product_categories || [];
 
-    // Map to Collection type
-    // Next.js Image component needs valid URLs, ensure we have one or fallback
-    collections.push({
-      handle: c.handle,
-      title: c.name,
-      description: c.description || c.name,
-      seo: { title: c.name, description: c.description || c.name },
-      path: `/search/${c.handle}`,
-      updatedAt: c.updated_at,
-      image: imgUrl ? {
-        url: imgUrl,
-        altText: c.name,
-        width: 800,
-        height: 600
-      } : undefined
-    } as any);
+  // Merge them (preferring Collections if there's a handle collision)
+  const merged = [...rawCollections];
+  for (const cat of rawCategories) {
+    if (!merged.find((m) => m.handle === cat.handle)) {
+      merged.push({ ...cat, title: cat.name }); // Categories use 'name', Collections use 'title'
+    }
   }
+
+  // Fetch all featured images in parallel for better performance
+  const collections: Collection[] = await Promise.all(merged.map(async (c) => {
+    const title = c.title || c.name;
+    try {
+      const productsData = await medusaFetch<{ products: any[] }>('/products', {
+        query: {
+          limit: 1,
+          [c.name ? 'category_id' : 'collection_id']: [c.id],
+          fields: '*images'
+        },
+        cacheSeconds: 3600
+      });
+
+      const product = productsData.products?.[0];
+      const imgUrl = product?.images?.[0]?.url || product?.thumbnail || '';
+
+      return {
+        handle: c.handle,
+        title: title,
+        description: c.description || title,
+        seo: { title: title, description: c.description || title },
+        path: `/search/${c.handle}`,
+        updatedAt: c.updated_at,
+        image: imgUrl
+          ? {
+            url: imgUrl,
+            altText: title,
+            width: 800,
+            height: 600
+          }
+          : undefined
+      } as any;
+    } catch (e) {
+      // If one fails, return collection without image
+      return {
+        handle: c.handle,
+        title: title,
+        path: `/search/${c.handle}`,
+        updatedAt: c.updated_at
+      } as any;
+    }
+  }));
 
   return collections;
 }
 
 export async function getCollection(handle: string): Promise<Collection | undefined> {
-  const data = await medusaFetch<{ product_categories: any[] }>('/product-categories', {
+  // Try collection first
+  const collData = await medusaFetch<{ collections: any[] }>('/collections', {
     query: { handle },
     tags: ['collections'],
     cacheSeconds: 3600
   });
 
-  const c = data.product_categories?.[0];
+  const coll = collData.collections?.[0];
+  if (coll) {
+    return {
+      handle: coll.handle,
+      title: coll.title,
+      description: coll.description || coll.title,
+      seo: { title: coll.title, description: coll.description || coll.title },
+      path: `/search/${coll.handle}`,
+      updatedAt: coll.updated_at
+    };
+  }
+
+  // Fallback to category
+  const catData = await medusaFetch<{ product_categories: any[] }>('/product-categories', {
+    query: { handle },
+    tags: ['collections'],
+    cacheSeconds: 3600
+  });
+
+  const c = catData.product_categories?.[0];
   if (!c) return undefined;
 
-  // We don't fetch image for single collection view usually, or we could if needed
   return {
     handle: c.handle,
     title: c.name,
@@ -523,26 +638,36 @@ export async function getCollectionProducts({
   sortKey?: string;
   query?: string;
 }): Promise<Product[]> {
-  // 1. Resolve collection handle to Category ID
-  const catData = await medusaFetch<{ product_categories: any[] }>('/product-categories', {
+  // 1. Try to find a Product Collection by handle
+  const collData = await medusaFetch<{ collections: any[] }>('/collections', {
     query: { handle: collection },
     cacheSeconds: 3600
   });
 
-  const categoryId = catData.product_categories?.[0]?.id;
+  const collectionId = collData.collections?.[0]?.id;
 
-  // 2. Fetch products
-  // Note: Medusa sort params might differ from Shopify's sortKey
+  // 2. If not found, try to find a Product Category by handle
+  let categoryId: string | undefined;
+  if (!collectionId) {
+    const catData = await medusaFetch<{ product_categories: any[] }>('/product-categories', {
+      query: { handle: collection },
+      cacheSeconds: 3600
+    });
+    categoryId = catData.product_categories?.[0]?.id;
+  }
+
+  // 3. Fetch products
   const region = await getDefaultRegion();
   const data = await medusaFetch<{ products: any[] }>(`/products`, {
     query: {
       limit: 100,
       q: query,
+      collection_id: collectionId ? [collectionId] : undefined,
       category_id: categoryId ? [categoryId] : undefined,
       fields: 'id,handle,title,description,metadata,updated_at,*images,*variants,*variants.prices,*options'
     },
     tags: [TAGS.products],
-    cacheSeconds: 60
+    cacheSeconds: 3600
   });
 
   return (data.products || []).map((p) => mapProduct(p, region.currency_code));
@@ -552,7 +677,7 @@ export async function getMenu(handle: string): Promise<Menu[]> {
   // Dynamic menu based on collections
   const collections = await getCollections();
 
-  const items: Menu[] = collections.map(c => ({
+  const items: Menu[] = collections.map((c) => ({
     title: c.title,
     path: c.path
   }));
@@ -571,7 +696,7 @@ export async function getMenu(handle: string): Promise<Menu[]> {
   return items;
 }
 
-// Simple static pages (so `/about` etc work without Shopify CMS)
+// Simple static pages
 const PAGES: Page[] = [
   {
     id: 'about',
@@ -597,7 +722,6 @@ const PAGES: Page[] = [
 
 export async function getPage(handle: string): Promise<Page> {
   const page = PAGES.find((p) => p.handle === handle);
-  // Match previous behavior: return null-ish if not found.
   return (page as any) || (null as any);
 }
 
@@ -605,10 +729,6 @@ export async function getPages(): Promise<Page[]> {
   return PAGES;
 }
 
-// Kept for compatibility with the template's webhook endpoint.
-// For Medusa, you can later wire webhooks to call this route with your own secret.
 export async function revalidate(_req: NextRequest): Promise<NextResponse> {
-  //  // revalidateTag(TAGS.collections);
-  // revalidateTag(TAGS.products);
   return (await import('next/server')).NextResponse.json({ status: 200, revalidated: true });
 }

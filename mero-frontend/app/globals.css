@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin "@tailwindcss/container-queries";
 @plugin "@tailwindcss/typography";
@@ -7,40 +7,63 @@
   :root {
     --background: #fff0e4;
     --foreground: #0e0e0e;
-    --accent: #6754b9;
+    --accent: #7365b4;
     --selection: rgba(67, 67, 67, 0.305);
-    --border-hover: #6352ad;
+    --border-hover: #7869b7;
     --muted: #5f5f5f3f;
   }
 
-.button {
-    @apply cursor-pointer;
-}
+  .button {
+    cursor: pointer !important;
+  }
 
-.a {
-    @apply cursor-pointer;
-}
+  .a {
+    cursor: pointer !important;
+  }
 
   .dark {
     --background: #0a0a0a;
     --foreground: #ffffff;
     --accent: hsl(301, 100%, 89%);
     --selection: rgba(255, 255, 255, 0.311);
-    --border-hover: #ffb5ec; 
+    --border-hover: #ffb5ec;
     --muted: #5f5f5f3f;
   }
 
-  
+  /* theme inline */
+  @theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-accent: var(--accent);
+    --color-selection: var(--selection);
+    --color-border-hover: var(--border-hover);
+    --color-muted: var(--muted);
 
-/* theme inline */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --color-selection: var(--selection);
-  --color-border-hover: var(--border-hover);
-  --color-muted: var(--muted);
-}
+    --animate-star-movement-bottom: star-movement-bottom linear infinite
+      alternate;
+    --animate-star-movement-top: star-movement-top linear infinite alternate;
+
+    @keyframes star-movement-bottom {
+      0% {
+        transform: translate(0%, 0%);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-100%, 0%);
+        opacity: 0;
+      }
+    }
+    @keyframes star-movement-top {
+      0% {
+        transform: translate(0%, 0%);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(100%, 0%);
+        opacity: 0;
+      }
+    }
+  }
   *,
   ::after,
   ::before,
@@ -51,7 +74,7 @@
 }
 
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {
-  img[loading='lazy'] {
+  img[loading="lazy"] {
     clip-path: inset(0.6px);
   }
 }
@@ -62,14 +85,15 @@ button {
   @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
 }
 
-
-
 /* Theme Toggle Animation styles */
 /* Theme Toggle Animation styles */
-::view-transition-group(root),
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-  z-index: 9999;
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

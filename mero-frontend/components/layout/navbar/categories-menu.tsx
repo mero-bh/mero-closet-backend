@@ -14,9 +14,11 @@ export default function CategoriesMenu({ menu }: { menu: MenuType[] }) {
         <div className="hidden md:block">
             <Menu as="div" className="relative inline-block text-left">
                 <div>
-                    <Menu.Button className="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-background bg-border-hover">
+                    <Menu.Button className="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-background cursor-pointer bg-border-hover transition-all duration-300 ease-in-out hover:translate-y-1 hover:text-background">
                         Categories
-                        <ChevronDownIcon className="-mr-1 mt-1 h-5 w-5 text-background/60" aria-hidden="true" />
+                        {/* make the ChevronDownIcon animated when the user make hover let the icon move down */}
+
+                        <ChevronDownIcon className="-mr-1 mt-1 h-5 w-5 text-background/60 transition-all duration-300 ease-in-out hover:translate-y-1 hover:text-background " aria-hidden="true" />
                     </Menu.Button>
                 </div>
 
