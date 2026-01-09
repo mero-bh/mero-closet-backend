@@ -24,5 +24,6 @@ module.exports = defineConfig({
     disable: false,
     // @ts-ignore
     favicon: "./static/favicon.ico",
+    backendUrl: process.env.MEDUSA_BACKEND_URL || "https://essential-clarey-merocloset-8214c1dd.koyeb.app",
   },
 })
