@@ -8,26 +8,30 @@ RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt
 # Copy package management files
 COPY package.json yarn.lock .yarnrc.yml* ./
 
-# Install dependencies
+# Install dependencies (including devDependencies for build)
 RUN yarn install --no-frozen-lockfile
 
-# Set environment variables for build and runtime
+# Define Build Arguments
+ARG MEDUSA_BACKEND_URL=https://mero-admin.koyeb.app
+ENV MEDUSA_BACKEND_URL=${MEDUSA_BACKEND_URL}
 ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Copy the rest of the application
 COPY . .
 
-# Build the application (In Medusa v2, this builds both the server and admin)
+# Explicitly build the admin and the backend
 RUN npx medusa build
 
-# Final check of the build output
+# CRITICAL: Verify the admin build is exactly where Medusa expects it
+# Default path for v2: .medusa/server/public/admin/index.html
 RUN if [ ! -f .medusa/server/public/admin/index.html ]; then \
-    echo "CRITICAL: Admin build failed - index.html not found!"; \
+    echo "ERROR: Admin build was not generated! Check your medusa-config.ts and dependencies."; \
+    ls -R .medusa || echo ".medusa folder not found"; \
     exit 1; \
     fi
 
-# Expose the correct port
+# Set runtime environment
 EXPOSE 9000
 
 # Start the server
