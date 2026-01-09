@@ -87,6 +87,7 @@ const UsersPage = () => {
                     <Table.Body>
                         {isLoading ? (
                             <Table.Row>
+                                {/* @ts-ignore */}
                                 <Table.Cell colSpan={8} className="text-center py-10 text-ui-fg-subtle">
                                     Loading users...
                                 </Table.Cell>
@@ -137,6 +138,7 @@ const UsersPage = () => {
                         ))}
                         {!isLoading && data?.users.length === 0 && (
                             <Table.Row>
+                                {/* @ts-ignore */}
                                 <Table.Cell colSpan={8} className="text-center py-10 text-ui-fg-subtle">
                                     No users found.
                                 </Table.Cell>

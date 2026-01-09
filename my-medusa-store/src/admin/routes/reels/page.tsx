@@ -114,7 +114,7 @@ const ReelsPage = () => {
           <div className="txt-small text-ui-fg-subtle">Scroll horizontally →</div>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
-          {(isLoading ? Array.from({ length: 6 }).map((_, i) => ({ name: `s-${i}`, type: "image" as const, url: "" })) : items)
+          {(isLoading ? Array.from({ length: 6 }).map((_, i) => ({ name: `s-${i}`, type: "image" as const, url: "", createdAt: "", size: 0 })) : items)
             .map((item) => (
               <div
                 key={item.name}
