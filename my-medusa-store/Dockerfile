@@ -18,13 +18,11 @@ ENV NODE_OPTIONS="--max-old-space-size=1024"
 COPY . .
 
 # Build the application
-# We use --admin-only if needed, but 'medusa build' should cover it.
 RUN yarn build
 
-# Ensure the admin build is in the correct location for Medusa v2
-# Medusa v2 usually looks in .medusa/admin, but some setups use different paths.
-# This ensures it's available where the server expects it.
-RUN ls -la .medusa/admin/index.html || (echo "Admin build failed to produce index.html" && exit 1)
+# In Medusa v2, the admin build is typically located in .medusa/server/public/admin
+# Let's verify and ensure it exists where the server expects it
+RUN ls -la .medusa/server/public/admin/index.html || (echo "Admin build files not found in .medusa/server/public/admin" && exit 1)
 
 # Expose the correct port
 EXPOSE 9000
