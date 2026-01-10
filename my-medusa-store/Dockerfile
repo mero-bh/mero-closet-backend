@@ -1,5 +1,6 @@
 FROM node:20-slim
 
+# Set working directory
 WORKDIR /app
 
 # Install system dependencies
