@@ -55,4 +55,4 @@ export const config = defineWidgetConfig({
 export default ProductWidget
 ```
 
-Learn more about translating admin extensions in the [Translate Admin Customizations](https://docs.medusajs.com/learn/fundamentals/admin/translations) documentation.
+- Learn more about translating admin extensions in the [Translate Admin Customizations](https://docs.medusajs.com/learn/fundamentals/admin/translations) documentation.
