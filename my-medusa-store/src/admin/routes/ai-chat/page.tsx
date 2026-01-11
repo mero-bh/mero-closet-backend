@@ -568,7 +568,7 @@ const AIChatPage = () => {
             <div
                 className={`${isSidebarOpen ? 'w-full md:w-72 absolute md:relative z-40 h-full' : 'w-0'} transition-all duration-300 border-r bg-ui-bg-base flex flex-col overflow-hidden shadow-2xl md:shadow-none`}
             >
-                <div className="p-4 border-b flex items-center justify-between bg-ui-bg-subtle/30">
+                <div className="p-4 py-8 border-b flex items-center justify-between bg-ui-bg-subtle/30">
                     <Heading level="h3" className="text-sm font-bold flex items-center gap-2">
                         <SidebarLeft /> History
                     </Heading>
