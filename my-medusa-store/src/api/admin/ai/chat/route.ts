@@ -36,12 +36,24 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
         const { aiTools, executeTool } = require("../../../../utils/ai-tools")
 
-        // Only use thinking on supported models to avoid crashes
-        const isThinkingModel = modelName.includes("thinking")
+        // Detect support for thinking (Model ID or explicit budget)
+        const isThinkingModel = modelName.includes("thinking") || (config.thinkingBudget && config.thinkingBudget > 0)
+
+        // Construct Tools
+        const tools: any[] = []
+        if (config.agentMode !== false) {
+            // @ts-ignore
+            tools.push({ functionDeclarations: aiTools[0].functionDeclarations })
+        }
+
+        // Add Google Search Grounding if enabled
+        if (config.searchEnabled) {
+            tools.push({ googleSearch: {} })
+        }
 
         const model = genAI.getGenerativeModel({
             model: modelName,
-            tools: config.agentMode !== false ? aiTools : undefined,
+            tools: tools.length > 0 ? tools : undefined,
             generationConfig: isThinkingModel ? {
                 // @ts-ignore - latest SDK supports thinkingConfig
                 thinkingConfig: {
@@ -54,6 +66,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
             - You are an expert in Medusa 2.0 (Medusa JS v2).
             - You manage products, prices, inventory, and dashboard settings using specialized tools.
             - You can process images to identify products and add them to the store.
+            - You have access to Google Search (Grounding) to find real-time info if enabled.
             
             ACTION GUIDELINES:
             1. If a user asks to perform a task (e.g., "Add this product", "Change price"), check your tools FIRST.
