@@ -67,17 +67,13 @@ const CodeBlock = ({ children, ...props }: any) => {
 }
 
 const models = [
-    { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro", description: "Stable • Higher quality", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-01-11" },
-    { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash", description: "Stable • Fast + good reasoning", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-11" },
-    { id: "gemini-2.5-flash-lite", name: "Gemini 2.5 Flash-Lite", description: "Stable • Cheapest/fastest", features: { vision: true, agent: true }, date: "2026-01-11" },
-    { id: "gemini-3-pro-preview", name: "Gemini 3.0 Pro", description: "The New Standard of Intelligence (Preview)", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-01-10" },
-    { id: "gemini-3-flash-preview", name: "Gemini 3.0 Flash", description: "Ultra-Fast & Reasoning (Preview)", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-10" },
-    { id: "gemini-2.5-pro-preview", name: "Gemini 2.5 Pro", description: "The New Standard of Intelligence (Preview)", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-01-10" },
-    { id: "gemini-2.5-flash-preview", name: "Gemini 2.5 Flash", description: "Ultra-Fast & Reasoning (Preview)", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-10" },
-    { id: "gemini-2.0-pro-exp-02-05", name: "Gemini 2.0 Pro", description: "Elite Intelligence & Coding", features: { vision: true, agent: true, imageGen: true }, date: "2025-02-05" },
-    { id: "gemini-2.0-flash-thinking-exp-01-21", name: "Gemini 2.0 Thinking", description: "Deep Reasoning (Specialist)", features: { vision: true, thoughts: true, agent: true }, date: "2025-01-21" },
-    { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash", description: "Legacy Fast Model", features: { vision: true, agent: true }, date: "2024-12-11" },
-].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    { id: "gemini-3-pro-preview", name: "Gemini 3.0 Pro", description: "The New Standard • Thinking Enabled", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-03-01" },
+    { id: "gemini-3-flash-preview", name: "Gemini 3.0 Flash", description: "Ultra-Fast • Thinking Enabled", features: { vision: true, agent: true, thoughts: true }, date: "2026-03-01" },
+    { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro", description: "Stable • Higher quality", features: { vision: true, agent: true, imageGen: true, thoughts: false }, date: "2026-01-11" },
+    { id: "gemini-2.5-flash-thinking", name: "Gemini 2.5 Flash Thinking", description: "Fast + Deep Reasoning", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-11" },
+    { id: "gemini-2.0-flash-thinking-exp-01-21", name: "Gemini 2.0 Flash Thinking", description: "Deep Reasoning (Specialist)", features: { vision: true, thoughts: true, agent: true }, date: "2025-01-21" },
+    { id: "gemini-2.0-pro-exp-02-05", name: "Gemini 2.0 Pro", description: "Elite Intelligence & Coding", features: { vision: true, agent: true, imageGen: true, thoughts: false }, date: "2025-02-05" },
+]
 
 const Reasoning = ({ content, loading }: { content: string, loading?: boolean }) => {
     const [isOpen, setIsOpen] = useState(false)
