@@ -30,4 +30,4 @@ export const config = defineWidgetConfig({
 export default ProductWidget
 ```
 
-- This inserts a widget with the text “Product Widget” at the end of a product’s details page.
+## This inserts a widget with the text “Product Widget” at the end of a product’s details page.
