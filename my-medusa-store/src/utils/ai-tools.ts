@@ -193,18 +193,29 @@ export const executeTool = async (name: string, args: any, container: any) => {
             const fulfillmentService = container.resolve(Modules.FULFILLMENT)
 
             // 1. Find Data (Shipping Profile, Sales Channel, Category)
-            const [shippingProfiles, salesChannels, categories] = await Promise.all([
+            // 1. Find Data (Shipping Profile, Sales Channel, Category)
+            // We search broadly to ensure we find *something*
+            let [shippingProfiles, salesChannels, categories] = await Promise.all([
                 fulfillmentService.listShippingProfiles({ name: "Default" }),
                 salesChannelService.listSalesChannels({ name: "Default" }),
                 productModuleService.listProductCategories({ name: category_name })
             ])
 
+            // Fallbacks: If no specific "Default" found, grab ANY
+            if (shippingProfiles.length === 0) {
+                shippingProfiles = await fulfillmentService.listShippingProfiles({ limit: 1 })
+            }
+
+            if (salesChannels.length === 0) {
+                salesChannels = await salesChannelService.listSalesChannels({ limit: 1 })
+            }
+
             const shippingProfileId = shippingProfiles[0]?.id
-            const salesChannelId = salesChannels[0]?.id || (await salesChannelService.listSalesChannels({}))[0]?.id
+            const salesChannelId = salesChannels[0]?.id
             const categoryId = categories[0]?.id
 
             if (!shippingProfileId) {
-                return { success: false, message: "Could not find a default shipping profile. Please create one first." }
+                return { success: false, message: "No shipping profiles found in store. Please create a Shipping Profile in Settings > Shipping." }
             }
 
             // 2. Run Workflow
