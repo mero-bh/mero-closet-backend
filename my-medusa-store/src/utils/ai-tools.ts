@@ -3,7 +3,7 @@ import {
     updateProductsWorkflow,
     deleteProductsWorkflow
 } from "@medusajs/medusa/core-flows"
-import { ProductStatus } from "@medusajs/framework/utils"
+import { ProductStatus, Modules, ContainerRegistrationKeys } from "@medusajs/framework/utils"
 
 export const aiTools = [
     {
@@ -80,9 +80,9 @@ export const executeTool = async (name: string, args: any, container: any) => {
 
     try {
         if (name === "get_store_info") {
-            const productModuleService = container.resolve("productModuleService")
-            const salesChannelService = container.resolve("salesChannelModuleService")
-            const regionService = container.resolve("regionModuleService")
+            const productModuleService = container.resolve(Modules.PRODUCT)
+            const salesChannelService = container.resolve(Modules.SALES_CHANNEL)
+            const regionService = container.resolve(Modules.REGION)
 
             const [categories, salesChannels, regions] = await Promise.all([
                 productModuleService.listProductCategories({}, { select: ["id", "name", "handle"] }),
@@ -101,7 +101,7 @@ export const executeTool = async (name: string, args: any, container: any) => {
 
         if (name === "list_products") {
             const { q = "" } = args
-            const productModuleService = container.resolve("productModuleService")
+            const productModuleService = container.resolve(Modules.PRODUCT)
             const [products] = await productModuleService.listAndCountProducts(
                 q ? { q } : {},
                 { select: ["id", "title", "handle", "status"], take: 5 }
@@ -112,9 +112,9 @@ export const executeTool = async (name: string, args: any, container: any) => {
         if (name === "create_product") {
             const { title, description, price, category_name = "Abayas" } = args
 
-            const productModuleService = container.resolve("productModuleService")
-            const salesChannelService = container.resolve("salesChannelModuleService")
-            const fulfillmentService = container.resolve("fulfillmentModuleService")
+            const productModuleService = container.resolve(Modules.PRODUCT)
+            const salesChannelService = container.resolve(Modules.SALES_CHANNEL)
+            const fulfillmentService = container.resolve(Modules.FULFILLMENT)
 
             // 1. Find Data (Shipping Profile, Sales Channel, Category)
             const [shippingProfiles, salesChannels, categories] = await Promise.all([
@@ -169,7 +169,7 @@ export const executeTool = async (name: string, args: any, container: any) => {
 
         if (name === "update_product_price") {
             const { handle, new_price } = args
-            const productModuleService = container.resolve("productModuleService")
+            const productModuleService = container.resolve(Modules.PRODUCT)
             const [product] = await productModuleService.listProducts({ handle }, { relations: ["variants"] })
 
             if (!product) {

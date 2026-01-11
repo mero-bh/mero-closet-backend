@@ -19,6 +19,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
             resolution?: string;
             searchEnabled?: boolean;
             thinkingBudget?: number;
+            agentMode?: boolean;
         }
     }
 
@@ -34,9 +35,17 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
         const { aiTools, executeTool } = require("../../../../utils/ai-tools")
 
+        const isThinkingModel = modelName.includes("thinking")
+
         const model = genAI.getGenerativeModel({
             model: modelName,
-            tools: aiTools,
+            tools: config.agentMode !== false ? aiTools : undefined,
+            generationConfig: isThinkingModel ? {
+                // @ts-ignore - latest SDK supports thinkingConfig
+                thinkingConfig: {
+                    includeThoughts: true,
+                }
+            } : {},
             systemInstruction: `You are Antigravity, a professional AI assistant and specialized Store Agent for the Mero Closet Medusa Dashboard.
             
             CORE COMPETENCIES:

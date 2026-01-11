@@ -1,8 +1,10 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { Heading, Button, toast, Text, Switch } from "@medusajs/ui"
-import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown, XMark } from "@medusajs/icons"
+import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown, XMark, Eye, CheckCircleSolid, RocketLaunch, ComputerDesktop } from "@medusajs/icons"
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { useState, useRef, useEffect } from "react"
+import * as SwitchPrimitives from "@radix-ui/react-switch"
+import { motion, AnimatePresence } from "framer-motion"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -64,14 +66,13 @@ const CodeBlock = ({ children, ...props }: any) => {
 }
 
 const models = [
-    { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash", description: "Fast and smart (Default)" },
-    { id: "gemini-2.0-pro-exp-02-05", name: "Gemini 2.0 Pro", description: "Advanced reasoning & intelligence" },
-    { id: "gemini-2.0-flash-lite-preview-02-05", name: "Gemini 2.0 Lite", description: "Lightweight and efficient" },
-    { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro", description: "Complex logic and long context" },
-    { id: "gemini-3-pro-placeholder", name: "Gemini 3 Pro", description: "Next-gen experimental model" },
-    { id: "gemini-2.5-preview-placeholder", name: "Gemini 2.5 Preview", description: "Experimental preview" },
-    { id: "gemini-2.5-pro-placeholder", name: "Gemini 2.5 Pro", description: "Experimental pro model" },
-]
+    { id: "gemini-2.0-pro-exp-02-05", name: "Gemini 2.0 Pro", description: "Elite Intelligence & Coding", features: { vision: true, agent: true, imageGen: true }, date: "2025-02-05" },
+    { id: "gemini-2.0-flash-thinking-exp-01-21", name: "Gemini 2.0 Thinking", description: "Deep Reasoning (Specialist)", features: { vision: true, thoughts: true, agent: true }, date: "2025-01-21" },
+    { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash", description: "Fast & Multi-modal (Default)", features: { vision: true, agent: true }, date: "2024-12-11" },
+    { id: "gemini-2.0-flash-lite-preview-02-05", name: "Gemini 2.0 Lite", description: "Lightweight Efficiency", features: { vision: true, agent: true }, date: "2025-01-29" },
+    { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro", description: "Stable Professional Model", features: { vision: true, agent: true }, date: "2024-05-14" },
+    { id: "gemini-1.5-flash", name: "Gemini 1.5 Flash", description: "Fast Stable Base", features: { vision: true, agent: true }, date: "2024-05-14" },
+].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
 const Reasoning = ({ content, loading }: { content: string, loading?: boolean }) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -173,6 +174,36 @@ const ToolInteraction = ({ interaction }: { interaction: { type: string, name: s
     )
 }
 
+const AnimatedSwitch = ({ checked, onCheckedChange, startIcon, endIcon, thumbIcon }: any) => {
+    return (
+        <SwitchPrimitives.Root
+            checked={checked}
+            onCheckedChange={onCheckedChange}
+            className="group relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ui-border-interactive data-[state=checked]:bg-ui-bg-interactive data-[state=unchecked]:bg-ui-bg-subtle shadow-inner"
+        >
+            <SwitchPrimitives.Thumb
+                asChild
+            >
+                <motion.span
+                    layout
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className="pointer-events-none flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-md ring-0 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0 z-10"
+                >
+                    {thumbIcon || (checked ? startIcon : endIcon)}
+                </motion.span>
+            </SwitchPrimitives.Thumb>
+            <div className="absolute inset-0 flex items-center justify-between px-1.5 pointer-events-none">
+                <div className={`transition-opacity duration-200 ${checked ? 'opacity-100' : 'opacity-0'}`}>
+                    {startIcon}
+                </div>
+                <div className={`transition-opacity duration-200 ${!checked ? 'opacity-100' : 'opacity-0'}`}>
+                    {endIcon}
+                </div>
+            </div>
+        </SwitchPrimitives.Root>
+    )
+}
+
 const AIChatPage = () => {
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
     const [input, setInput] = useState("")
@@ -190,9 +221,22 @@ const AIChatPage = () => {
     const [resolution, setResolution] = useState("1024x1024")
     const [searchEnabled, setSearchEnabled] = useState(false)
     const [thinkingBudget, setThinkingBudget] = useState(0)
+    const [agentEnabled, setAgentEnabled] = useState(true)
+    const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false)
+    const modelDropdownRef = useRef<HTMLDivElement>(null)
 
     const chatEndRef = useRef<HTMLDivElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modelDropdownRef.current && !modelDropdownRef.current.contains(event.target as Node)) {
+                setIsModelDropdownOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
 
     // --- Data Fetching ---
     const { data: sessionsData, refetch: refetchSessions } = useQuery({
@@ -282,7 +326,7 @@ const AIChatPage = () => {
                         prompt,
                         history,
                         images,
-                        config: { model, resolution, searchEnabled, thinkingBudget }
+                        config: { model, resolution, searchEnabled, thinkingBudget, agentMode: agentEnabled }
                     }),
                     signal: controller.signal
                 })
@@ -446,30 +490,79 @@ const AIChatPage = () => {
                     </div>
 
                     {activeSessionId && (
-                        <div className="flex items-center gap-x-4">
-                            <div className="flex items-center gap-x-1.5">
+                        <div className="flex items-center gap-x-5">
+                            {/* Agent Toggle */}
+                            <div className="flex items-center gap-x-3 bg-ui-bg-subtle/50 px-3 py-1.5 rounded-2xl border border-ui-border-base/50">
+                                <span className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${agentEnabled ? 'text-ui-fg-interactive' : 'text-ui-fg-muted'}`}>
+                                    {agentEnabled ? 'Agent Mode' : 'Normal Mode'}
+                                </span>
+                                <AnimatedSwitch
+                                    checked={agentEnabled}
+                                    onCheckedChange={setAgentEnabled}
+                                    startIcon={<RocketLaunch width={10} height={10} className="text-ui-fg-interactive" />}
+                                    endIcon={<ComputerDesktop width={10} height={10} className="text-ui-fg-muted" />}
+                                />
+                            </div>
+
+                            {/* Search Toggle */}
+                            <div className="flex items-center gap-x-2">
                                 <GlobeEuropeSolid className={`w-4 h-4 ${searchEnabled ? 'text-blue-500' : 'text-ui-fg-muted'}`} />
                                 <Switch checked={searchEnabled} onCheckedChange={setSearchEnabled} size="small" />
                             </div>
 
-                            <select
-                                value={model}
-                                onChange={(e) => setModel(e.target.value)}
-                                className="text-[11px] font-bold bg-ui-bg-subtle border rounded-lg px-2 py-1 outline-none appearance-none hover:bg-ui-bg-base-hover transition-colors pr-6 relative"
-                                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center' }}
-                            >
-                                {models.map((m) => (
-                                    <option key={m.id} value={m.id}>
-                                        {m.name}
-                                    </option>
-                                ))}
-                            </select>
+                            {/* Custom Model Dropdown */}
+                            <div className="relative" ref={modelDropdownRef}>
+                                <button
+                                    onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+                                    className="flex items-center gap-2 text-[11px] font-bold bg-ui-bg-subtle border border-ui-border-base rounded-xl px-3 py-1.5 hover:bg-ui-bg-base-hover transition-all shadow-sm min-w-[140px] justify-between"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                                        <span>{models.find(m => m.id === model)?.name || "Select Model"}</span>
+                                    </div>
+                                    <ChevronDown width={14} height={14} className={`transition-transform duration-200 ${isModelDropdownOpen ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                <AnimatePresence>
+                                    {isModelDropdownOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 4, scale: 1 }}
+                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            className="absolute top-full right-0 mt-2 w-64 bg-ui-bg-base border border-ui-border-base rounded-2xl shadow-2xl z-[100] overflow-hidden backdrop-blur-xl"
+                                        >
+                                            <div className="p-2 space-y-1">
+                                                {models.map((m) => (
+                                                    <div
+                                                        key={m.id}
+                                                        onClick={() => {
+                                                            setModel(m.id)
+                                                            setIsModelDropdownOpen(false)
+                                                        }}
+                                                        className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${model === m.id ? 'bg-ui-bg-interactive/10 border border-ui-border-interactive/20' : 'hover:bg-ui-bg-base-hover'}`}
+                                                    >
+                                                        <div className="flex flex-col gap-0.5">
+                                                            <div className="flex items-center gap-2">
+                                                                <span className={`text-[11px] font-bold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
+                                                                {m.features.vision && <span title="Has Vision"><Eye width={12} height={12} className="text-purple-500" /></span>}
+                                                                {m.features.imageGen && <span title="Can Generate Images"><Photo width={12} height={12} className="text-blue-500" /></span>}
+                                                            </div>
+                                                            <span className="text-[9px] text-ui-fg-muted leading-tight">{m.description}</span>
+                                                        </div>
+                                                        {model === m.id && <CheckCircleSolid width={14} height={14} className="text-ui-fg-interactive" />}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
 
                             <select
                                 value={resolution}
                                 onChange={(e) => setResolution(e.target.value)}
-                                className="text-[11px] font-bold bg-ui-bg-subtle border rounded-lg px-2 py-1 outline-none appearance-none pr-6"
-                                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center' }}
+                                className="text-[11px] font-bold bg-ui-bg-subtle border rounded-xl px-2 py-1.5 outline-none appearance-none pr-8 shadow-sm"
+                                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
                             >
                                 <option value="1024x1024">1024x1024</option>
                                 <option value="1024x1792">1024x1792</option>
