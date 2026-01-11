@@ -37,7 +37,10 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         const { aiTools, executeTool } = require("../../../../utils/ai-tools")
 
         // Detect support for thinking (Model ID or explicit budget)
-        const isThinkingModel = modelName.includes("thinking") || (config.thinkingBudget && config.thinkingBudget > 0)
+        const isThinkingModel = modelName.includes("thinking") ||
+            modelName.includes("gemini-3") ||
+            modelName.includes("gemini-2.0-pro") ||
+            (config.thinkingBudget && config.thinkingBudget > 0)
 
         // Construct Tools
         const tools: any[] = []

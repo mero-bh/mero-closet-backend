@@ -66,8 +66,8 @@ const CodeBlock = ({ children, ...props }: any) => {
 }
 
 const models = [
-    { id: "gemini-3.0-pro-exp-02-05", name: "Gemini 3.0 Pro", description: "The New Standard of Intelligence", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-02-05" },
-    { id: "gemini-3.0-flash-exp", name: "Gemini 3.0 Flash", description: "Ultra-Fast & Reasoning (Default)", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-30" },
+    { id: "gemini-3-pro-preview", name: "Gemini 3.0 Pro", description: "The New Standard of Intelligence (Preview)", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-01-10" },
+    { id: "gemini-3-flash-preview", name: "Gemini 3.0 Flash", description: "Ultra-Fast & Reasoning (Preview)", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-10" },
     { id: "gemini-2.0-pro-exp-02-05", name: "Gemini 2.0 Pro", description: "Elite Intelligence & Coding", features: { vision: true, agent: true, imageGen: true }, date: "2025-02-05" },
     { id: "gemini-2.0-flash-thinking-exp-01-21", name: "Gemini 2.0 Thinking", description: "Deep Reasoning (Specialist)", features: { vision: true, thoughts: true, agent: true }, date: "2025-01-21" },
     { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash", description: "Legacy Fast Model", features: { vision: true, agent: true }, date: "2024-12-11" },
@@ -561,17 +561,20 @@ const AIChatPage = () => {
                                                             }}
                                                             className={`flex items-start justify-between p-3 rounded-xl cursor-pointer transition-all ${model === m.id ? 'bg-ui-bg-interactive/10 border border-ui-border-interactive/20' : 'hover:bg-ui-bg-base-hover border border-transparent'}`}
                                                         >
-                                                            <div className="flex flex-col gap-1 pr-2">
-                                                                <div className="flex items-center gap-2 flex-wrap">
-                                                                    <span className={`text-xs md:text-sm font-semibold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
-                                                                    <div className="flex items-center gap-1.5 opacity-80">
-                                                                        {m.features.vision && <span title="Has Vision"><Eye width={12} height={12} className="text-purple-500" /></span>}
-                                                                        {m.features.imageGen && <span title="Can Generate Images"><Photo width={12} height={12} className="text-blue-500" /></span>}
+                                                            <div className="flex flex-col gap-1 pr-2 w-full">
+                                                                <div className="flex items-center justify-between w-full">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className={`text-sm font-semibold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
+                                                                        <div className="flex items-center gap-1">
+                                                                            {m.features.vision && <div title="Has Vision" className="text-purple-500 bg-purple-500/10 p-0.5 rounded"><Eye className="w-3.5 h-3.5" /></div>}
+                                                                            {m.features.imageGen && <div title="Can Generate Images" className="text-blue-500 bg-blue-500/10 p-0.5 rounded"><Photo className="w-3.5 h-3.5" /></div>}
+                                                                            {m.features.thoughts && <div title="Reasoning" className="text-amber-500 bg-amber-500/10 p-0.5 rounded"><SidebarLeft className="w-3.5 h-3.5" /></div>}
+                                                                        </div>
                                                                     </div>
+                                                                    {model === m.id && <CheckCircleSolid className="w-4 h-4 text-ui-fg-interactive shrink-0" />}
                                                                 </div>
-                                                                <span className="text-[10px] md:text-xs text-ui-fg-subtle leading-relaxed whitespace-normal">{m.description}</span>
+                                                                <span className="text-xs text-ui-fg-subtle leading-normal whitespace-normal w-[95%]">{m.description}</span>
                                                             </div>
-                                                            {model === m.id && <CheckCircleSolid width={16} height={16} className="text-ui-fg-interactive shrink-0 mt-1" />}
                                                         </div>
                                                     ))}
                                                 </div>
