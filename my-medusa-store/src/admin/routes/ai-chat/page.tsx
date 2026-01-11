@@ -51,7 +51,7 @@ const CodeBlock = ({ children, ...props }: any) => {
     return (
         <div className="group relative my-4 rounded-lg overflow-hidden border border-ui-border-base bg-ui-bg-subtle/50">
             <div className="flex items-center justify-between px-4 py-6 bg-ui-bg-base border-b border-ui-border-base">
-                <span className="text-[10px] font-mono font-semibold text-ui-fg-subtle uppercase">Code</span>
+                <span className="text-[10px]  font-semibold text-ui-fg-subtle uppercase">Code</span>
                 <button
                     onClick={handleCopy}
                     className="text-ui-fg-muted hover:text-ui-fg-interactive transition-colors text-[10px] font-medium flex items-center gap-1"
@@ -59,7 +59,7 @@ const CodeBlock = ({ children, ...props }: any) => {
                     {copied ? "Copied!" : "Copy"}
                 </button>
             </div>
-            <pre className="p-4 overflow-x-auto text-xs font-mono leading-relaxed bg-ui-bg-base/30">
+            <pre className="p-4 overflow-x-auto text-xs leading-relaxed bg-ui-bg-base/30">
                 <code {...props}>{children}</code>
             </pre>
         </div>
@@ -215,7 +215,7 @@ const ToolInteraction = ({
                                 Copy args
                             </button>
                         </div>
-                        <pre className="p-2 bg-ui-bg-base rounded-lg border text-[10px] font-mono leading-relaxed overflow-x-auto">
+                        <pre className="p-2 bg-ui-bg-base rounded-lg border text-[10px]  leading-relaxed overflow-x-auto">
                             {JSON.stringify(interaction.args, null, 2)}
                         </pre>
                     </div>
@@ -820,7 +820,7 @@ const AIChatPage = () => {
                                                             return !inline && match ? (
                                                                 <CodeBlock language={match[1]} value={String(children).replace(/\n$/, "")} />
                                                             ) : (
-                                                                <code className="bg-ui-bg-base/50 px-1.5 py-0.5 rounded text-ui-fg-interactive font-mono text-[11px]" {...props}>
+                                                                <code className="bg-ui-bg-base/50 px-1.5 py-0.5 rounded text-ui-fg-interactive  text-[11px]" {...props}>
                                                                     {children}
                                                                 </code>
                                                             )
