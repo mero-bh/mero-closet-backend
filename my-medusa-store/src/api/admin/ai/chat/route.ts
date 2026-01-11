@@ -97,7 +97,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
             history: chatParts,
             generationConfig: {
                 ...(config.thinkingBudget ? { thinkingConfig: { include_thoughts: true, total_thinking_budget_token_count: config.thinkingBudget } } : {})
-            }
+            } as any
         })
 
         const result = await chat.sendMessage(activeUserParts)
