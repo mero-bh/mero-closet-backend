@@ -1,5 +1,5 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { getPgPool } from "../../../../utils/pg"
+import { getPgPool } from "../../../../../utils/pg"
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     const { id } = req.params

@@ -1,8 +1,8 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
-import { Container, Heading, Button, toast, Input, Text } from "@medusajs/ui"
-import { ChatBubble, Trash, Plus, Send, SidebarLeft, PencilSquare } from "@medusajs/icons"
+import { Heading, Button, toast, Text } from "@medusajs/ui"
+import { ChatBubble, Trash, Plus, SidebarLeft } from "@medusajs/icons"
 import { useQuery, useMutation } from "@tanstack/react-query"
-import { useState, useRef, useEffect, useMemo } from "react"
+import { useState, useRef, useEffect } from "react"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -41,7 +41,7 @@ const AIChatPage = () => {
     })
 
     // Fetch Active Session Messages
-    const { data: activeSessionData, refetch: refetchMessages, isLoading: isLoadingMessages } = useQuery({
+    const { data: activeSessionData, refetch: refetchMessages } = useQuery({
         queryKey: ["ai_messages", activeSessionId],
         queryFn: async () => {
             if (!activeSessionId) return null
@@ -191,8 +191,8 @@ const AIChatPage = () => {
                                 <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div
                                         className={`max-w-[80%] rounded-2xl p-4 shadow-sm border ${m.role === 'user'
-                                                ? 'bg-ui-bg-interactive text-ui-fg-on-color border-transparent'
-                                                : 'bg-ui-bg-subtle border-ui-border-base'
+                                            ? 'bg-ui-bg-interactive text-ui-fg-on-color border-transparent'
+                                            : 'bg-ui-bg-subtle border-ui-border-base'
                                             }`}
                                     >
                                         <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -250,7 +250,7 @@ const AIChatPage = () => {
                                     disabled={!input.trim() || sendMessage.isPending}
                                     className="absolute right-2 bottom-2 p-2 rounded-xl bg-ui-bg-interactive text-white disabled:bg-ui-bg-disabled disabled:text-ui-fg-muted transition-all"
                                 >
-                                    <Send className="w-5 h-5" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                                 </button>
                             </div>
                         </div>
