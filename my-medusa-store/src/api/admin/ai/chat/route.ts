@@ -32,16 +32,12 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     try {
         const genAI = new GoogleGenerativeAI(apiKey)
 
-        // Tools
-        const tools: any[] = []
-        if (config.searchEnabled) {
-            tools.push({ googleSearch: {} })
-        }
+        const { aiTools, executeTool } = require("../../../../utils/ai-tools")
 
         const model = genAI.getGenerativeModel({
             model: modelName,
-            tools: tools.length > 0 ? tools : undefined,
-            systemInstruction: "You are Antigravity, a professional AI assistant integrated into the Mero Closet Medusa Dashboard. You are helpful, expert in coding and e-commerce. You can reason deeply and generate code or images when asked. Use Markdown for all formatting."
+            tools: aiTools,
+            systemInstruction: "You are Antigravity, a professional AI assistant and Agent integrated into the Mero Closet Medusa Dashboard. You are helpful and expert. You have the ability to manage the store by calling functions (tools). If a user asks to add a product or change something, use the appropriate tool. If you need more info (like price), ask the user. Use Markdown for all formatting."
         })
 
         const pool = getPgPool()
@@ -61,11 +57,11 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
         // Update session config
         await pool.query(`
-      UPDATE "ai_sessions" 
-      SET updated_at = NOW(), 
-          model = $2, 
-          resolution = $3, 
-          search_enabled = $4, 
+      UPDATE "ai_sessions"
+      SET updated_at = NOW(),
+          model = $2,
+          resolution = $3,
+          search_enabled = $4,
           thinking_budget = $5
       WHERE id = $1
     `, [
@@ -76,7 +72,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
             config.thinkingBudget || 0
         ])
 
-        // Generate AI Response
+        // Generate AI Response with tool handling
         const chatParts: any[] = history.map((m: any) => ({
             role: m.role === "user" ? "user" : "model",
             parts: [{ text: m.content.text || "" }]
@@ -100,11 +96,32 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
             } as any
         })
 
-        const result = await chat.sendMessage(activeUserParts)
-        const responseText = result.response.text()
+        let result = await chat.sendMessage(activeUserParts)
+        let responseText = ""
 
-        // Actually, thoughts are handled differently in the SDK. 
-        // Gemini 2.0 Flash thinking usually appears in separate parts.
+        // Tool Handling Loop
+        while (result.response.candidates?.[0]?.content?.parts?.some((p: any) => p.functionCall)) {
+            const toolResults: any[] = []
+            const parts = result.response.candidates[0].content.parts
+
+            for (const part of parts) {
+                if (part.functionCall) {
+                    const { name, args } = part.functionCall
+                    const toolResult = await executeTool(name, args, req.scope)
+                    toolResults.push({
+                        functionResponse: {
+                            name,
+                            response: toolResult
+                        }
+                    })
+                }
+            }
+
+            // Send tool results back to get the final text response
+            result = await chat.sendMessage(toolResults)
+        }
+
+        responseText = result.response.text()
 
         // Save AI Response
         const aiMsgResult = await pool.query(`
