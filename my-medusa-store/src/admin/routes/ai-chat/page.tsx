@@ -50,7 +50,7 @@ const CodeBlock = ({ children, ...props }: any) => {
 
     return (
         <div className="group relative my-4 rounded-lg overflow-hidden border border-ui-border-base bg-ui-bg-subtle/50">
-            <div className="flex items-center justify-between px-4 py-1.5 bg-ui-bg-base border-b border-ui-border-base">
+            <div className="flex items-center justify-between px-4 py-6 bg-ui-bg-base border-b border-ui-border-base">
                 <span className="text-[10px] font-mono font-semibold text-ui-fg-subtle uppercase">Code</span>
                 <button
                     onClick={handleCopy}
@@ -158,12 +158,12 @@ const ToolInteraction = ({
     }
 
     return (
-        <div className="mb-3 bg-ui-bg-subtle/30 py-8 rounded-xl border border-ui-border-base/40 overflow-hidden text-[11px]">
+        <div className="mb-3 bg-ui-bg-subtle/30 rounded-xl border border-ui-border-base/40 overflow-hidden text-[11px]">
             <div
                 className="flex items-center justify-between p-2.5 cursor-pointer hover:bg-ui-bg-base-hover transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <div className="flex items-center gap-2 font-semibold text-ui-fg-subtle uppercase tracking-wider">
+                <div className="flex items-center gap-2 py-6 font-semibold text-ui-fg-subtle uppercase tracking-wider">
                     <div className="w-6 h-6 rounded-lg bg-ui-bg-base border flex items-center justify-center shadow-sm">
                         {getIcon(interaction.name)}
                     </div>
