@@ -74,7 +74,7 @@ const models = [
     { id: "gemini-3-flash-preview", name: "Gemini 3.0 Flash", description: "Ultra-Fast & Reasoning (Preview)", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-10" },
     { id: "gemini-2.5-pro-preview", name: "Gemini 2.5 Pro", description: "The New Standard of Intelligence (Preview)", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-01-10" },
     { id: "gemini-2.5-flash-preview", name: "Gemini 2.5 Flash", description: "Ultra-Fast & Reasoning (Preview)", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-10" },
-    { id: "gemini-2.0-pro-exp-02-05", name: "Gemini 2.0 Pro", description: "Elite Intelligence & Coding", features: { vision: true, agent: true, imageGen: true }, date: "2025-02-05" }, 
+    { id: "gemini-2.0-pro-exp-02-05", name: "Gemini 2.0 Pro", description: "Elite Intelligence & Coding", features: { vision: true, agent: true, imageGen: true }, date: "2025-02-05" },
     { id: "gemini-2.0-flash-thinking-exp-01-21", name: "Gemini 2.0 Thinking", description: "Deep Reasoning (Specialist)", features: { vision: true, thoughts: true, agent: true }, date: "2025-01-21" },
     { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash", description: "Legacy Fast Model", features: { vision: true, agent: true }, date: "2024-12-11" },
 ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -548,7 +548,22 @@ const AIChatPage = () => {
     const messages = activeSessionData?.messages || []
 
     return (
-        <div className="flex h-[calc(100vh-80px)] overflow-hidden rounded-xl border bg-ui-bg-subtle shadow-sm m-[-24px] relative">
+        <div className="flex h-[calc(100vh-80px)] overflow-hidden rounded-xl border bg-ui-bg-subtle shadow-sm m-[-24px] relative google-sans-ai-chat">
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Google+Sans:opsz,wght,GRAD@17..18,451,56&family=Scheherazade+New:wght@400;500;600;700&display=swap');
+                
+                .google-sans-ai-chat {
+                    font-family: "Google Sans", sans-serif !important;
+                    font-optical-sizing: auto;
+                    font-weight: 451;
+                    font-style: normal;
+                    font-variation-settings: "GRAD" 56;
+                }
+                
+                .google-sans-ai-chat * {
+                    font-family: "Google Sans", sans-serif !important;
+                }
+            `}</style>
             {/* Sidebar */}
             <div
                 className={`${isSidebarOpen ? 'w-full md:w-72 absolute md:relative z-40 h-full' : 'w-0'} transition-all duration-300 border-r bg-ui-bg-base flex flex-col overflow-hidden shadow-2xl md:shadow-none`}
