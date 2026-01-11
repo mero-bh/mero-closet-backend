@@ -2,6 +2,7 @@ import { defineMiddlewares } from "@medusajs/framework/http"
 import multer from "multer"
 import fs from "fs"
 import path from "path"
+import express from "express"
 
 /**
  * Reels upload (video/images) middleware.
@@ -58,6 +59,10 @@ export default defineMiddlewares({
     {
       matcher: "/store/reels/upload",
       middlewares: [upload.single("file") as any],
+    },
+    {
+      matcher: "/admin/ai/chat",
+      middlewares: [express.json({ limit: "15mb" }) as any],
     },
   ],
 })
