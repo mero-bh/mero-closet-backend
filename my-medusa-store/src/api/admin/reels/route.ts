@@ -1,39 +1,21 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import fs from "fs"
-import path from "path"
-
-const reelsDir = path.join(process.cwd(), "static", "reels")
-
-function publicUrl(req: MedusaRequest, fileName: string) {
-  const host = req.headers.host
-  const proto = (req.headers["x-forwarded-proto"] as string) || "http"
-  // Medusa serves /static ... so we return an absolute URL for convenience.
-  return `${proto}://${host}/static/reels/${encodeURIComponent(fileName)}`
-}
+import { getPgPool } from "../../../utils/pg"
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   try {
-    fs.mkdirSync(reelsDir, { recursive: true })
-    const files = fs
-      .readdirSync(reelsDir)
-      .filter((f) => !f.startsWith("."))
-      .map((name) => {
-        const full = path.join(reelsDir, name)
-        const stat = fs.statSync(full)
-        const ext = path.extname(name).toLowerCase()
-        const type = [".mp4", ".webm", ".mov"].includes(ext) ? "video" : "image"
-        return {
-          name,
-          type,
-          size: stat.size,
-          createdAt: stat.birthtime?.toISOString?.() || stat.ctime.toISOString(),
-          url: publicUrl(req, name),
-        }
-      })
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+    const pool = getPgPool()
+    // We return everything to admin, or maybe just non-expired? 
+    // Let's return only non-expired to keep it clean, or everything if they want to manage it.
+    // User wants it to "stay" based on choice. So if it's expired, it shouldn't show.
+    const query = `
+      SELECT * FROM "reels" 
+      WHERE expires_at IS NULL OR expires_at > NOW()
+      ORDER BY created_at DESC
+    `
+    const result = await pool.query(query)
 
-    res.json({ items: files, count: files.length })
+    res.json({ items: result.rows, count: result.rowCount })
   } catch (error: any) {
-    res.status(500).json({ message: "Failed to list reels", error: error?.message })
+    res.status(500).json({ message: "Failed to fetch reels", error: error.message })
   }
 }
