@@ -4,22 +4,28 @@ import {
     deleteProductsWorkflow
 } from "@medusajs/medusa/core-flows"
 import { ProductStatus, Modules, ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { required } from "yargs"
 
 export const aiTools = [
     {
         functionDeclarations: [
             {
                 name: "create_product",
-                description: "Create a new product in the store. Useful when the user provides an image or description of a new item.",
+                description: "Create a new product. If description is missing, the agent should analyze the image first.",
                 parameters: {
                     type: "OBJECT",
                     properties: {
-                        title: { type: "STRING", description: "The name of the product" },
-                        description: { type: "STRING", description: "A detailed description of the product" },
-                        price: { type: "NUMBER", description: "The price of the product in BHD (Bahraini Dinar)" },
-                        category_name: { type: "STRING", description: "The category name (e.g., Abayas, Sets, etc.)" }
+                        title: { type: "STRING" },
+                        description: { type: "STRING" },
+                        price: { type: "NUMBER" },
+                        category_name: { type: "STRING" },
+                        images: {
+                            type: "ARRAY",
+                            description: "List of image URLs",
+                            items: { type: "STRING" }
+                        }
                     },
-                    required: ["title", "description", "price"]
+                    required: ["title", "price"]
                 }
             },
             {
@@ -49,53 +55,59 @@ export const aiTools = [
                     }
                 }
             },
-            required: ["id"]
+            {
+                name: "delete_product",
+                description: "Delete a product from the store by its ID.",
+                parameters: {
+                    type: "OBJECT",
+                    properties: {
+                        id: { type: "STRING", description: "The unique ID of the product" }
+                    },
+                    required: ["id"]
                 }
             },
-{
-    name: "create_product",
-        description: "Create a new product. If description is missing, the agent should analyze the image first.",
-            parameters: {
-        type: "OBJECT",
-            properties: {
-            title: { type: "STRING" },
-            description: { type: "STRING" },
-            price: { type: "NUMBER" },
-            category_name: { type: "STRING" },
-            images: {
-                type: "ARRAY",
-                    description: "List of image URLs",
-                        items: { type: "STRING" }
+            {
+                name: "update_product",
+                description: "Update a product. If description is missing, the agent should analyze the image first.",
+                parameters: {
+                    type: "OBJECT",
+                    properties: {
+                        title: { type: "STRING" },
+                        description: { type: "STRING" },
+                        price: { type: "NUMBER" },
+                        category_name: { type: "STRING" },
+                        images: {
+                            type: "ARRAY",
+                            description: "List of image URLs",
+                            items: { type: "STRING" }
+                        }
+                    },
+                    required: ["title", "price"]
+                }
+            },
+            {
+                name: "create_reel",
+                description: "Create a new Reel/Story from an image URL.",
+                parameters: {
+                    type: "OBJECT",
+                    properties: {
+                        caption: { type: "STRING" },
+                        url: { type: "STRING" }
+                    },
+                    required: ["url"]
+                }
+            },
+            {
+                name: "change_dashboard_language",
+                description: "Change the language of the admin dashboard.",
+                parameters: {
+                    type: "OBJECT",
+                    properties: {
+                        language_code: { type: "STRING", description: "The language code (e.g., 'ar' for Arabic, 'en' for English)" }
+                    },
+                    required: ["language_code"]
+                }
             }
-        },
-        required: ["title", "price"]
-    }
-},
-{
-    name: "create_reel",
-        description: "Create a new Reel/Story from an image URL.",
-            parameters: {
-        type: "OBJECT",
-            properties: {
-            caption: { type: "STRING" },
-            url: { type: "STRING" }
-        },
-        required: ["url"]
-    }
-},
-                }
-            },
-{
-    name: "change_dashboard_language",
-        description: "Change the language of the admin dashboard.",
-            parameters: {
-        type: "OBJECT",
-            properties: {
-            language_code: { type: "STRING", description: "The language code (e.g., 'ar' for Arabic, 'en' for English)" }
-        },
-        required: ["language_code"]
-    }
-}
         ]
     }
 ]
@@ -250,3 +262,4 @@ export const executeTool = async (name: string, args: any, container: any) => {
 
     return { success: false, message: "Unknown tool" }
 }
+
