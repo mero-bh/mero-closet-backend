@@ -73,17 +73,17 @@ const ReelsPage = () => {
 
   return (
     <Container className="divide-y p-0 overflow-hidden">
-      <div className="flex items-center justify-between px-6 py-4 bg-ui-bg-base">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-6 py-4 bg-ui-bg-base gap-4 md:gap-0">
         <div>
           <Heading level="h1" className="flex items-center gap-x-2">
             <PlaySolid /> Reels
           </Heading>
-          <p className="text-ui-fg-subtle txt-small">
+          <p className="text-ui-fg-subtle txt-small mt-1">
             Upload images/videos to Cloudinary and specify their visibility duration.
           </p>
         </div>
 
-        <div className="flex items-center gap-x-3">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <div className="flex items-center gap-x-2">
             <label className="txt-xsmall font-medium text-ui-fg-subtle">Duration:</label>
             <select
@@ -97,27 +97,29 @@ const ReelsPage = () => {
             </select>
           </div>
 
-          <Button variant="secondary" size="small" onClick={() => refetch()}>
-            {isFetching ? <ArrowPath className="animate-spin" /> : <ArrowPath />} Refresh
-          </Button>
+          <div className="flex gap-2 ml-auto md:ml-0">
+            <Button variant="secondary" size="small" onClick={() => refetch()}>
+              {isFetching ? <ArrowPath className="animate-spin" /> : <ArrowPath />} Refresh
+            </Button>
 
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*,video/*"
-            className="hidden"
-            onChange={(e) => {
-              const f = e.target.files?.[0]
-              if (f) upload(f)
-            }}
-          />
-          <Button
-            size="small"
-            isLoading={isUploading}
-            onClick={() => fileRef.current?.click()}
-          >
-            Upload
-          </Button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*,video/*"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0]
+                if (f) upload(f)
+              }}
+            />
+            <Button
+              size="small"
+              isLoading={isUploading}
+              onClick={() => fileRef.current?.click()}
+            >
+              Upload
+            </Button>
+          </div>
         </div>
       </div>
 

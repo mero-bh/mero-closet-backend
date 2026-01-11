@@ -67,9 +67,9 @@ const CodeBlock = ({ children, ...props }: any) => {
 
 const models = [
     { id: "gemini-2.0-pro-exp-02-05", name: "Gemini 2.0 Pro", description: "Elite Intelligence & Coding", features: { vision: true, agent: true, imageGen: true }, date: "2025-02-05" },
+    { id: "gemini-2.0-flash-lite-preview-02-05", name: "Gemini 2.0 Lite", description: "Lightweight Efficiency", features: { vision: true, agent: true }, date: "2025-02-05" },
     { id: "gemini-2.0-flash-thinking-exp-01-21", name: "Gemini 2.0 Thinking", description: "Deep Reasoning (Specialist)", features: { vision: true, thoughts: true, agent: true }, date: "2025-01-21" },
     { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash", description: "Fast & Multi-modal (Default)", features: { vision: true, agent: true }, date: "2024-12-11" },
-    { id: "gemini-2.0-flash-lite-preview-02-05", name: "Gemini 2.0 Lite", description: "Lightweight Efficiency", features: { vision: true, agent: true }, date: "2025-01-29" },
     { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro", description: "Stable Professional Model", features: { vision: true, agent: true }, date: "2024-05-14" },
     { id: "gemini-1.5-flash", name: "Gemini 1.5 Flash", description: "Fast Stable Base", features: { vision: true, agent: true }, date: "2024-05-14" },
 ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -229,13 +229,21 @@ const AIChatPage = () => {
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (modelDropdownRef.current && !modelDropdownRef.current.contains(event.target as Node)) {
-                setIsModelDropdownOpen(false)
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setIsSidebarOpen(false)
+            } else {
+                setIsSidebarOpen(true)
             }
         }
-        document.addEventListener("mousedown", handleClickOutside)
-        return () => document.removeEventListener("mousedown", handleClickOutside)
+
+        // Initial check
+        if (window.innerWidth < 768) {
+            setIsSidebarOpen(false)
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
     }, [])
 
     // --- Data Fetching ---
@@ -406,29 +414,39 @@ const AIChatPage = () => {
     const messages = activeSessionData?.messages || []
 
     return (
-        <div className="flex h-[calc(100vh-80px)] overflow-hidden rounded-xl border bg-ui-bg-subtle shadow-sm m-[-24px]">
+        <div className="flex h-[calc(100vh-80px)] overflow-hidden rounded-xl border bg-ui-bg-subtle shadow-sm m-[-24px] relative">
             {/* Sidebar */}
             <div
-                className={`${isSidebarOpen ? 'w-72' : 'w-0'} transition-all duration-300 border-r bg-ui-bg-base flex flex-col overflow-hidden`}
+                className={`${isSidebarOpen ? 'w-full md:w-72 absolute md:relative z-40 h-full' : 'w-0'} transition-all duration-300 border-r bg-ui-bg-base flex flex-col overflow-hidden shadow-2xl md:shadow-none`}
             >
                 <div className="p-4 border-b flex items-center justify-between bg-ui-bg-subtle/30">
                     <Heading level="h3" className="text-sm font-bold flex items-center gap-2">
                         <SidebarLeft /> History
                     </Heading>
-                    <Button variant="transparent" size="small" onClick={() => createSession.mutate("New Chat")}>
-                        <Plus />
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button variant="transparent" size="small" onClick={() => setIsSidebarOpen(false)} className="md:hidden">
+                            <XMark />
+                        </Button>
+                        <Button variant="transparent" size="small" onClick={() => createSession.mutate("New Chat")}>
+                            <Plus />
+                        </Button>
+                    </div>
                 </div>
+                {/* ... existing sidebar content ... */}
                 <div className="flex-1 overflow-y-auto p-3 space-y-1 bg-ui-bg-base">
                     {sessions.map((s) => (
                         <div
                             key={s.id}
-                            onClick={() => setActiveSessionId(s.id)}
+                            onClick={() => {
+                                setActiveSessionId(s.id)
+                                if (window.innerWidth < 768) setIsSidebarOpen(false)
+                            }}
                             className={`group flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${activeSessionId === s.id
                                 ? "bg-ui-bg-interactive text-ui-fg-on-color shadow-md shadow-ui-bg-interactive/20"
                                 : "hover:bg-ui-bg-base-hover text-ui-fg-base"
                                 }`}
                         >
+                            {/* ... existing session item content ... */}
                             <div className="flex items-center gap-3 overflow-hidden">
                                 <ChatBubble className={`shrink-0 ${activeSessionId === s.id ? "text-white/80" : "text-ui-fg-muted"}`} />
                                 <div className="flex flex-col truncate">
@@ -440,7 +458,7 @@ const AIChatPage = () => {
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation()
@@ -470,31 +488,33 @@ const AIChatPage = () => {
             </div>
 
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col bg-ui-bg-base relative">
+            <div className="flex-1 flex flex-col bg-ui-bg-base relative w-full">
                 {/* Header with Selective Logic */}
-                <div className="h-16 border-b flex items-center justify-between px-6 bg-ui-bg-base/80 backdrop-blur-xl z-20 sticky top-0">
-                    <div className="flex items-center gap-4">
-                        <Button variant="transparent" onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2">
-                            <SidebarLeft />
-                        </Button>
-                        <div>
-                            <Heading level="h2" className="text-base font-bold text-ui-fg-base">
-                                {activeSessionData?.session?.title || "Antigravity AI"}
-                            </Heading>
-                            {activeSessionId && (
-                                <div className="flex items-center gap-x-3 mt-0.5">
-                                    <span className="text-[10px] font-bold text-ui-fg-subtle uppercase px-1.5 py-0.5 bg-ui-bg-subtle rounded">{model}</span>
-                                </div>
-                            )}
+                <div className="min-h-16 md:h-16 border-b flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-6 py-2 md:py-0 bg-ui-bg-base/80 backdrop-blur-xl z-50 sticky top-0 gap-y-2">
+                    <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+                        <div className="flex items-center gap-4">
+                            <Button variant="transparent" onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2">
+                                <SidebarLeft />
+                            </Button>
+                            <div>
+                                <Heading level="h2" className="text-sm md:text-base font-bold text-ui-fg-base truncate max-w-[150px] md:max-w-xs">
+                                    {activeSessionData?.session?.title || "Antigravity AI"}
+                                </Heading>
+                                {activeSessionId && (
+                                    <div className="flex items-center gap-x-3 mt-0.5">
+                                        <span className="text-[10px] font-bold text-ui-fg-subtle uppercase px-1.5 py-0.5 bg-ui-bg-subtle rounded">{model}</span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
                     {activeSessionId && (
-                        <div className="flex items-center gap-x-5">
+                        <div className="flex flex-wrap items-center gap-2 md:gap-x-5 w-full md:w-auto justify-between md:justify-end">
                             {/* Agent Toggle */}
-                            <div className="flex items-center gap-x-3 bg-ui-bg-subtle/50 px-3 py-1.5 rounded-2xl border border-ui-border-base/50">
-                                <span className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${agentEnabled ? 'text-ui-fg-interactive' : 'text-ui-fg-muted'}`}>
-                                    {agentEnabled ? 'Agent Mode' : 'Normal Mode'}
+                            <div className="flex items-center gap-x-2 md:gap-x-3 bg-ui-bg-subtle/50 px-2 md:px-3 py-1.5 rounded-2xl border border-ui-border-base/50">
+                                <span className={`text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-colors ${agentEnabled ? 'text-ui-fg-interactive' : 'text-ui-fg-muted'}`}>
+                                    {agentEnabled ? 'Agent' : 'Normal'}
                                 </span>
                                 <AnimatedSwitch
                                     checked={agentEnabled}
@@ -510,69 +530,71 @@ const AIChatPage = () => {
                                 <Switch checked={searchEnabled} onCheckedChange={setSearchEnabled} size="small" />
                             </div>
 
-                            {/* Custom Model Dropdown */}
-                            <div className="relative" ref={modelDropdownRef}>
-                                <button
-                                    onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
-                                    className="flex items-center gap-2 text-[11px] font-bold bg-ui-bg-subtle border border-ui-border-base rounded-xl px-3 py-1.5 hover:bg-ui-bg-base-hover transition-all shadow-sm min-w-[140px] justify-between"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                                        <span>{models.find(m => m.id === model)?.name || "Select Model"}</span>
-                                    </div>
-                                    <ChevronDown width={14} height={14} className={`transition-transform duration-200 ${isModelDropdownOpen ? 'rotate-180' : ''}`} />
-                                </button>
+                            <div className="flex gap-2">
+                                {/* Custom Model Dropdown */}
+                                <div className="relative" ref={modelDropdownRef}>
+                                    <button
+                                        onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+                                        className="flex items-center gap-2 text-[11px] font-bold bg-ui-bg-subtle border border-ui-border-base rounded-xl px-3 py-1.5 hover:bg-ui-bg-base-hover transition-all shadow-sm min-w-[120px] md:min-w-[140px] justify-between"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                                            <span className="truncate max-w-[80px] md:max-w-none">{models.find(m => m.id === model)?.name || "Select"}</span>
+                                        </div>
+                                        <ChevronDown width={14} height={14} className={`transition-transform duration-200 ${isModelDropdownOpen ? 'rotate-180' : ''}`} />
+                                    </button>
 
-                                <AnimatePresence>
-                                    {isModelDropdownOpen && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                            animate={{ opacity: 1, y: 4, scale: 1 }}
-                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                            className="absolute top-full right-0 mt-2 w-64 bg-ui-bg-base border border-ui-border-base rounded-2xl shadow-2xl z-[100] overflow-hidden backdrop-blur-xl"
-                                        >
-                                            <div className="p-2 space-y-1">
-                                                {models.map((m) => (
-                                                    <div
-                                                        key={m.id}
-                                                        onClick={() => {
-                                                            setModel(m.id)
-                                                            setIsModelDropdownOpen(false)
-                                                        }}
-                                                        className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${model === m.id ? 'bg-ui-bg-interactive/10 border border-ui-border-interactive/20' : 'hover:bg-ui-bg-base-hover'}`}
-                                                    >
-                                                        <div className="flex flex-col gap-0.5">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className={`text-[11px] font-bold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
-                                                                {m.features.vision && <span title="Has Vision"><Eye width={12} height={12} className="text-purple-500" /></span>}
-                                                                {m.features.imageGen && <span title="Can Generate Images"><Photo width={12} height={12} className="text-blue-500" /></span>}
+                                    <AnimatePresence>
+                                        {isModelDropdownOpen && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 4, scale: 1 }}
+                                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                className="absolute top-full right-0 mt-2 w-64 bg-ui-bg-base border border-ui-border-base rounded-2xl shadow-2xl z-[100] overflow-hidden backdrop-blur-xl"
+                                            >
+                                                <div className="p-2 space-y-1">
+                                                    {models.map((m) => (
+                                                        <div
+                                                            key={m.id}
+                                                            onClick={() => {
+                                                                setModel(m.id)
+                                                                setIsModelDropdownOpen(false)
+                                                            }}
+                                                            className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${model === m.id ? 'bg-ui-bg-interactive/10 border border-ui-border-interactive/20' : 'hover:bg-ui-bg-base-hover'}`}
+                                                        >
+                                                            <div className="flex flex-col gap-0.5">
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className={`text-[11px] font-bold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
+                                                                    {m.features.vision && <span title="Has Vision"><Eye width={12} height={12} className="text-purple-500" /></span>}
+                                                                    {m.features.imageGen && <span title="Can Generate Images"><Photo width={12} height={12} className="text-blue-500" /></span>}
+                                                                </div>
+                                                                <span className="text-[9px] text-ui-fg-muted leading-tight">{m.description}</span>
                                                             </div>
-                                                            <span className="text-[9px] text-ui-fg-muted leading-tight">{m.description}</span>
+                                                            {model === m.id && <CheckCircleSolid width={14} height={14} className="text-ui-fg-interactive" />}
                                                         </div>
-                                                        {model === m.id && <CheckCircleSolid width={14} height={14} className="text-ui-fg-interactive" />}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </div>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
 
-                            <select
-                                value={resolution}
-                                onChange={(e) => setResolution(e.target.value)}
-                                className="text-[11px] font-bold bg-ui-bg-subtle border rounded-xl px-2 py-1.5 outline-none appearance-none pr-8 shadow-sm"
-                                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
-                            >
-                                <option value="1024x1024">1024x1024</option>
-                                <option value="1024x1792">1024x1792</option>
-                            </select>
+                                <select
+                                    value={resolution}
+                                    onChange={(e) => setResolution(e.target.value)}
+                                    className="hidden md:block text-[11px] font-bold bg-ui-bg-subtle border rounded-xl px-2 py-1.5 outline-none appearance-none pr-8 shadow-sm"
+                                    style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
+                                >
+                                    <option value="1024x1024">1024x1024</option>
+                                    <option value="1024x1792">1024x1792</option>
+                                </select>
+                            </div>
                         </div>
                     )}
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-ui-bg-base no-scrollbar">
+                <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 bg-ui-bg-base no-scrollbar">
                     {!activeSessionId ? (
                         <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
                             <div className="w-20 h-20 rounded-3xl bg-ui-bg-interactive/10 flex items-center justify-center rotate-12 shadow-inner">
@@ -590,7 +612,7 @@ const AIChatPage = () => {
                         <>
                             {messages.map((m) => (
                                 <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in duration-300`}>
-                                    <div className={`flex gap-4 max-w-[85%] ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                    <div className={`flex gap-4 max-w-[95%] md:max-w-[85%] ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-lg ${m.role === 'model' ? 'bg-ui-bg-interactive shadow-ui-bg-interactive/20' : 'bg-ui-bg-subtle border border-ui-border-base shadow-sm'}`}>
                                             <span className={`text-[10px] font-bold ${m.role === 'model' ? 'text-white' : 'text-ui-fg-base'}`}>
                                                 {m.role === 'model' ? 'AI' : 'U'}
@@ -598,11 +620,12 @@ const AIChatPage = () => {
                                         </div>
 
                                         <div
-                                            className={`rounded-3xl p-5 shadow-sm border ${m.role === 'user'
+                                            className={`rounded-3xl p-4 md:p-5 shadow-sm border ${m.role === 'user'
                                                 ? 'bg-ui-bg-interactive/10 border-ui-border-interactive/30'
                                                 : 'bg-ui-bg-subtle border-ui-border-base'
                                                 }`}
                                         >
+                                            {/* ... content ... */}
                                             {m.role === 'model' && m.content.thoughts && (
                                                 <Reasoning content={m.content.thoughts} loading={false} />
                                             )}
@@ -615,7 +638,7 @@ const AIChatPage = () => {
                                                 </div>
                                             )}
 
-                                            <div className={`prose prose-sm dark:prose-invert max-w-none ${m.role === 'user' ? 'text-ui-fg-base font-medium' : ''}`}>
+                                            <div className={`prose prose-sm dark:prose-invert max-w-none break-words ${m.role === 'user' ? 'text-ui-fg-base font-medium' : ''}`}>
                                                 <ReactMarkdown
                                                     remarkPlugins={[remarkGfm]}
                                                     components={{
@@ -690,9 +713,9 @@ const AIChatPage = () => {
 
                 {/* Input Area */}
                 {activeSessionId && (
-                    <div className="p-6 border-t bg-ui-bg-base/95 backdrop-blur-xl z-30">
+                    <div className="p-3 md:p-6 border-t bg-ui-bg-base/95 backdrop-blur-xl z-30">
                         <div className="mx-auto max-w-5xl">
-
+                            {/* ... existing code ... */}
                             {/* Attachment Previews */}
                             {pendingImages.length > 0 && (
                                 <div className="flex gap-3 mb-4 p-2 bg-ui-bg-subtle/50 rounded-2xl border border-ui-border-base overflow-x-auto no-scrollbar">
@@ -722,7 +745,8 @@ const AIChatPage = () => {
                                 </div>
                             )}
 
-                            <div className="relative flex items-end gap-3 bg-ui-bg-field border-2 border-transparent focus-within:border-ui-bg-interactive transition-all rounded-[28px] p-2 pr-4 shadow-xl shadow-ui-bg-interactive/5">
+                            <div className="relative flex items-end gap-2 md:gap-3 bg-ui-bg-field border-2 border-transparent focus-within:border-ui-bg-interactive transition-all rounded-[28px] p-2 pr-2 md:pr-4 shadow-xl shadow-ui-bg-interactive/5">
+                                {/* ... existing code ... */}
                                 <input
                                     type="file"
                                     ref={fileInputRef}
