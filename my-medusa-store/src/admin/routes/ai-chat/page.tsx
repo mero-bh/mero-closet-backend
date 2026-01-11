@@ -51,7 +51,7 @@ const CodeBlock = ({ children, ...props }: any) => {
     return (
         <div className="group relative my-4 rounded-lg overflow-hidden border border-ui-border-base bg-ui-bg-subtle/50">
             <div className="flex items-center justify-between px-4 py-1.5 bg-ui-bg-base border-b border-ui-border-base">
-                <span className="text-[10px] font-mono font-bold text-ui-fg-subtle uppercase">Code</span>
+                <span className="text-[10px] font-mono font-semibold text-ui-fg-subtle uppercase">Code</span>
                 <button
                     onClick={handleCopy}
                     className="text-ui-fg-muted hover:text-ui-fg-interactive transition-colors text-[10px] font-medium flex items-center gap-1"
@@ -152,18 +152,18 @@ const ToolInteraction = ({
 
     const getIcon = (name: string) => {
         if (name === "create_product") return <Plus width={14} height={14} className="text-green-500" />
-        if (name === "update_product_price") return <span className="text-blue-500 font-bold">$</span>
+        if (name === "update_product_price") return <span className="text-blue-500 font-semibold">$</span>
         if (name === "change_dashboard_language") return <GlobeEuropeSolid width={14} height={14} className="text-purple-500" />
         return <GlobeEuropeSolid width={14} height={14} />
     }
 
     return (
-        <div className="mb-3 bg-ui-bg-subtle/30 rounded-xl border border-ui-border-base/40 overflow-hidden text-[11px]">
+        <div className="mb-3 bg-ui-bg-subtle/30 py-8 rounded-xl border border-ui-border-base/40 overflow-hidden text-[11px]">
             <div
                 className="flex items-center justify-between p-2.5 cursor-pointer hover:bg-ui-bg-base-hover transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <div className="flex items-center gap-2 font-bold text-ui-fg-subtle uppercase tracking-wider">
+                <div className="flex items-center gap-2 font-semibold text-ui-fg-subtle uppercase tracking-wider">
                     <div className="w-6 h-6 rounded-lg bg-ui-bg-base border flex items-center justify-center shadow-sm">
                         {getIcon(interaction.name)}
                     </div>
@@ -177,7 +177,7 @@ const ToolInteraction = ({
                                 onConfirm(callId)
                             }}
                             disabled={isConfirming}
-                            className={`px-2 py-1 rounded-full font-bold text-[10px] transition-colors ${isConfirming ? 'bg-ui-bg-subtle text-ui-fg-muted cursor-not-allowed' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'}`}
+                            className={`px-2 py-1 rounded-full font-semibold text-[10px] transition-colors ${isConfirming ? 'bg-ui-bg-subtle text-ui-fg-muted cursor-not-allowed' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'}`}
                             title="Execute this action"
                         >
                             {isConfirming ? 'Confirming...' : 'Confirm'}
@@ -185,7 +185,7 @@ const ToolInteraction = ({
                     )}
 
                     <span
-                        className={`px-2 py-0.5 rounded-full font-bold ${requiresConfirmation
+                        className={`px-2 py-0.5 rounded-full font-semibold ${requiresConfirmation
                             ? 'bg-amber-100 text-amber-800'
                             : isExecuted
                                 ? 'bg-green-100 text-green-700'
@@ -203,14 +203,14 @@ const ToolInteraction = ({
             {isOpen && (
                 <div className="p-3 pt-0 border-t border-ui-border-base/20 space-y-3">
                     <div className="space-y-1">
-                        <div className="text-[9px] font-bold text-ui-fg-muted uppercase opacity-50">Arguments</div>
+                        <div className="text-[9px] font-semibold text-ui-fg-muted uppercase opacity-50">Arguments</div>
                         <div className="flex gap-2">
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     copy(JSON.stringify(interaction.args, null, 2))
                                 }}
-                                className="text-[10px] font-bold px-2 py-1 rounded-lg bg-ui-bg-base hover:bg-ui-bg-base-hover border transition-colors"
+                                className="text-[10px] font-semibold px-2 py-1 rounded-lg bg-ui-bg-base hover:bg-ui-bg-base-hover border transition-colors"
                             >
                                 Copy args
                             </button>
@@ -221,14 +221,14 @@ const ToolInteraction = ({
                     </div>
                     {interaction.result && (
                         <div className="space-y-1">
-                            <div className="text-[9px] font-bold text-ui-fg-muted uppercase opacity-50">Output</div>
+                            <div className="text-[9px] font-semibold text-ui-fg-muted uppercase opacity-50">Output</div>
                             <div className="flex gap-2">
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         copy(JSON.stringify(interaction.result, null, 2))
                                     }}
-                                    className="text-[10px] font-bold px-2 py-1 rounded-lg bg-ui-bg-base hover:bg-ui-bg-base-hover border transition-colors"
+                                    className="text-[10px] font-semibold px-2 py-1 rounded-lg bg-ui-bg-base hover:bg-ui-bg-base-hover border transition-colors"
                                 >
                                     Copy output
                                 </button>
@@ -569,7 +569,7 @@ const AIChatPage = () => {
                 className={`${isSidebarOpen ? 'w-full md:w-72 absolute md:relative z-40 h-full' : 'w-0'} transition-all duration-300 border-r bg-ui-bg-base flex flex-col overflow-hidden shadow-2xl md:shadow-none`}
             >
                 <div className="p-4 py-8 border-b flex items-center justify-between bg-ui-bg-subtle/30">
-                    <Heading level="h3" className="text-sm font-bold flex items-center gap-2">
+                    <Heading level="h3" className="text-sm font-semibold flex items-center gap-2">
                         <SidebarLeft /> History
                     </Heading>
                     <div className="flex gap-2">
@@ -599,7 +599,7 @@ const AIChatPage = () => {
                             <div className="flex items-center gap-3 overflow-hidden">
                                 <ChatBubble className={`shrink-0 ${activeSessionId === s.id ? "text-white/80" : "text-ui-fg-muted"}`} />
                                 <div className="flex flex-col truncate">
-                                    <span className="text-[11px] font-bold leading-none truncate mb-1">
+                                    <span className="text-[11px] font-semibold leading-none truncate mb-1">
                                         {s.title || "New Chat"}
                                     </span>
                                     <span className={`text-[9px] ${activeSessionId === s.id ? "text-white/60" : "text-ui-fg-muted"}`}>
@@ -646,12 +646,12 @@ const AIChatPage = () => {
                                 <SidebarLeft />
                             </Button>
                             <div>
-                                <Heading level="h2" className="text-sm md:text-base font-bold text-ui-fg-base truncate max-w-[150px] md:max-w-xs">
+                                <Heading level="h2" className="text-sm md:text-base font-semibold text-ui-fg-base truncate max-w-[150px] md:max-w-xs">
                                     {activeSessionData?.session?.title || "Antigravity AI"}
                                 </Heading>
                                 {activeSessionId && (
                                     <div className="flex items-center gap-x-3 mt-0.5">
-                                        <span className="text-[10px] font-bold text-ui-fg-subtle uppercase px-1.5 py-0.5 bg-ui-bg-subtle rounded">{model}</span>
+                                        <span className="text-[10px] font-semibold text-ui-fg-subtle uppercase px-1.5 py-0.5 bg-ui-bg-subtle rounded">{model}</span>
                                     </div>
                                 )}
                             </div>
@@ -662,7 +662,7 @@ const AIChatPage = () => {
                         <div className="flex flex-wrap items-center gap-2 md:gap-x-5 w-full md:w-auto justify-between md:justify-end">
                             {/* Agent Toggle */}
                             <div className="flex items-center gap-x-2 md:gap-x-3 bg-ui-bg-subtle/50 px-2 md:px-3 py-1.5 rounded-2xl border border-ui-border-base/50">
-                                <span className={`text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-colors ${agentEnabled ? 'text-ui-fg-interactive' : 'text-ui-fg-muted'}`}>
+                                <span className={`text-[9px] md:text-[10px] font-semibold uppercase tracking-widest transition-colors ${agentEnabled ? 'text-ui-fg-interactive' : 'text-ui-fg-muted'}`}>
                                     {agentEnabled ? 'Agent' : 'Normal'}
                                 </span>
                                 <AnimatedSwitch
@@ -681,7 +681,7 @@ const AIChatPage = () => {
 
                             {/* Confirm Toggle */}
                             <div className="flex items-center gap-x-2">
-                                <span className={`text-[10px] font-bold uppercase tracking-widest ${confirmEnabled ? 'text-ui-fg-interactive' : 'text-ui-fg-muted'}`}>
+                                <span className={`text-[10px] font-semibold uppercase tracking-widest ${confirmEnabled ? 'text-ui-fg-interactive' : 'text-ui-fg-muted'}`}>
                                     Confirm
                                 </span>
                                 <Switch checked={confirmEnabled} onCheckedChange={setConfirmEnabled} size="small" />
@@ -722,7 +722,7 @@ const AIChatPage = () => {
                                                             <div className="flex flex-col gap-1 pr-2 w-full">
                                                                 <div className="flex items-center justify-between w-full">
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className={`text-sm font-semibold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
+                                                                        <span className={`text-sm font-semisemibold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
                                                                         <div className="flex items-center gap-1">
                                                                             {m.features.vision && <div title="Has Vision" className="text-purple-500 bg-purple-500/10 p-0.5 rounded"><Eye className="w-3.5 h-3.5" /></div>}
                                                                             {m.features.imageGen && <div title="Can Generate Images" className="text-blue-500 bg-blue-500/10 p-0.5 rounded"><Photo className="w-3.5 h-3.5" /></div>}
@@ -744,7 +744,7 @@ const AIChatPage = () => {
                                 <select
                                     value={resolution}
                                     onChange={(e) => setResolution(e.target.value)}
-                                    className="hidden md:block text-[11px] font-bold bg-ui-bg-subtle border rounded-xl px-2 py-1.5 outline-none appearance-none pr-8 shadow-sm"
+                                    className="hidden md:block text-[11px] font-semibold bg-ui-bg-subtle border rounded-xl px-2 py-1.5 outline-none appearance-none pr-8 shadow-sm"
                                     style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
                                 >
                                     <option value="1024x1024">1024x1024</option>
@@ -763,7 +763,7 @@ const AIChatPage = () => {
                                 <ChatBubble className="w-10 h-10 text-ui-bg-interactive" />
                             </div>
                             <div>
-                                <Heading level="h1" className="text-3xl font-extrabold tracking-tight">Antigravity AI</Heading>
+                                <Heading level="h1" className="text-3xl font-extrasemibold tracking-tight">Antigravity AI</Heading>
                                 <Text className="text-ui-fg-subtle mt-2 text-lg">Deep reasoning and image awareness built into your store.</Text>
                             </div>
                             <Button size="large" onClick={() => createSession.mutate("New Chat")} className="rounded-2xl px-8">
@@ -776,7 +776,7 @@ const AIChatPage = () => {
                                 <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in duration-300`}>
                                     <div className={`flex gap-4 max-w-[95%] md:max-w-[85%] ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-lg ${m.role === 'model' ? 'bg-ui-bg-interactive shadow-ui-bg-interactive/20' : 'bg-ui-bg-subtle border border-ui-border-base shadow-sm'}`}>
-                                            <span className={`text-[10px] font-bold ${m.role === 'model' ? 'text-white' : 'text-ui-fg-base'}`}>
+                                            <span className={`text-[10px] font-semibold ${m.role === 'model' ? 'text-white' : 'text-ui-fg-base'}`}>
                                                 {m.role === 'model' ? 'AI' : 'U'}
                                             </span>
                                         </div>
@@ -843,7 +843,7 @@ const AIChatPage = () => {
                                                 </ReactMarkdown>
                                             </div>
 
-                                            <div className={`text-[9px] font-bold uppercase tracking-wider mt-3 opacity-40 ${m.role === 'user' ? 'text-right' : ''}`}>
+                                            <div className={`text-[9px] font-semibold uppercase tracking-wider mt-3 opacity-40 ${m.role === 'user' ? 'text-right' : ''}`}>
                                                 {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                         </div>
@@ -856,7 +856,7 @@ const AIChatPage = () => {
                                 <div className="flex justify-start animate-in fade-in slide-in-from-left-4 duration-500">
                                     <div className="flex gap-4 max-w-[85%]">
                                         <div className="w-8 h-8 rounded-full bg-ui-bg-interactive flex items-center justify-center shrink-0 animate-pulse">
-                                            <span className="text-[10px] font-bold text-white">AI</span>
+                                            <span className="text-[10px] font-semibold text-white">AI</span>
                                         </div>
                                         <div className="bg-ui-bg-subtle border border-ui-border-base rounded-3xl p-5 shadow-sm min-w-[100px]">
                                             {sendMessage.isPending ? (
@@ -866,7 +866,7 @@ const AIChatPage = () => {
                                                         <div className="w-2 h-2 bg-ui-bg-interactive rounded-full animate-bounce [animation-delay:0.2s] [animation-duration:1s]" />
                                                         <div className="w-2 h-2 bg-ui-bg-interactive rounded-full animate-bounce [animation-delay:0.4s] [animation-duration:1s]" />
                                                     </div>
-                                                    <span className="text-[11px] font-bold text-ui-fg-subtle tracking-tight">Thinking...</span>
+                                                    <span className="text-[11px] font-semibold text-ui-fg-subtle tracking-tight">Thinking...</span>
                                                 </div>
                                             ) : (
                                                 <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -963,7 +963,7 @@ const AIChatPage = () => {
                                         title="Stop generating"
                                     >
                                         <div className="w-2 h-2 bg-ui-fg-error rounded-sm animate-pulse" />
-                                        <span className="text-[10px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">Stop</span>
+                                        <span className="text-[10px] font-semibold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">Stop</span>
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                                         </svg>
@@ -985,7 +985,7 @@ const AIChatPage = () => {
                                 <div className="flex gap-4">
                                     <div className="flex items-center gap-1.5 opacity-60">
                                         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                        <span className="text-[10px] font-bold text-ui-fg-subtle">Ready</span>
+                                        <span className="text-[10px] font-semibold text-ui-fg-subtle">Ready</span>
                                     </div>
                                 </div>
                                 <Text size="xsmall" className="text-ui-fg-subtle font-medium italic opacity-60">
