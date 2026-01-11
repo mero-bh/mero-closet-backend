@@ -20,4 +20,21 @@ module.exports = defineConfig({
     path: "/app",
     backendUrl: process.env.MEDUSA_BACKEND_URL || adminUrl,
   },
+  modules: [
+    {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            resolve: "medusa-payment-stripe",
+            id: "stripe",
+            options: {
+              apiKey: process.env.STRIPE_API_KEY,
+              webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+            },
+          },
+        ],
+      },
+    },
+  ],
 })
