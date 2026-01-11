@@ -1,4 +1,5 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
+import { useNavigate } from "react-router-dom"
 import { Heading, Button, toast, Text, Switch } from "@medusajs/ui"
 import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown, XMark, Eye, CheckCircleSolid, RocketLaunch, ComputerDesktop } from "@medusajs/icons"
 import { useQuery, useMutation } from "@tanstack/react-query"
@@ -204,6 +205,7 @@ const AnimatedSwitch = ({ checked, onCheckedChange, startIcon, endIcon, thumbIco
 }
 
 const AIChatPage = () => {
+    const navigate = useNavigate()
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
     const [input, setInput] = useState("")
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -408,6 +410,25 @@ const AIChatPage = () => {
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [activeSessionData?.messages, sendMessage.isPending, animatedText])
+
+    // Auto-Navigation Effect
+    useEffect(() => {
+        if (!activeSessionData?.messages) return
+        const lastMsg = activeSessionData.messages[activeSessionData.messages.length - 1]
+
+        // Only act on fresh messages (this is a simple check, could be more robust with message IDs tracking)
+        if (lastMsg?.role === "model" && lastMsg.content.interactions) {
+            for (const interaction of lastMsg.content.interactions) {
+                if (interaction.result?.action === "NAVIGATE" && interaction.result.path) {
+                    // Prevent infinite loops or re-runs if already there? 
+                    // For now, we trust the user interaction flow.
+                    toast.dismiss("nav-toast")
+                    toast.info(`Navigating to ${interaction.result.path}...`, { id: "nav-toast" })
+                    navigate(interaction.result.path)
+                }
+            }
+        }
+    }, [activeSessionData?.messages, navigate])
 
     const sessions = sessionsData?.sessions || []
     const messages = activeSessionData?.messages || []
