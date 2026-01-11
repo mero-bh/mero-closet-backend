@@ -4,7 +4,7 @@ import { Heading } from "@medusajs/ui"
 const LoginHeader = () => {
     return (
         <div className="flex flex-col items-center justify-center p-4 mb-4">
-            <Heading level="h1" className="text-2xl font-bold text-ui-fg-base text-center uppercase tracking-widest">
+            <Heading level="h1" className="text-2xl font-350 text-ui-fg-subtle text-center uppercase tracking-widest">
                 MERO CLOSET DASHBOARD
             </Heading>
         </div>
