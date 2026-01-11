@@ -534,11 +534,11 @@ const AIChatPage = () => {
                                 <div className="relative" ref={modelDropdownRef}>
                                     <button
                                         onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
-                                        className="flex items-center gap-2 text-[11px] font-bold bg-ui-bg-subtle border border-ui-border-base rounded-xl px-3 py-1.5 hover:bg-ui-bg-base-hover transition-all shadow-sm min-w-[120px] md:min-w-[140px] justify-between"
+                                        className="flex items-center gap-2 text-[11px] md:text-sm font-sans font-medium bg-ui-bg-subtle border border-ui-border-base rounded-xl px-3 py-2 hover:bg-ui-bg-base-hover transition-all shadow-sm min-w-[120px] md:min-w-[160px] justify-between"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                                            <span className="truncate max-w-[80px] md:max-w-none">{models.find(m => m.id === model)?.name || "Select"}</span>
+                                            <span className="truncate max-w-[90px] md:max-w-[120px]">{models.find(m => m.id === model)?.name || "Select"}</span>
                                         </div>
                                         <ChevronDown width={14} height={14} className={`transition-transform duration-200 ${isModelDropdownOpen ? 'rotate-180' : ''}`} />
                                     </button>
@@ -549,7 +549,7 @@ const AIChatPage = () => {
                                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                                 animate={{ opacity: 1, y: 4, scale: 1 }}
                                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                className="absolute top-full right-0 mt-2 w-64 bg-ui-bg-base border border-ui-border-base rounded-2xl shadow-2xl z-[100] overflow-hidden backdrop-blur-xl"
+                                                className="absolute top-full right-0 mt-2 w-[85vw] max-w-[320px] md:w-80 bg-ui-bg-base border border-ui-border-base rounded-2xl shadow-2xl z-[100] overflow-hidden backdrop-blur-xl font-sans"
                                             >
                                                 <div className="p-2 space-y-1">
                                                     {models.map((m) => (
@@ -559,17 +559,19 @@ const AIChatPage = () => {
                                                                 setModel(m.id)
                                                                 setIsModelDropdownOpen(false)
                                                             }}
-                                                            className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${model === m.id ? 'bg-ui-bg-interactive/10 border border-ui-border-interactive/20' : 'hover:bg-ui-bg-base-hover'}`}
+                                                            className={`flex items-start justify-between p-3 rounded-xl cursor-pointer transition-all ${model === m.id ? 'bg-ui-bg-interactive/10 border border-ui-border-interactive/20' : 'hover:bg-ui-bg-base-hover border border-transparent'}`}
                                                         >
-                                                            <div className="flex flex-col gap-0.5">
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className={`text-[11px] font-bold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
-                                                                    {m.features.vision && <span title="Has Vision"><Eye width={12} height={12} className="text-purple-500" /></span>}
-                                                                    {m.features.imageGen && <span title="Can Generate Images"><Photo width={12} height={12} className="text-blue-500" /></span>}
+                                                            <div className="flex flex-col gap-1 pr-2">
+                                                                <div className="flex items-center gap-2 flex-wrap">
+                                                                    <span className={`text-xs md:text-sm font-semibold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
+                                                                    <div className="flex items-center gap-1.5 opacity-80">
+                                                                        {m.features.vision && <span title="Has Vision"><Eye width={12} height={12} className="text-purple-500" /></span>}
+                                                                        {m.features.imageGen && <span title="Can Generate Images"><Photo width={12} height={12} className="text-blue-500" /></span>}
+                                                                    </div>
                                                                 </div>
-                                                                <span className="text-[9px] text-ui-fg-muted leading-tight">{m.description}</span>
+                                                                <span className="text-[10px] md:text-xs text-ui-fg-subtle leading-relaxed whitespace-normal">{m.description}</span>
                                                             </div>
-                                                            {model === m.id && <CheckCircleSolid width={14} height={14} className="text-ui-fg-interactive" />}
+                                                            {model === m.id && <CheckCircleSolid width={16} height={16} className="text-ui-fg-interactive shrink-0 mt-1" />}
                                                         </div>
                                                     ))}
                                                 </div>
