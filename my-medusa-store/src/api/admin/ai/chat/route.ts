@@ -37,46 +37,39 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         const model = genAI.getGenerativeModel({
             model: modelName,
             tools: aiTools,
-            systemInstruction: "You are Antigravity, a professional AI assistant and Agent integrated into the Mero Closet Medusa Dashboard. You are helpful and expert. You have the ability to manage the store by calling functions (tools). If a user asks to add a product or change something, use the appropriate tool. If you need more info (like price), ask the user. Use Markdown for all formatting."
+            systemInstruction: `You are Antigravity, a professional AI assistant and specialized Store Agent for the Mero Closet Medusa Dashboard.
+            
+            CORE COMPETENCIES:
+            - You are an expert in Medusa 2.0 (Medusa JS v2).
+            - You manage products, prices, inventory, and dashboard settings using specialized tools.
+            - You can process images to identify products and add them to the store.
+            
+            ACTION GUIDELINES:
+            1. If a user asks to perform a task (e.g., "Add this product", "Change price"), check your tools FIRST.
+            2. If you have a tool for the task, USE IT immediately. Do not just say you will do it; EXECUTE the tool.
+            3. If information is missing (like price if not in image/text), ask the user.
+            4. Once a tool is executed, summarize the result to the user.
+            
+            Use Markdown for all formatting. Be concise but extremely helpful.`
         })
 
         const pool = getPgPool()
 
-        // Save User Message (with images if any)
-        const userMessageContent = {
-            type: "text",
-            text: prompt,
-            images: images.length > 0 ? images.map(img => ({ mimeType: img.mimeType, data: img.data.slice(0, 100) + "..." })) : undefined // Only log thumbnail for DB
-        }
-
-        // Save to DB
-        await pool.query(`
-      INSERT INTO "ai_messages" (session_id, role, content)
-      VALUES ($1, $2, $3)
-    `, [sessionId, "user", JSON.stringify(userMessageContent)])
-
-        // Update session config
-        await pool.query(`
-      UPDATE "ai_sessions"
-      SET updated_at = NOW(),
-          model = $2,
-          resolution = $3,
-          search_enabled = $4,
-          thinking_budget = $5
-      WHERE id = $1
-    `, [
-            sessionId,
-            modelName,
-            config.resolution || "1024x1024",
-            config.searchEnabled || false,
-            config.thinkingBudget || 0
-        ])
-
         // Generate AI Response with tool handling
-        const chatParts: any[] = history.map((m: any) => ({
-            role: m.role === "user" ? "user" : "model",
-            parts: [{ text: m.content.text || "" }]
-        }))
+        const chatParts: any[] = history.map((m: any) => {
+            const parts: any[] = []
+            if (m.content.text) parts.push({ text: m.content.text })
+            if (m.content.interactions) {
+                m.content.interactions.forEach((inter: any) => {
+                    parts.push({ functionCall: { name: inter.name, args: inter.args } })
+                    parts.push({ functionResponse: { name: inter.name, response: inter.result } })
+                })
+            }
+            return {
+                role: m.role === "user" ? "user" : "model",
+                parts
+            }
+        })
 
         const activeUserParts: any[] = []
         images.forEach(img => {
@@ -89,6 +82,12 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         })
         activeUserParts.push({ text: prompt })
 
+        // Save User Message
+        await pool.query(`
+          INSERT INTO "ai_messages" (session_id, role, content)
+          VALUES ($1, $2, $3)
+        `, [sessionId, "user", JSON.stringify({ type: "text", text: prompt, has_images: images.length > 0 })])
+
         const chat = model.startChat({
             history: chatParts,
             generationConfig: {
@@ -99,6 +98,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         let result = await chat.sendMessage(activeUserParts)
         let responseText = ""
         let thoughts = ""
+        let toolInteractions: any[] = []
 
         // Extract thoughts if any (Gemini 2.0 Flash Thinking)
         const extractThoughts = (response: any) => {
@@ -129,6 +129,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
                             response: toolResult
                         }
                     })
+                    toolInteractions.push({ type: "call", name, args, result: toolResult })
                 }
             }
 
@@ -139,12 +140,17 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
         responseText = result.response.text()
 
-        // Save AI Response
+        // Save AI Response with interactions
         const aiMsgResult = await pool.query(`
-      INSERT INTO "ai_messages" (session_id, role, content)
-      VALUES ($1, $2, $3)
-      RETURNING *
-    `, [sessionId, "model", JSON.stringify({ type: "text", text: responseText, thoughts: thoughts || undefined })])
+          INSERT INTO "ai_messages" (session_id, role, content)
+          VALUES ($1, $2, $3)
+          RETURNING *
+        `, [sessionId, "model", JSON.stringify({
+            type: "text",
+            text: responseText,
+            thoughts: thoughts || undefined,
+            interactions: toolInteractions.length > 0 ? toolInteractions : undefined
+        })])
 
         res.json(aiMsgResult.rows[0])
     } catch (error: any) {
@@ -152,4 +158,3 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         res.status(500).json({ message: "AI response failed", error: error.message })
     }
 }
-```

@@ -1,8 +1,8 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
-import { Heading, Button, toast, Text, Switch, Label } from "@medusajs/ui"
-import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown } from "@medusajs/icons"
+import { Heading, Button, toast, Text, Switch } from "@medusajs/ui"
+import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown, XMark } from "@medusajs/icons"
 import { useQuery, useMutation } from "@tanstack/react-query"
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect } from "react"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -16,6 +16,8 @@ type Message = {
         text?: string
         url?: string
         images?: { mimeType: string, data: string }[]
+        thoughts?: string
+        interactions?: { type: string, name: string, args: any, result: any }[]
     }
     created_at: string
 }
@@ -117,6 +119,60 @@ const Reasoning = ({ content, loading }: { content: string, loading?: boolean })
     )
 }
 
+const ToolInteraction = ({ interaction }: { interaction: { type: string, name: string, args: any, result: any } }) => {
+    const [isOpen, setIsOpen] = useState(false)
+
+    const getIcon = (name: string) => {
+        if (name === "create_product") return <Plus width={14} height={14} className="text-green-500" />
+        if (name === "update_product_price") return <span className="text-blue-500 font-bold">$</span>
+        if (name === "change_dashboard_language") return <GlobeEuropeSolid width={14} height={14} className="text-purple-500" />
+        return <GlobeEuropeSolid width={14} height={14} />
+    }
+
+    return (
+        <div className="mb-3 bg-ui-bg-subtle/30 rounded-xl border border-ui-border-base/40 overflow-hidden text-[11px]">
+            <div
+                className="flex items-center justify-between p-2.5 cursor-pointer hover:bg-ui-bg-base-hover transition-colors"
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <div className="flex items-center gap-2 font-bold text-ui-fg-subtle uppercase tracking-wider">
+                    <div className="w-6 h-6 rounded-lg bg-ui-bg-base border flex items-center justify-center shadow-sm">
+                        {getIcon(interaction.name)}
+                    </div>
+                    <span>{interaction.name.replace(/_/g, ' ')}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={`px-2 py-0.5 rounded-full font-bold ${interaction.result?.success !== false ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {interaction.result?.success !== false ? 'Executed' : 'Failed'}
+                    </span>
+                    <div className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}>
+                        <ChevronDown width={14} height={14} />
+                    </div>
+                </div>
+            </div>
+
+            {isOpen && (
+                <div className="p-3 pt-0 border-t border-ui-border-base/20 space-y-3">
+                    <div className="space-y-1">
+                        <div className="text-[9px] font-bold text-ui-fg-muted uppercase opacity-50">Arguments</div>
+                        <pre className="p-2 bg-ui-bg-base rounded-lg border text-[10px] font-mono leading-relaxed overflow-x-auto">
+                            {JSON.stringify(interaction.args, null, 2)}
+                        </pre>
+                    </div>
+                    {interaction.result && (
+                        <div className="space-y-1">
+                            <div className="text-[9px] font-bold text-ui-fg-muted uppercase opacity-50">Output</div>
+                            <div className="p-2 bg-ui-bg-base rounded-lg border text-ui-fg-subtle leading-normal">
+                                {interaction.result.message || JSON.stringify(interaction.result)}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    )
+}
+
 const AIChatPage = () => {
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
     const [input, setInput] = useState("")
@@ -139,7 +195,7 @@ const AIChatPage = () => {
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     // --- Data Fetching ---
-    const { data: sessionsData, refetch: refetchSessions, isLoading: isLoadingSessions } = useQuery({
+    const { data: sessionsData, refetch: refetchSessions } = useQuery({
         queryKey: ["ai_sessions"],
         queryFn: async () => {
             const res = await fetch("/admin/ai/sessions")
@@ -458,6 +514,14 @@ const AIChatPage = () => {
                                                 <Reasoning content={m.content.thoughts} loading={false} />
                                             )}
 
+                                            {m.role === 'model' && m.content.interactions && (
+                                                <div className="mb-4 space-y-2">
+                                                    {m.content.interactions.map((interaction: any, idx: number) => (
+                                                        <ToolInteraction key={idx} interaction={interaction} />
+                                                    ))}
+                                                </div>
+                                            )}
+
                                             <div className={`prose prose-sm dark:prose-invert max-w-none ${m.role === 'user' ? 'text-ui-fg-base font-medium' : ''}`}>
                                                 <ReactMarkdown
                                                     remarkPlugins={[remarkGfm]}
@@ -642,6 +706,55 @@ const AIChatPage = () => {
                     </div>
                 )}
             </div>
+
+            {/* Image Preview Modal */}
+            {showImageModal && modalImageSrc && (
+                <div
+                    className="fixed inset-0 z-[999] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm transition-all animate-in fade-in duration-200"
+                    onClick={() => setShowImageModal(false)}
+                >
+                    <div className="relative max-w-[90vw] max-h-[90vh] bg-ui-bg-base rounded-2xl overflow-hidden shadow-2xl scale-in-center">
+                        <img src={modalImageSrc} className="max-w-full max-h-[85vh] object-contain" />
+                        <div className="p-4 border-t bg-ui-bg-subtle flex justify-between items-center">
+                            <span className="text-xs text-ui-fg-muted font-medium">Image Preview</span>
+                            <Button size="small" variant="secondary" onClick={() => setShowImageModal(false)}>Close</Button>
+                        </div>
+                        <button className="absolute top-4 right-4 text-white hover:text-gray-300 drop-shadow-lg">
+                            <XMark width={24} height={24} />
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Session Edit Modal */}
+            {editingSessionId && (
+                <div className="fixed inset-0 z-[999] bg-black/50 flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div className="bg-ui-bg-base rounded-2xl p-6 w-full max-w-md shadow-2xl border border-ui-border-base transition-all scale-in-center">
+                        <Heading level="h2" className="text-lg mb-4">Edit Chat Title</Heading>
+                        <input
+                            type="text"
+                            value={editTitle}
+                            onChange={(e) => setEditTitle(e.target.value)}
+                            className="w-full bg-ui-bg-subtle border rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-ui-border-interactive outline-none mb-6"
+                            placeholder="New title..."
+                            autoFocus
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    updateSessionTitle.mutate({ id: editingSessionId, title: editTitle })
+                                    setEditingSessionId(null)
+                                }
+                            }}
+                        />
+                        <div className="flex justify-end gap-3">
+                            <Button variant="secondary" onClick={() => setEditingSessionId(null)}>Cancel</Button>
+                            <Button variant="primary" onClick={() => {
+                                updateSessionTitle.mutate({ id: editingSessionId, title: editTitle })
+                                setEditingSessionId(null)
+                            }}>Save Changes</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
