@@ -49,28 +49,53 @@ export const aiTools = [
                     }
                 }
             },
-            {
-                name: "delete_product",
-                description: "Delete a product from the store by its ID.",
-                parameters: {
-                    type: "OBJECT",
-                    properties: {
-                        id: { type: "STRING", description: "The unique ID of the product" }
-                    },
-                    required: ["id"]
+            required: ["id"]
                 }
             },
-            {
-                name: "change_dashboard_language",
-                description: "Change the language of the admin dashboard.",
-                parameters: {
-                    type: "OBJECT",
-                    properties: {
-                        language_code: { type: "STRING", description: "The language code (e.g., 'ar' for Arabic, 'en' for English)" }
-                    },
-                    required: ["language_code"]
-                }
+{
+    name: "create_product",
+        description: "Create a new product. If description is missing, the agent should analyze the image first.",
+            parameters: {
+        type: "OBJECT",
+            properties: {
+            title: { type: "STRING" },
+            description: { type: "STRING" },
+            price: { type: "NUMBER" },
+            category_name: { type: "STRING" },
+            images: {
+                type: "ARRAY",
+                    description: "List of image URLs",
+                        items: { type: "STRING" }
             }
+        },
+        required: ["title", "price"]
+    }
+},
+{
+    name: "create_reel",
+        description: "Create a new Reel/Story from an image URL.",
+            parameters: {
+        type: "OBJECT",
+            properties: {
+            caption: { type: "STRING" },
+            url: { type: "STRING" }
+        },
+        required: ["url"]
+    }
+},
+                }
+            },
+{
+    name: "change_dashboard_language",
+        description: "Change the language of the admin dashboard.",
+            parameters: {
+        type: "OBJECT",
+            properties: {
+            language_code: { type: "STRING", description: "The language code (e.g., 'ar' for Arabic, 'en' for English)" }
+        },
+        required: ["language_code"]
+    }
+}
         ]
     }
 ]
@@ -110,7 +135,9 @@ export const executeTool = async (name: string, args: any, container: any) => {
         }
 
         if (name === "create_product") {
-            const { title, description, price, category_name = "Abayas" } = args
+            const { title, description, price, category_name = "Abayas", images = [] } = args
+
+            // ... (rest of logic)
 
             const productModuleService = container.resolve(Modules.PRODUCT)
             const salesChannelService = container.resolve(Modules.SALES_CHANNEL)
@@ -139,8 +166,9 @@ export const executeTool = async (name: string, args: any, container: any) => {
                 input: {
                     products: [{
                         title,
-                        description,
+                        description: description || "No description provided",
                         handle,
+                        images: images.map((url: string) => ({ url })),
                         status: ProductStatus.PUBLISHED,
                         shipping_profile_id: shippingProfileId,
                         sales_channels: salesChannelId ? [{ id: salesChannelId }] : undefined,
@@ -193,6 +221,17 @@ export const executeTool = async (name: string, args: any, container: any) => {
                 input: { ids: [id] }
             })
             return { success: true, message: `Successfully deleted product with ID: ${id}.` }
+        }
+
+        if (name === "create_reel") {
+            const { caption = "New AI Reel", url } = args
+            const pool = container.resolve("pg_connection")
+            // Query to insert reel (assuming 'reels' table exists matching schema)
+            await pool.query(
+                `INSERT INTO reels (file_url, caption, duration, created_at, updated_at) VALUES ($1, $2, $3, NOW(), NOW())`,
+                [url, caption, 5] // Default duration 5s
+            )
+            return { success: true, message: `Created new Reel with caption: ${caption}` }
         }
 
         if (name === "change_dashboard_language") {

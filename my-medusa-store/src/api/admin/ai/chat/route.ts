@@ -28,6 +28,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         return res.status(500).json({ message: "GOOGLE_AI_API_KEY is not set in environment" })
     }
 
+    // Default to stable Flash model if 2.0 Pro is failing
     const modelName = config.model || "gemini-2.0-flash-exp"
 
     try {
@@ -35,6 +36,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
         const { aiTools, executeTool } = require("../../../../utils/ai-tools")
 
+        // Only use thinking on supported models to avoid crashes
         const isThinkingModel = modelName.includes("thinking")
 
         const model = genAI.getGenerativeModel({
@@ -66,88 +68,118 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
         // Generate AI Response with tool handling
         const chatParts: any[] = history.map((m: any) => {
-            const parts: any[] = []
-            if (m.content.text) parts.push({ text: m.content.text })
-            if (m.content.interactions) {
-                m.content.interactions.forEach((inter: any) => {
-                    parts.push({ functionCall: { name: inter.name, args: inter.args } })
-                    parts.push({ functionResponse: { name: inter.name, response: inter.result } })
-                })
+            const role = m.role === "user" ? "user" : "model"
+
+            // Handle multimodal inputs (images + text)
+            if (role === "user" && m.images && m.images.length > 0) {
+                return {
+                    role,
+                    parts: [
+                        { text: m.content },
+                        ...m.images.map((img: any) => ({
+                            inlineData: {
+                                mimeType: img.mimeType,
+                                data: img.data
+                            }
+                        }))
+                    ]
+                }
             }
-            return {
-                role: m.role === "user" ? "user" : "model",
-                parts
-            }
+
+            return { role, parts: [{ text: m.content }] }
         })
 
-        const activeUserParts: any[] = []
-        images.forEach(img => {
-            activeUserParts.push({
-                inlineData: {
-                    mimeType: img.mimeType,
-                    data: img.data
-                }
+        // Current Interaction
+        const userParts: any[] = [{ text: prompt }]
+        if (images && images.length > 0) {
+            images.forEach(img => {
+                userParts.push({
+                    inlineData: {
+                        mimeType: img.mimeType,
+                        data: img.data
+                    }
+                })
             })
+        }
+
+        const chat = model.startChat({
+            history: chatParts
         })
-        activeUserParts.push({ text: prompt })
+
+        let result = await chat.sendMessage(userParts)
+        let responseText = result.response.text()
+        const toolInteractions: any[] = []
+        let thoughts: string | null = null
+
+        // Capture Thinking Process if available (Gemini 2.0 Thinking)
+        // @ts-ignore
+        if (result.response.candidates?.[0]?.content?.parts?.[0]?.thought) {
+            // @ts-ignore
+            thoughts = result.response.candidates[0].content.parts[0].thought
+        }
+
+        // --- RECURSIVE TOOL EXECUTION LOOP ---
+        let functionCalls = result.response.functionCalls()
+
+        // Loop while the model wants to call functions (up to a limit to prevent infinite loops)
+        let maxToolLoops = 5
+        while (functionCalls && functionCalls.length > 0 && maxToolLoops > 0) {
+            maxToolLoops--
+
+            const toolResults: any[] = []
+
+            for (const call of functionCalls) {
+                console.log(`EXECUTING TOOL: ${call.name}`, call.args)
+
+                // Execute the tool locally
+                try {
+                    const toolOutput = await executeTool(call.name, call.args, req.scope)
+
+                    toolInteractions.push({
+                        type: "tool_use",
+                        name: call.name,
+                        args: call.args,
+                        result: toolOutput
+                    })
+
+                    toolResults.push({
+                        functionResponse: {
+                            name: call.name,
+                            response: toolOutput
+                        }
+                    })
+                } catch (toolError: any) {
+                    console.error(`TOOL EXECUTION FAILED [${call.name}]:`, toolError)
+                    toolResults.push({
+                        functionResponse: {
+                            name: call.name,
+                            response: { error: toolError.message }
+                        }
+                    })
+                    toolInteractions.push({
+                        type: "tool_use",
+                        name: call.name,
+                        args: call.args,
+                        result: { success: false, error: toolError.message }
+                    })
+                }
+            }
+
+            // Feed results back to the model
+            result = await chat.sendMessage(toolResults)
+            responseText = result.response.text()
+            functionCalls = result.response.functionCalls()
+        }
 
         // Save User Message
         await pool.query(`
           INSERT INTO "ai_messages" (session_id, role, content)
           VALUES ($1, $2, $3)
-        `, [sessionId, "user", JSON.stringify({ type: "text", text: prompt, has_images: images.length > 0 })])
-
-        const chat = model.startChat({
-            history: chatParts,
-            generationConfig: {
-                ...(config.thinkingBudget ? { thinkingConfig: { include_thoughts: true, total_thinking_budget_token_count: config.thinkingBudget } } : {})
-            } as any
-        })
-
-        let result = await chat.sendMessage(activeUserParts)
-        let responseText = ""
-        let thoughts = ""
-        let toolInteractions: any[] = []
-
-        // Extract thoughts if any (Gemini 2.0 Flash Thinking)
-        const extractThoughts = (response: any) => {
-            let t = ""
-            const parts = response.candidates?.[0]?.content?.parts || []
-            for (const part of parts) {
-                if (part.thought) {
-                    t += part.text || ""
-                }
-            }
-            return t
-        }
-
-        thoughts += extractThoughts(result.response)
-
-        // Tool Handling Loop
-        while (result.response.candidates?.[0]?.content?.parts?.some((p: any) => p.functionCall)) {
-            const toolResults: any[] = []
-            const parts = result.response.candidates[0].content.parts
-
-            for (const part of parts) {
-                if (part.functionCall) {
-                    const { name, args } = part.functionCall
-                    const toolResult = await executeTool(name, args, req.scope)
-                    toolResults.push({
-                        functionResponse: {
-                            name,
-                            response: toolResult
-                        }
-                    })
-                    toolInteractions.push({ type: "call", name, args, result: toolResult })
-                }
-            }
-
-            // Send tool results back to get the final text response
-            result = await chat.sendMessage(toolResults)
-            thoughts += extractThoughts(result.response)
-        }
-
-        responseText = result.response.text()
+        `, [sessionId, "user", JSON.stringify({
+            type: "text",
+            text: prompt,
+            images: images && images.length > 0 ? images.map(i => ({ mimeType: i.mimeType, data: i.data })) : undefined
+        })])
 
         // Save AI Response with interactions
         const aiMsgResult = await pool.query(`
@@ -166,4 +198,10 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         console.error("AI CHAT ERROR:", error)
         res.status(500).json({ message: "AI response failed", error: error.message })
     }
+}
+
+export const AUTHENTICATED = true
+
+export const CONFIG = {
+    maxBodySize: 50 * 1024 * 1024, // 50MB
 }
