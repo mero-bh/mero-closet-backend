@@ -639,7 +639,7 @@ const AIChatPage = () => {
             {/* Main Chat Area */}
             <div className="flex-1 flex flex-col bg-ui-bg-base relative w-full">
                 {/* Header with Selective Logic */}
-                <div className="min-h-16 md:h-16 border-b flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-6 py-2 md:py-0 bg-ui-bg-base/80 backdrop-blur-xl z-50 sticky top-0 gap-y-2">
+                <div className="min-h-16 border-b flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-6 py-6 bg-ui-bg-base/80 backdrop-blur-xl z-50 sticky top-0 gap-y-2">
                     <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
                         <div className="flex items-center gap-4">
                             <Button variant="transparent" onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2">
@@ -717,12 +717,12 @@ const AIChatPage = () => {
                                                                 setModel(m.id)
                                                                 setIsModelDropdownOpen(false)
                                                             }}
-                                                            className={`flex items-start justify-between p-3 rounded-xl cursor-pointer transition-all ${model === m.id ? 'bg-ui-bg-interactive/10 border border-ui-border-interactive/20' : 'hover:bg-ui-bg-base-hover border border-transparent'}`}
+                                                            className={`flex items-start justify-between p-2 rounded-xl cursor-pointer transition-all ${model === m.id ? 'bg-ui-bg-interactive/10 border border-ui-border-interactive/20' : 'hover:bg-ui-bg-base-hover border border-transparent'}`}
                                                         >
-                                                            <div className="flex flex-col gap-1 pr-2 w-full">
+                                                            <div className="flex flex-col gap-0.5 pr-2 w-full">
                                                                 <div className="flex items-center justify-between w-full">
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className={`text-sm font-semisemibold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
+                                                                        <span className={`text-xs font-semisemibold ${model === m.id ? 'text-ui-fg-interactive' : 'text-ui-fg-base'}`}>{m.name}</span>
                                                                         <div className="flex items-center gap-1">
                                                                             {m.features.vision && <div title="Has Vision" className="text-purple-500 bg-purple-500/10 p-0.5 rounded"><Eye className="w-3.5 h-3.5" /></div>}
                                                                             {m.features.imageGen && <div title="Can Generate Images" className="text-blue-500 bg-blue-500/10 p-0.5 rounded"><Photo className="w-3.5 h-3.5" /></div>}
@@ -731,7 +731,7 @@ const AIChatPage = () => {
                                                                     </div>
                                                                     {model === m.id && <CheckCircleSolid className="w-4 h-4 text-ui-fg-interactive shrink-0" />}
                                                                 </div>
-                                                                <span className="text-xs text-ui-fg-subtle leading-normal whitespace-normal w-[95%]">{m.description}</span>
+                                                                <span className="text-[10px] text-ui-fg-subtle leading-normal whitespace-normal w-[95%]">{m.description}</span>
                                                             </div>
                                                         </div>
                                                     ))}
