@@ -30,6 +30,7 @@ const upload = multer({
     fileSize: 150 * 1024 * 1024,
   },
   fileFilter: (_req, file, cb) => {
+    console.log("Multer filtering file:", file.originalname, "mimetype:", file.mimetype)
     const allowed = [
       "image/jpeg",
       "image/png",
@@ -39,7 +40,11 @@ const upload = multer({
       "video/webm",
       "video/quicktime",
     ]
-    if (allowed.includes(file.mimetype)) return cb(null, true)
+    if (allowed.includes(file.mimetype)) {
+      console.log("File allowed")
+      return cb(null, true)
+    }
+    console.error("File rejected: Unsupported mimetype", file.mimetype)
     cb(new Error(`Unsupported file type: ${file.mimetype}`))
   },
 })

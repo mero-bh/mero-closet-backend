@@ -5,11 +5,14 @@ const apiKey = process.env.CLOUDINARY_API_KEY
 const apiSecret = process.env.CLOUDINARY_API_SECRET
 
 if (cloudName && apiKey && apiSecret) {
+    console.log("Cloudinary configuration found. Initializing...")
     cloudinary.config({
         cloud_name: cloudName,
         api_key: apiKey,
         api_secret: apiSecret,
     })
+} else {
+    console.error("Cloudinary configuration MISSING! Check .env variables.")
 }
 
 export const uploadToCloudinary = async (

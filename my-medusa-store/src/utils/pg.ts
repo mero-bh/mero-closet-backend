@@ -14,6 +14,11 @@ export function getPgPool() {
     throw new Error("DATABASE_URL is missing in backend environment")
   }
 
-  pool = new Pool({ connectionString })
+  pool = new Pool({
+    connectionString,
+    ssl: connectionString.includes("sslmode=require") || connectionString.includes("neon.tech")
+      ? { rejectUnauthorized: false }
+      : false
+  })
   return pool
 }

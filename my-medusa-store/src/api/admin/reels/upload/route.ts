@@ -12,9 +12,14 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   }
 
   try {
+    console.log("Starting upload process for file:", file.originalname)
+
     // 1. Upload to Cloudinary
     const resourceType = file.mimetype.startsWith("video") ? "video" : "image"
+    console.log("Uploading to Cloudinary as resourceType:", resourceType)
+
     const cloudRes: any = await uploadToCloudinary(file.path, resourceType)
+    console.log("Cloudinary upload successful:", cloudRes.secure_url)
 
     // 2. Calculate expires_at
     let expiresAt: Date | null = null
@@ -23,8 +28,10 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     } else if (duration_type === "24h") {
       expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000)
     }
+    console.log("Calculated expiration:", expiresAt)
 
     // 3. Save to Neon
+    console.log("Saving metadata to Neon database...")
     const pool = getPgPool()
     const query = `
       INSERT INTO "reels" (url, public_id, type, duration_type, expires_at)
@@ -38,6 +45,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       duration_type,
       expiresAt
     ])
+    console.log("Database entry created:", result.rows[0].id)
 
     // 4. Cleanup local file
     if (fs.existsSync(file.path)) {
@@ -46,10 +54,11 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
     res.json(result.rows[0])
   } catch (error: any) {
+    console.error("UPLOAD ERROR DETAILS:", error)
     // Cleanup on error
     if (file && fs.existsSync(file.path)) {
       fs.unlinkSync(file.path)
     }
-    res.status(500).json({ message: "Upload failed", error: error.message })
+    res.status(500).json({ message: "Upload failed", error: error.message || "Unknown error" })
   }
 }
