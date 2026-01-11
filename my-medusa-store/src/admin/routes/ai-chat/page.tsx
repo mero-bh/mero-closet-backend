@@ -67,6 +67,9 @@ const CodeBlock = ({ children, ...props }: any) => {
 }
 
 const models = [
+    { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro", description: "Stable • Higher quality", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-01-11" },
+    { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash", description: "Stable • Fast + good reasoning", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-11" },
+    { id: "gemini-2.5-flash-lite", name: "Gemini 2.5 Flash-Lite", description: "Stable • Cheapest/fastest", features: { vision: true, agent: true }, date: "2026-01-11" },
     { id: "gemini-3-pro-preview", name: "Gemini 3.0 Pro", description: "The New Standard of Intelligence (Preview)", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-01-10" },
     { id: "gemini-3-flash-preview", name: "Gemini 3.0 Flash", description: "Ultra-Fast & Reasoning (Preview)", features: { vision: true, agent: true, thoughts: true }, date: "2026-01-10" },
     { id: "gemini-2.5-pro-preview", name: "Gemini 2.5 Pro", description: "The New Standard of Intelligence (Preview)", features: { vision: true, agent: true, imageGen: true, thoughts: true }, date: "2026-01-10" },
@@ -122,8 +125,30 @@ const Reasoning = ({ content, loading }: { content: string, loading?: boolean })
     )
 }
 
-const ToolInteraction = ({ interaction }: { interaction: { type: string, name: string, args: any, result: any } }) => {
+const ToolInteraction = ({
+    interaction,
+    onConfirm,
+    isConfirming
+}: {
+    interaction: { type: string, name: string, args: any, result: any }
+    onConfirm?: (callId: string) => void
+    isConfirming?: boolean
+}) => {
     const [isOpen, setIsOpen] = useState(false)
+
+    const requiresConfirmation = Boolean(interaction.result?.requires_confirmation)
+    const callId: string | undefined = interaction.result?.call_id
+    const isFailure = interaction.result?.success === false
+    const isExecuted = !requiresConfirmation && !isFailure
+
+    const copy = async (text: string) => {
+        try {
+            await navigator.clipboard.writeText(text)
+            toast.success("Copied")
+        } catch {
+            toast.error("Copy failed")
+        }
+    }
 
     const getIcon = (name: string) => {
         if (name === "create_product") return <Plus width={14} height={14} className="text-green-500" />
@@ -145,8 +170,29 @@ const ToolInteraction = ({ interaction }: { interaction: { type: string, name: s
                     <span>{interaction.name.replace(/_/g, ' ')}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className={`px-2 py-0.5 rounded-full font-bold ${interaction.result?.success !== false ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                        {interaction.result?.success !== false ? 'Executed' : 'Failed'}
+                    {requiresConfirmation && callId && onConfirm && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                onConfirm(callId)
+                            }}
+                            disabled={isConfirming}
+                            className={`px-2 py-1 rounded-full font-bold text-[10px] transition-colors ${isConfirming ? 'bg-ui-bg-subtle text-ui-fg-muted cursor-not-allowed' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'}`}
+                            title="Execute this action"
+                        >
+                            {isConfirming ? 'Confirming...' : 'Confirm'}
+                        </button>
+                    )}
+
+                    <span
+                        className={`px-2 py-0.5 rounded-full font-bold ${requiresConfirmation
+                            ? 'bg-amber-100 text-amber-800'
+                            : isExecuted
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-red-100 text-red-700'
+                            }`}
+                    >
+                        {requiresConfirmation ? 'Pending' : isExecuted ? 'Executed' : 'Failed'}
                     </span>
                     <div className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}>
                         <ChevronDown width={14} height={14} />
@@ -158,6 +204,17 @@ const ToolInteraction = ({ interaction }: { interaction: { type: string, name: s
                 <div className="p-3 pt-0 border-t border-ui-border-base/20 space-y-3">
                     <div className="space-y-1">
                         <div className="text-[9px] font-bold text-ui-fg-muted uppercase opacity-50">Arguments</div>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    copy(JSON.stringify(interaction.args, null, 2))
+                                }}
+                                className="text-[10px] font-bold px-2 py-1 rounded-lg bg-ui-bg-base hover:bg-ui-bg-base-hover border transition-colors"
+                            >
+                                Copy args
+                            </button>
+                        </div>
                         <pre className="p-2 bg-ui-bg-base rounded-lg border text-[10px] font-mono leading-relaxed overflow-x-auto">
                             {JSON.stringify(interaction.args, null, 2)}
                         </pre>
@@ -165,6 +222,17 @@ const ToolInteraction = ({ interaction }: { interaction: { type: string, name: s
                     {interaction.result && (
                         <div className="space-y-1">
                             <div className="text-[9px] font-bold text-ui-fg-muted uppercase opacity-50">Output</div>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        copy(JSON.stringify(interaction.result, null, 2))
+                                    }}
+                                    className="text-[10px] font-bold px-2 py-1 rounded-lg bg-ui-bg-base hover:bg-ui-bg-base-hover border transition-colors"
+                                >
+                                    Copy output
+                                </button>
+                            </div>
                             <div className="p-2 bg-ui-bg-base rounded-lg border text-ui-fg-subtle leading-normal">
                                 {interaction.result.message || JSON.stringify(interaction.result)}
                             </div>
@@ -220,11 +288,12 @@ const AIChatPage = () => {
     const [editTitle, setEditTitle] = useState("")
 
     // Model Config State
-    const [model, setModel] = useState("gemini-2.0-flash-exp")
+    const [model, setModel] = useState("gemini-2.5-flash")
     const [resolution, setResolution] = useState("1024x1024")
     const [searchEnabled, setSearchEnabled] = useState(false)
     const [thinkingBudget, setThinkingBudget] = useState(0)
     const [agentEnabled, setAgentEnabled] = useState(true)
+    const [confirmEnabled, setConfirmEnabled] = useState(true)
     const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false)
     const modelDropdownRef = useRef<HTMLDivElement>(null)
 
@@ -337,7 +406,7 @@ const AIChatPage = () => {
                         prompt,
                         history,
                         images,
-                        config: { model, resolution, searchEnabled, thinkingBudget, agentMode: agentEnabled }
+                        config: { model, resolution, searchEnabled, thinkingBudget, agentMode: agentEnabled, confirmMode: confirmEnabled }
                     }),
                     signal: controller.signal
                 })
@@ -374,6 +443,49 @@ const AIChatPage = () => {
         onError: (e: any) => {
             if (e.name === 'AbortError') {
                 toast.info("Generation stopped")
+            } else {
+                toast.error("AI Error", { description: e.message })
+            }
+        }
+    })
+
+    const confirmTools = useMutation({
+        mutationFn: async ({ callIds }: { callIds: string[] }) => {
+            const controller = new AbortController()
+            setAbortController(controller)
+
+            try {
+                const history = activeSessionData?.messages || []
+
+                const res = await fetch("/admin/ai/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        sessionId: activeSessionId,
+                        confirmations: callIds,
+                        history,
+                        config: { model, resolution, searchEnabled, thinkingBudget, agentMode: agentEnabled, confirmMode: confirmEnabled }
+                    }),
+                    signal: controller.signal
+                })
+
+                if (!res.ok) {
+                    const err = await res.json()
+                    throw new Error(err.message || "Failed to confirm tools")
+                }
+
+                return res.json()
+            } finally {
+                setAbortController(null)
+            }
+        },
+        onSuccess: () => {
+            refetchMessages()
+            refetchSessions()
+        },
+        onError: (e: any) => {
+            if (e.name === 'AbortError') {
+                toast.info("Request stopped")
             } else {
                 toast.error("AI Error", { description: e.message })
             }
@@ -552,6 +664,14 @@ const AIChatPage = () => {
                                 <Switch checked={searchEnabled} onCheckedChange={setSearchEnabled} size="small" />
                             </div>
 
+                            {/* Confirm Toggle */}
+                            <div className="flex items-center gap-x-2">
+                                <span className={`text-[10px] font-bold uppercase tracking-widest ${confirmEnabled ? 'text-ui-fg-interactive' : 'text-ui-fg-muted'}`}>
+                                    Confirm
+                                </span>
+                                <Switch checked={confirmEnabled} onCheckedChange={setConfirmEnabled} size="small" />
+                            </div>
+
                             <div className="flex gap-2">
                                 {/* Custom Model Dropdown */}
                                 <div className="relative" ref={modelDropdownRef}>
@@ -660,7 +780,18 @@ const AIChatPage = () => {
                                             {m.role === 'model' && m.content.interactions && (
                                                 <div className="mb-4 space-y-2">
                                                     {m.content.interactions.map((interaction: any, idx: number) => (
-                                                        <ToolInteraction key={idx} interaction={interaction} />
+                                                        <ToolInteraction
+                                                            key={idx}
+                                                            interaction={interaction}
+                                                            isConfirming={confirmTools.isPending}
+                                                            onConfirm={(callId) => {
+                                                                if (!confirmEnabled) {
+                                                                    toast.error("Confirm mode is disabled")
+                                                                    return
+                                                                }
+                                                                confirmTools.mutate({ callIds: [callId] })
+                                                            }}
+                                                        />
                                                     ))}
                                                 </div>
                                             )}
