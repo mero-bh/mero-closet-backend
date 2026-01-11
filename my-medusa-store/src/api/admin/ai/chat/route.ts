@@ -98,6 +98,21 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
         let result = await chat.sendMessage(activeUserParts)
         let responseText = ""
+        let thoughts = ""
+
+        // Extract thoughts if any (Gemini 2.0 Flash Thinking)
+        const extractThoughts = (response: any) => {
+            let t = ""
+            const parts = response.candidates?.[0]?.content?.parts || []
+            for (const part of parts) {
+                if (part.thought) {
+                    t += part.text || ""
+                }
+            }
+            return t
+        }
+
+        thoughts += extractThoughts(result.response)
 
         // Tool Handling Loop
         while (result.response.candidates?.[0]?.content?.parts?.some((p: any) => p.functionCall)) {
@@ -119,6 +134,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
             // Send tool results back to get the final text response
             result = await chat.sendMessage(toolResults)
+            thoughts += extractThoughts(result.response)
         }
 
         responseText = result.response.text()
@@ -128,7 +144,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       INSERT INTO "ai_messages" (session_id, role, content)
       VALUES ($1, $2, $3)
       RETURNING *
-    `, [sessionId, "model", JSON.stringify({ type: "text", text: responseText })])
+    `, [sessionId, "model", JSON.stringify({ type: "text", text: responseText, thoughts: thoughts || undefined })])
 
         res.json(aiMsgResult.rows[0])
     } catch (error: any) {
@@ -136,3 +152,4 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         res.status(500).json({ message: "AI response failed", error: error.message })
     }
 }
+```
