@@ -555,7 +555,7 @@ const AIChatPage = () => {
                 .google-sans-ai-chat {
                     font-family: "Google Sans", sans-serif !important;
                     font-optical-sizing: auto;
-                    font-weight: 451;
+                    font-weight: 400;
                     font-style: normal;
                     font-variation-settings: "GRAD" 56;
                 }
