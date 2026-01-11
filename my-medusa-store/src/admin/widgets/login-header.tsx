@@ -23,6 +23,9 @@ const LoginHeader = () => {
             <Heading level="h1" className="text-2xl font-400 text-ui-fg-subtle text-center uppercase tracking-widest">
                 MERO CLOSET DASHBOARD
             </Heading>
+            <div className="flex items-center justify-center">
+                <img src="/logo.png" alt="Logo" className="w-24 h-24" />
+            </div>
         </div>
     )
 }
