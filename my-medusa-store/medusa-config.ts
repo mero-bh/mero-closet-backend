@@ -13,8 +13,6 @@ module.exports = defineConfig({
       authCors: process.env.AUTH_CORS || `http://localhost:5173,http://localhost:9000,https://mero-closet.vercel.app,https://mero-closet-frontend-ui.vercel.app,${adminUrl}`,
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
-      // Increase body limit for image uploads
-      bodyLimit: "50mb",
     },
   },
   admin: {
