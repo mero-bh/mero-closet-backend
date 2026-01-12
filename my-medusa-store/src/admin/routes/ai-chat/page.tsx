@@ -78,40 +78,40 @@ const models = [
 
 const Reasoning = ({ content, loading }: { content: string, loading?: boolean }) => {
     const [isOpen, setIsOpen] = useState(false)
-    const [initialized, setInitialized] = useState(false)
+    const [seconds, setSeconds] = useState(0)
 
     useEffect(() => {
-        if (!initialized) {
-            setInitialized(true)
-            if (loading) setIsOpen(true)
+        let interval: NodeJS.Timeout
+        if (loading) {
+            setIsOpen(true)
+            interval = setInterval(() => {
+                setSeconds(s => s + 1)
+            }, 1000)
         }
-    }, [loading, initialized])
+        return () => clearInterval(interval)
+    }, [loading])
 
     return (
-        <div className="mb-4 bg-ui-bg-subtle/50 rounded-lg border border-ui-border-base/50 overflow-hidden">
+        <div className="mb-4 bg-ui-bg-subtle/30 rounded-lg border border-ui-border-base/50 overflow-hidden">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-3 text-xs font-medium text-ui-fg-muted hover:bg-ui-bg-base-hover transition-colors"
+                className="w-full flex items-center gap-2 p-2 px-3 text-xs font-medium text-ui-fg-muted hover:bg-ui-bg-base-hover transition-colors"
             >
-                <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 flex items-center justify-center bg-ui-bg-base border rounded shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 32 32">
-                            <path
-                                className="stroke-ui-fg-muted"
-                                style={{ strokeWidth: 2, fill: "none", strokeLinecap: "round", strokeLinejoin: "round" }}
-                                d="M16 6v3.33M16 6c0-2.65 3.25-4.3 5.4-2.62 1.2.95 1.6 2.65.95 4.04a3.63 3.63 0 0 1 4.61.16 3.45 3.45 0 0 1 .46 4.37 5.32 5.32 0 0 1 1.87 4.75c-.22 1.66-1.39 3.6-3.07 4.14M16 6c0-2.65-3.25-4.3-5.4-2.62a3.37 3.37 0 0 0-.95 4.04 3.65 3.65 0 0 0-4.6.16 3.37 3.37 0 0 0-.49 4.27 5.57 5.57 0 0 0-1.85 4.85 5.3 5.3 0 0 0 3.07 4.15M16 9.33v17.34m0-17.34c0 2.18 1.82 4 4 4m6.22 7.5c.67 1.3.56 2.91-.27 4.11a4.05 4.05 0 0 1-4.62 1.5c0 1.53-1.05 2.9-2.66 2.9A2.7 2.7 0 0 1 16 26.66m10.22-5.83a4.05 4.05 0 0 0-3.55-2.17m-16.9 2.18a4.05 4.05 0 0 0 .28 4.1c1 1.44 2.92 2.09 4.59 1.5 0 1.52 1.12 2.88 2.7 2.88A2.7 2.7 0 0 0 16 26.67M5.78 20.85a4.04 4.04 0 0 1 3.55-2.18"
-                            />
-                        </svg>
-                    </div>
-                    {loading ? "Thinking..." : "Reasoning"}
+                <div className={`transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`}>
+                    <ChevronDown width={12} height={12} />
                 </div>
-                <div className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}>
-                    <ChevronDown />
+                <div className="flex items-center gap-2">
+                    {loading ? (
+                        <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                    ) : (
+                        <CheckCircleSolid className="text-green-500 w-3 h-3" />
+                    )}
+                    <span>{loading ? "Thinking" : "Thought"} for {seconds}s</span>
                 </div>
             </button>
             {isOpen && (
-                <div className="p-4 pt-0 border-t border-ui-border-base/30 bg-ui-bg-base/20">
-                    <div className="prose prose-invert prose-sm max-w-none text-ui-fg-muted italic leading-relaxed">
+                <div className="p-3 pl-8 border-t border-ui-border-base/30 bg-ui-bg-base/20">
+                    <div className="prose prose-invert prose-xs max-w-none text-ui-fg-subtle opacity-80 leading-relaxed font-mono">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {content}
                         </ReactMarkdown>
@@ -131,44 +131,79 @@ const ToolInteraction = ({
 }) => {
     const requiresConfirmation = Boolean(interaction.result?.requires_confirmation)
     const isExecuted = !requiresConfirmation && interaction.result?.success !== false
-
-    // Determine priority from args or defaults (mocking for now)
-    const priority = "High"
+    // MCP tool logic: explicit is better
+    const [isOpen, setIsOpen] = useState(false)
 
     return (
-        <div
-            className="mb-3 bg-ui-bg-subtle/30 rounded-xl border border-ui-border-base/40 overflow-hidden group hover:border-ui-border-interactive/50 hover:shadow-md transition-all cursor-pointer"
-            onClick={onSelect}
-        >
-            <div className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                    <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-ui-fg-muted uppercase tracking-wider mb-1">{interaction.name.replace(/_/g, ' ')}</span>
-                        <Heading level="h3" className="text-sm font-semibold text-ui-fg-base leading-tight">
-                            {interaction.args?.title || `Execute ${interaction.name}`}
-                        </Heading>
+        <div className="mb-3 rounded-md border border-ui-border-base bg-[#0d0d0d] overflow-hidden text-ui-fg-subtle font-sans shadow-sm">
+            <div
+                className="flex items-center justify-between p-2 cursor-pointer hover:bg-[#1a1a1a] transition-colors select-none"
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <div className="flex items-center gap-2 overflow-hidden">
+                    <div className={`transition-transform duration-200 text-ui-fg-muted ${isOpen ? "rotate-90" : ""}`}>
+                        <ChevronDown width={14} height={14} />
                     </div>
-                    <div>
-                        {isExecuted ? <CheckCircleSolid className="text-green-500" /> : <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />}
-                    </div>
+                    <ComputerDesktop className="w-4 h-4 text-purple-400 shrink-0" />
+                    <span className="text-xs font-semibold text-ui-fg-base truncate">
+                        MCP Tool: <span className="text-ui-fg-muted font-mono ml-1">{interaction.name}</span>
+                    </span>
                 </div>
-
-                <Text className="text-xs text-ui-fg-subtle mb-3 line-clamp-2">
-                    {interaction.args?.description || JSON.stringify(interaction.args)}
-                </Text>
-
-                <div className="flex items-center justify-between pt-3 border-t border-ui-border-base/30">
-                    <div className="flex items-center gap-2 text-[10px]">
-                        <span className={`px-1.5 py-0.5 rounded border font-medium ${priority === 'High' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' : 'bg-blue-500/10 text-blue-500'}`}>
-                            {priority} Priority
+                <div className="flex items-center gap-2 shrink-0">
+                    {isExecuted ? (
+                        <span className="flex items-center gap-1 text-[10px] text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded border border-green-500/20">
+                            <CheckCircleSolid width={10} height={10} /> Success
                         </span>
-                        <span className={`px-1.5 py-0.5 rounded border font-medium ${requiresConfirmation ? 'bg-orange-500/10 text-orange-500' : 'bg-green-500/10 text-green-500'}`}>
-                            {requiresConfirmation ? 'Pending' : 'Done'}
+                    ) : (
+                        <span className="flex items-center gap-1 text-[10px] text-orange-500 bg-orange-500/10 px-1.5 py-0.5 rounded border border-orange-500/20">
+                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" /> Pending
                         </span>
-                    </div>
-                    <ArrowRightOnRectangle width={14} height={14} className="text-ui-fg-interactive opacity-0 group-hover:opacity-100 transition-opacity" />
+                    )}
                 </div>
             </div>
+
+            {isOpen && (
+                <div className="p-3 border-t border-ui-border-base/20 bg-[#0a0a0a] space-y-3">
+                    {/* Arguments */}
+                    <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-medium text-ui-fg-muted uppercase tracking-wider">Ran with these arguments:</span>
+                        </div>
+                        <div className="relative group">
+                            <pre className="text-[11px] font-mono leading-relaxed bg-[#151515] p-2 rounded border border-ui-border-base/10 overflow-x-auto text-blue-300">
+                                {JSON.stringify(interaction.args, null, 2)}
+                            </pre>
+                        </div>
+                    </div>
+
+                    {/* Result */}
+                    {interaction.result && (
+                        <div className="space-y-1">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-medium text-ui-fg-muted uppercase tracking-wider">Output</span>
+                            </div>
+                            <pre className="text-[11px] font-mono leading-relaxed bg-[#151515] p-2 rounded border border-ui-border-base/10 overflow-x-auto text-green-300/80 max-h-60">
+                                {JSON.stringify(interaction.result, null, 2)}
+                            </pre>
+                            {requiresConfirmation && (
+                                <div className="pt-2">
+                                    <Button
+                                        variant="primary"
+                                        size="small"
+                                        className="w-full text-xs h-7"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            onSelect && onSelect()
+                                        }}
+                                    >
+                                        Review & Confirm Action
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     )
 }
@@ -646,7 +681,10 @@ const AIChatPage = () => {
 
                 // 3. Language Change
                 if (result.action === "LANGUAGE_CHANGE") {
-                    toast.success(`Language changed to ${result.code}`, { icon: <GlobeEuropeSolid /> })
+                    toast.success(`Language changed to ${result.code}`, {
+                        // @ts-ignore - Icon property exists in UI library but TS definitions might be outdated
+                        icon: <GlobeEuropeSolid />
+                    })
                     // Actual i18n logic would go here (e.g., changing context or localStorage)
                 }
             }
