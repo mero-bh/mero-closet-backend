@@ -1163,22 +1163,7 @@ const AIChatPage = () => {
                 </div>
             )}
 
-            {/* Right Panel (Action Detail) */}
-            <AnimatePresence>
-                {activeInteraction && (
-                    <RightPanel
-                        interaction={activeInteraction}
-                        onClose={() => setActiveInteraction(null)}
-                        onConfirm={(callId) => {
-                            if (!confirmEnabled) {
-                                toast.error("Confirm mode is disabled")
-                                return
-                            }
-                            confirmTools.mutate({ callIds: [callId] })
-                        }}
-                    />
-                )}
-            </AnimatePresence>
+
         </div>
     )
 }
