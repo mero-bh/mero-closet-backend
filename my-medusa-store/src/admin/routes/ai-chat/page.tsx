@@ -8,6 +8,7 @@ import * as SwitchPrimitives from "@radix-ui/react-switch"
 import { motion, AnimatePresence } from "framer-motion"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { ImageGenModal } from "./components/ImageGenModal"
 
 // --- Types ---
 type Message = {
@@ -341,6 +342,9 @@ const AIChatPage = () => {
     const [activeInteraction, setActiveInteraction] = useState<any>(null)
     const [editTitle, setEditTitle] = useState("")
 
+    // Image Gen State
+    const [showImageGenModal, setShowImageGenModal] = useState(false)
+    const [promptForImageGen, setPromptForImageGen] = useState("")
 
     // Model Config State
     const [model, setModel] = useState("gemini-2.5-flash")
@@ -614,20 +618,36 @@ const AIChatPage = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [activeSessionData?.messages, sendMessage.isPending, animatedText])
 
-    // Auto-Navigation Effect
+    // Auto-Navigation and Action Effect
     useEffect(() => {
         if (!activeSessionData?.messages) return
         const lastMsg = activeSessionData.messages[activeSessionData.messages.length - 1]
 
-        // Only act on fresh messages (this is a simple check, could be more robust with message IDs tracking)
         if (lastMsg?.role === "model" && lastMsg.content.interactions) {
             for (const interaction of lastMsg.content.interactions) {
-                if (interaction.result?.action === "NAVIGATE" && interaction.result.path) {
-                    // Prevent infinite loops or re-runs if already there? 
-                    // For now, we trust the user interaction flow.
+                const result = interaction.result
+                if (!result) continue
+
+                // 1. Navigation
+                if (result.action === "NAVIGATE" && result.path) {
                     toast.dismiss("nav-toast")
-                    toast.info(`Navigating to ${interaction.result.path}...`, { id: "nav-toast" })
-                    navigate(interaction.result.path)
+                    toast.info(`Navigating to ${result.path}...`, { id: "nav-toast" })
+                    navigate(result.path)
+                }
+
+                // 2. Open Modals
+                if (result.action === "OPEN_MODAL") {
+                    if (result.modal === "IMAGE_GEN") {
+                        setPromptForImageGen(result.prompt || "")
+                        setShowImageGenModal(true)
+                        // toast.info("Opening Image Studio...", { icon: <Sparkles /> })
+                    }
+                }
+
+                // 3. Language Change
+                if (result.action === "LANGUAGE_CHANGE") {
+                    toast.success(`Language changed to ${result.code}`, { icon: <GlobeEuropeSolid /> })
+                    // Actual i18n logic would go here (e.g., changing context or localStorage)
                 }
             }
         }
@@ -1163,7 +1183,12 @@ const AIChatPage = () => {
                 </div>
             )}
 
-
+            {/* Image Gen Modal */}
+            <ImageGenModal
+                open={showImageGenModal}
+                onOpenChange={setShowImageGenModal}
+                initialPrompt={promptForImageGen}
+            />
         </div>
     )
 }

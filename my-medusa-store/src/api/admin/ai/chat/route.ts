@@ -171,12 +171,39 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { aiTools, executeTool } = require("../../../../utils/ai-tools")
+    // Import MCP integration
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { listMcpTools, callMcpTool } = require("../../../../utils/mcp-integration")
 
     const isGemini25 = modelName.startsWith("gemini-2.5-")
 
+    // Fetch MCP tools
+    let mcpToolsList: any[] = []
+    try {
+      mcpToolsList = await listMcpTools()
+    } catch (e) {
+      console.warn("Failed to fetch MCP tools:", e)
+    }
+
     const tools: any[] = []
+
+    // Add local tools
+    const localFunctionDeclarations = aiTools?.[0]?.functionDeclarations ?? []
+
+    // Add MCP tools converted to Gemini format
+    const mcpFunctionDeclarations = mcpToolsList.map((t: any) => ({
+      name: t.name,
+      description: t.description,
+      parameters: t.inputSchema,
+    }))
+
+    const allFunctionDeclarations = [
+      ...localFunctionDeclarations,
+      ...mcpFunctionDeclarations
+    ]
+
     if (config.agentMode !== false) {
-      tools.push({ functionDeclarations: aiTools?.[0]?.functionDeclarations ?? [] })
+      tools.push({ functionDeclarations: allFunctionDeclarations })
     }
 
     if (config.searchEnabled) {
@@ -191,12 +218,12 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       tools: tools.length > 0 ? tools : undefined,
       generationConfig: isGemini25
         ? {
-            // @ts-ignore - supported by latest Gemini API for thinking models
-            thinkingConfig: {
-              includeThoughts: true,
-              ...(typeof thinkingBudget === "number" ? { thinkingBudget } : {}),
-            },
-          }
+          // @ts-ignore - supported by latest Gemini API for thinking models
+          thinkingConfig: {
+            includeThoughts: true,
+            ...(typeof thinkingBudget === "number" ? { thinkingBudget } : {}),
+          },
+        }
         : {},
       systemInstruction: `You are Antigravity, a professional AI assistant and specialized Store Agent for the Mero Closet Medusa Dashboard.
 
@@ -205,6 +232,7 @@ CORE COMPETENCIES & INTERFACE CONTROL:
 - **Documentation Expert**: You have access to Medusa 2.0 documentation. If asked about how something works ("How do I create a region?", "What is a Sales Channel?"), use 'get_documentation'.
 - **Store Management**: You manage products, prices, orders, customers, and inventory.
 - **Image Intelligence**: You can see and analyze images to extract product details or create content.
+- **System Tools**: You have access to additional system tools provided by the MCP server (e.g., file system, terminal, etc.). Use them when appropriate to help the user.
 
 ACTION GUIDELINES:
 1. **Control the View**: If a task requires a specific page, NAVIGATE the user there immediately using 'navigate_to'.
@@ -297,7 +325,16 @@ Use Markdown for all formatting. Be concise, professional, and action-oriented.`
         console.log(`EXECUTING TOOL: ${toolName}`, args)
 
         try {
-          const toolOutput = await executeTool(toolName, args, req.scope)
+          // Check if it's an MCP tool
+          const isMcpTool = mcpToolsList.some((t: any) => t.name === toolName)
+
+          let toolOutput
+          if (isMcpTool) {
+            toolOutput = await callMcpTool(toolName, args)
+          } else {
+            toolOutput = await executeTool(toolName, args, req.scope)
+          }
+
           const safeOutput = safeForJson(toolOutput)
 
           toolInteractions.push({
@@ -406,7 +443,16 @@ Use Markdown for all formatting. Be concise, professional, and action-oriented.`
         const call_id = String(content?.call_id ?? "")
 
         try {
-          const toolOutput = await executeTool(toolName, args, req.scope)
+          // Check if it's an MCP tool
+          const isMcpTool = mcpToolsList.some((t: any) => t.name === toolName)
+
+          let toolOutput
+          if (isMcpTool) {
+            toolOutput = await callMcpTool(toolName, args)
+          } else {
+            toolOutput = await executeTool(toolName, args, req.scope)
+          }
+
           const safeOutput = safeForJson(toolOutput)
 
           toolInteractions.push({
