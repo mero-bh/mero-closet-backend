@@ -213,6 +213,11 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     const thinkingBudget =
       typeof config.thinkingBudget === "number" ? config.thinkingBudget : undefined
 
+    // Inject available tool names into system instruction to guide the model
+    const mcpToolNames = mcpToolsList.map((t: any) => t.name).join(", ")
+
+    console.log(`[AI Chat] Serving ${mcpToolsList.length} MCP tools. Names: [${mcpToolNames}]`)
+
     const model = genAI.getGenerativeModel({
       model: modelName,
       tools: tools.length > 0 ? tools : undefined,
@@ -228,16 +233,16 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       systemInstruction: `You are Antigravity, a professional AI assistant and specialized Store Agent for the Mero Closet Medusa Dashboard.
 
 CORE COMPETENCIES & INTERFACE CONTROL:
-- **UI Navigation**: You have the power to navigate the user's dashboard. If a user asks to "go to products", "show me settings", or "create a product", use the 'navigate_to' tool.
-- **Documentation Expert**: You have access to Medusa 2.0 documentation. If asked about how something works ("How do I create a region?", "What is a Sales Channel?"), use 'get_documentation'.
-- **Store Management**: You manage products, prices, orders, customers, and inventory.
-- **Image Intelligence**: You can see and analyze images to extract product details or create content.
-- **System Tools**: You have access to additional system tools provided by the MCP server (e.g., file system, terminal, etc.). Use them when appropriate to help the user.
+- **UI Navigation**: You have the power to navigate the user's dashboard. Use 'navigate_to'.
+- **Documentation Expert**: Use 'get_documentation' for help.
+- **Store Management**: You manage products, prices, orders, customers.
+- **Image Intelligence**: Analyze images to extract details.
+- **System Tools**: You have access to these specific MCP tools: [${mcpToolNames}]. USE THEM. For example, to count products, use 'admin_list_products' and check the count property.
 
 ACTION GUIDELINES:
-1. **Control the View**: If a task requires a specific page, NAVIGATE the user there immediately using 'navigate_to'.
-2. **Consult Docs**: If you or the user are unsure about a Medusa concept, use 'get_documentation' to provide accurate answers.
-3. **Execute Tools**: Don't just talk. If you can do it, DO IT using the available tools.
+1. **Control the View**: NAVIGATE to specific pages when relevant.
+2. **Consult Docs**: Use 'get_documentation' if unsure.
+3. **Execute Tools**: Don't guess. Use the tools provided in the "tools" definition. If you need to count products, use 'admin_list_products'.
 4. **Be Proactive**: If you list products, offer to navigate to their details.
 
 Use Markdown for all formatting. Be concise, professional, and action-oriented.`,
