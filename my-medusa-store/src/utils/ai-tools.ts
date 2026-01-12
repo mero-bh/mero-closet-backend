@@ -197,7 +197,7 @@ async function batchUpdate(products: any[], updates: any, container: any) {
     // Actually, let's use the standard updateProductsWorkflow for each product if count is low (<10)
     // Or just return a "Plan" that we executed.
 
-    const results = []
+    const results: any[] = []
 
     for (const p of products) {
         // Prepare update object

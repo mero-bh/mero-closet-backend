@@ -97,50 +97,49 @@ async function connectSingleServer(name: string, config: McpServerConfig) {
     try {
         if (config.url) {
             // remote/sse
-            transport = new SSEClientTransport(new URL(config.url), {
-                eventSourceInit: {
-                    headers: config.headers,
-                },
+            eventSourceInit: {
+                headers: config.headers,
+                } as any,
             })
-        } else if (config.command) {
-            // stdio
-            transport = new StdioClientTransport({
-                command: config.command,
-                args: config.args,
-                env: { ...process.env, ...(config.env || {}) },
-            })
-        } else {
-            throw new Error("Invalid config: missing 'url' or 'command'")
-        }
-
-        const client = new Client(
-            { name: "Medusa Store Agent", version: "1.0.0" },
-            { capabilities: { tools: {} } }
-        )
-
-        await client.connect(transport)
-
-        // Fetch available tools
-        const toolsResult = await client.listTools()
-
-        ACTIVE_SERVERS[name] = {
-            client,
-            transport,
-            config,
-            status: "connected",
-            tools: toolsResult.tools,
-        }
-        console.log(`[MCP] Connected to ${name}`)
-    } catch (e: any) {
-        console.error(`[MCP] Failed to connect to ${name}:`, e)
-        ACTIVE_SERVERS[name] = {
-            client: null as any,
-            transport: null as any,
-            config,
-            status: "failed",
-            error: e.message,
-        }
+    } else if (config.command) {
+        // stdio
+        transport = new StdioClientTransport({
+            command: config.command,
+            args: config.args,
+            env: { ...process.env, ...(config.env || {}) } as any,
+        })
+    } else {
+        throw new Error("Invalid config: missing 'url' or 'command'")
     }
+
+    const client = new Client(
+        { name: "Medusa Store Agent", version: "1.0.0" },
+        { capabilities: {} }
+    )
+
+    await client.connect(transport)
+
+    // Fetch available tools
+    const toolsResult = await client.listTools()
+
+    ACTIVE_SERVERS[name] = {
+        client,
+        transport,
+        config,
+        status: "connected",
+        tools: toolsResult.tools,
+    }
+    console.log(`[MCP] Connected to ${name}`)
+} catch (e: any) {
+    console.error(`[MCP] Failed to connect to ${name}:`, e)
+    ACTIVE_SERVERS[name] = {
+        client: null as any,
+        transport: null as any,
+        config,
+        status: "failed",
+        error: e.message,
+    }
+}
 }
 
 // Get all tools from all connected servers
