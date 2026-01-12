@@ -1,7 +1,7 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { useNavigate } from "react-router-dom"
 import { Heading, Button, toast, Text, Switch } from "@medusajs/ui"
-import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown, XMark, Eye, CheckCircleSolid, RocketLaunch, ComputerDesktop, Map, Sparkles, SpeakerWave, ArrowRightOnRectangle, PlaySolid, PauseSolid, InformationCircleSolid } from "@medusajs/icons"
+import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown, XMark, Eye, CheckCircleSolid, RocketLaunch, ComputerDesktop, Map, Sparkles, ArrowRightOnRectangle, PlaySolid, PauseSolid, InformationCircleSolid } from "@medusajs/icons"
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { useState, useRef, useEffect } from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
@@ -123,21 +123,16 @@ const Reasoning = ({ content, loading }: { content: string, loading?: boolean })
 
 const ToolInteraction = ({
     interaction,
-    onConfirm,
-    isConfirming,
     onSelect
 }: {
     interaction: { type: string, name: string, args: any, result: any }
-    onConfirm?: (callId: string) => void
-    isConfirming?: boolean
     onSelect?: () => void
 }) => {
     const requiresConfirmation = Boolean(interaction.result?.requires_confirmation)
     const isExecuted = !requiresConfirmation && interaction.result?.success !== false
 
-    // Determine priority/risk from args or defaults (mocking for now)
+    // Determine priority from args or defaults (mocking for now)
     const priority = "High"
-    const risk = requiresConfirmation ? "High" : "Low"
 
     return (
         <div
@@ -855,26 +850,15 @@ const AIChatPage = () => {
                                             {m.role === 'model' && m.content.interactions && (
                                                 <div className="mb-4 space-y-2">
                                                     {m.content.interactions.map((interaction: any, idx: number) => (
-                                                        {
-                                                            m.content.interactions.map((interaction: any, idx: number) => (
-                                                                <ToolInteraction
-                                                                    key={idx}
-                                                                    interaction={interaction}
-                                                                    isConfirming={confirmTools.isPending}
-                                                                    onConfirm={(callId) => {
-                                                                        if (!confirmEnabled) {
-                                                                            toast.error("Confirm mode is disabled")
-                                                                            return
-                                                                        }
-                                                                        confirmTools.mutate({ callIds: [callId] })
-                                                                    }}
-                                                                    onSelect={() => {
-                                                                        setActiveInteraction(interaction)
-                                                                        if (window.innerWidth < 768) setIsSidebarOpen(false)
-                                                                    }}
-                                                                />
-                                                            ))
-                                                        }
+                                                        <ToolInteraction
+                                                            key={idx}
+                                                            interaction={interaction}
+                                                            onSelect={() => {
+                                                                setActiveInteraction(interaction)
+                                                                if (window.innerWidth < 768) setIsSidebarOpen(false)
+                                                            }}
+                                                        />
+                                                    ))}
                                                 </div>
                                             )}
 
