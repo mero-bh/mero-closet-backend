@@ -1,7 +1,7 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { useNavigate } from "react-router-dom"
 import { Heading, Button, toast, Text, Switch } from "@medusajs/ui"
-import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown, XMark, Eye, CheckCircleSolid, RocketLaunch, ComputerDesktop } from "@medusajs/icons"
+import { ChatBubble, Trash, Plus, SidebarLeft, Photo, GlobeEuropeSolid, ChevronDown, XMark, Eye, CheckCircleSolid, RocketLaunch, ComputerDesktop, Map, Sparkles, SpeakerWave, ArrowRightOnRectangle, PlaySolid, PauseSolid, InformationCircleSolid } from "@medusajs/icons"
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { useState, useRef, useEffect } from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
@@ -124,118 +124,55 @@ const Reasoning = ({ content, loading }: { content: string, loading?: boolean })
 const ToolInteraction = ({
     interaction,
     onConfirm,
-    isConfirming
+    isConfirming,
+    onSelect
 }: {
     interaction: { type: string, name: string, args: any, result: any }
     onConfirm?: (callId: string) => void
     isConfirming?: boolean
+    onSelect?: () => void
 }) => {
-    const [isOpen, setIsOpen] = useState(false)
-
     const requiresConfirmation = Boolean(interaction.result?.requires_confirmation)
-    const callId: string | undefined = interaction.result?.call_id
-    const isFailure = interaction.result?.success === false
-    const isExecuted = !requiresConfirmation && !isFailure
+    const isExecuted = !requiresConfirmation && interaction.result?.success !== false
 
-    const copy = async (text: string) => {
-        try {
-            await navigator.clipboard.writeText(text)
-            toast.success("Copied")
-        } catch {
-            toast.error("Copy failed")
-        }
-    }
-
-    const getIcon = (name: string) => {
-        if (name === "create_product") return <Plus width={14} height={14} className="text-green-500" />
-        if (name === "update_product_price") return <span className="text-blue-500 font-semibold">$</span>
-        if (name === "change_dashboard_language") return <GlobeEuropeSolid width={14} height={14} className="text-purple-500" />
-        return <GlobeEuropeSolid width={14} height={14} />
-    }
+    // Determine priority/risk from args or defaults (mocking for now)
+    const priority = "High"
+    const risk = requiresConfirmation ? "High" : "Low"
 
     return (
-        <div className="mb-3 bg-ui-bg-subtle/30 rounded-xl border border-ui-border-base/40 overflow-hidden text-[11px]">
-            <div
-                className="flex items-center justify-between p-2.5 cursor-pointer hover:bg-ui-bg-base-hover transition-colors"
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                <div className="flex items-center gap-2 py-6 font-semibold text-ui-fg-subtle uppercase tracking-wider">
-                    <div className="w-6 h-6 rounded-lg bg-ui-bg-base border flex items-center justify-center shadow-sm">
-                        {getIcon(interaction.name)}
+        <div
+            className="mb-3 bg-ui-bg-subtle/30 rounded-xl border border-ui-border-base/40 overflow-hidden group hover:border-ui-border-interactive/50 hover:shadow-md transition-all cursor-pointer"
+            onClick={onSelect}
+        >
+            <div className="p-4">
+                <div className="flex justify-between items-start mb-2">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] font-bold text-ui-fg-muted uppercase tracking-wider mb-1">{interaction.name.replace(/_/g, ' ')}</span>
+                        <Heading level="h3" className="text-sm font-semibold text-ui-fg-base leading-tight">
+                            {interaction.args?.title || `Execute ${interaction.name}`}
+                        </Heading>
                     </div>
-                    <span>{interaction.name.replace(/_/g, ' ')}</span>
+                    <div>
+                        {isExecuted ? <CheckCircleSolid className="text-green-500" /> : <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />}
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    {requiresConfirmation && callId && onConfirm && (
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                onConfirm(callId)
-                            }}
-                            disabled={isConfirming}
-                            className={`px-2 py-1 rounded-full font-semibold text-[10px] transition-colors ${isConfirming ? 'bg-ui-bg-subtle text-ui-fg-muted cursor-not-allowed' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'}`}
-                            title="Execute this action"
-                        >
-                            {isConfirming ? 'Confirming...' : 'Confirm'}
-                        </button>
-                    )}
 
-                    <span
-                        className={`px-2 py-0.5 rounded-full font-semibold ${requiresConfirmation
-                            ? 'bg-amber-100 text-amber-800'
-                            : isExecuted
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-red-100 text-red-700'
-                            }`}
-                    >
-                        {requiresConfirmation ? 'Pending' : isExecuted ? 'Executed' : 'Failed'}
-                    </span>
-                    <div className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}>
-                        <ChevronDown width={14} height={14} />
+                <Text className="text-xs text-ui-fg-subtle mb-3 line-clamp-2">
+                    {interaction.args?.description || JSON.stringify(interaction.args)}
+                </Text>
+
+                <div className="flex items-center justify-between pt-3 border-t border-ui-border-base/30">
+                    <div className="flex items-center gap-2 text-[10px]">
+                        <span className={`px-1.5 py-0.5 rounded border font-medium ${priority === 'High' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' : 'bg-blue-500/10 text-blue-500'}`}>
+                            {priority} Priority
+                        </span>
+                        <span className={`px-1.5 py-0.5 rounded border font-medium ${requiresConfirmation ? 'bg-orange-500/10 text-orange-500' : 'bg-green-500/10 text-green-500'}`}>
+                            {requiresConfirmation ? 'Pending' : 'Done'}
+                        </span>
                     </div>
+                    <ArrowRightOnRectangle width={14} height={14} className="text-ui-fg-interactive opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
             </div>
-
-            {isOpen && (
-                <div className="p-3 pt-0 border-t border-ui-border-base/20 space-y-3">
-                    <div className="space-y-1">
-                        <div className="text-[9px] font-semibold text-ui-fg-muted uppercase opacity-50">Arguments</div>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    copy(JSON.stringify(interaction.args, null, 2))
-                                }}
-                                className="text-[10px] font-semibold px-2 py-1 rounded-lg bg-ui-bg-base hover:bg-ui-bg-base-hover border transition-colors"
-                            >
-                                Copy args
-                            </button>
-                        </div>
-                        <pre className="p-2 bg-ui-bg-base rounded-lg border text-[10px]  leading-relaxed overflow-x-auto">
-                            {JSON.stringify(interaction.args, null, 2)}
-                        </pre>
-                    </div>
-                    {interaction.result && (
-                        <div className="space-y-1">
-                            <div className="text-[9px] font-semibold text-ui-fg-muted uppercase opacity-50">Output</div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-                                        copy(JSON.stringify(interaction.result, null, 2))
-                                    }}
-                                    className="text-[10px] font-semibold px-2 py-1 rounded-lg bg-ui-bg-base hover:bg-ui-bg-base-hover border transition-colors"
-                                >
-                                    Copy output
-                                </button>
-                            </div>
-                            <div className="p-2 bg-ui-bg-base rounded-lg border text-ui-fg-subtle leading-normal">
-                                {interaction.result.message || JSON.stringify(interaction.result)}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )}
         </div>
     )
 }
@@ -270,6 +207,131 @@ const AnimatedSwitch = ({ checked, onCheckedChange, startIcon, endIcon, thumbIco
     )
 }
 
+const RightPanel = ({ interaction, onClose, onConfirm }: { interaction: any, onClose: () => void, onConfirm: (callId: string) => void }) => {
+    const [isPlaying, setIsPlaying] = useState(false)
+    const steps = interaction.args?.steps || []
+    const missingInfo = interaction.args?.missing_info || []
+    const isConfirmed = interaction.result?.success || interaction.result?.confirmed
+    const title = interaction.args?.title || interaction.name.replace(/_/g, ' ')
+    const description = interaction.args?.description || "Review the details of this action below."
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            className="w-full md:w-96 border-l bg-ui-bg-base h-full flex flex-col shadow-2xl absolute md:relative right-0 z-40"
+        >
+            {/* Header */}
+            <div className="p-4 border-b flex items-center justify-between bg-ui-bg-subtle/30">
+                <Heading level="h2" className="text-base font-semibold text-ui-fg-base">Action Detail</Heading>
+                <Button variant="transparent" size="small" onClick={onClose}>
+                    <XMark />
+                </Button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold px-2 py-1 bg-ui-bg-subtle border border-ui-border-base rounded uppercase tracking-wide text-ui-fg-subtle">
+                        {interaction.name.replace(/_/g, ' ')}
+                    </span>
+                    {isConfirmed && (
+                        <span className="text-[10px] font-bold px-2 py-1 bg-green-500/10 text-green-600 border border-green-500/20 rounded flex items-center gap-1">
+                            <CheckCircleSolid width={12} height={12} /> Confirmed
+                        </span>
+                    )}
+                </div>
+
+                <div>
+                    <Heading level="h1" className="text-xl font-bold text-ui-fg-base mb-2 leading-tight">
+                        {title}
+                    </Heading>
+                    <Text className="text-ui-fg-subtle leading-relaxed">
+                        {description}
+                    </Text>
+                </div>
+
+                <div className="flex gap-2">
+                    <Button
+                        variant="secondary"
+                        size="small"
+                        className={`rounded-full gap-2 ${isPlaying ? 'text-ui-fg-interactive' : ''}`}
+                        onClick={() => {
+                            setIsPlaying(!isPlaying)
+                            // Placeholder for audio logic
+                            setTimeout(() => setIsPlaying(false), 3000)
+                        }}
+                    >
+                        {isPlaying ? <PauseSolid /> : <PlaySolid />}
+                        {isPlaying ? "Playing..." : "Read Aloud"}
+                    </Button>
+                </div>
+
+                {/* Steps */}
+                {steps.length > 0 && (
+                    <div className="space-y-3">
+                        <Heading level="h3" className="text-sm font-semibold text-ui-fg-base">Steps</Heading>
+                        <div className="space-y-2">
+                            {steps.map((step: string, idx: number) => (
+                                <div key={idx} className="flex gap-3 text-sm text-ui-fg-muted bg-ui-bg-subtle/50 p-3 rounded-lg border border-ui-border-base/50">
+                                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-ui-bg-base border flex items-center justify-center text-[10px] font-medium text-ui-fg-subtle">
+                                        {idx + 1}
+                                    </span>
+                                    <span>{step}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Missing Info */}
+                {missingInfo.length > 0 && (
+                    <div className="p-4 bg-orange-500/10 rounded-xl border border-orange-500/20 space-y-3">
+                        <div className="flex items-center gap-2 text-orange-600 font-semibold text-sm">
+                            <InformationCircleSolid width={16} height={16} />
+                            <span>Missing Information</span>
+                        </div>
+                        <div className="space-y-2">
+                            {missingInfo.map((info: string, idx: number) => (
+                                <div key={idx} className="flex items-center justify-between bg-ui-bg-base p-2 rounded border border-orange-500/10 text-xs">
+                                    <span className="text-ui-fg-base">{info}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {interaction.result && !isConfirmed && (
+                    <div className="space-y-2">
+                        <div className="text-[10px] font-semibold text-ui-fg-muted uppercase">Output</div>
+                        <pre className="p-3 bg-ui-bg-subtle rounded-lg border text-[10px] overflow-x-auto text-ui-fg-subtle">
+                            {JSON.stringify(interaction.result, null, 2)}
+                        </pre>
+                    </div>
+                )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t bg-ui-bg-subtle/30">
+                {!isConfirmed && interaction.result?.requires_confirmation ? (
+                    <Button
+                        size="large"
+                        className="w-full bg-ui-bg-interactive text-ui-fg-on-color shadow-lg hover:shadow-ui-shadow-interactive"
+                        onClick={() => interaction.result?.call_id && onConfirm(interaction.result.call_id)}
+                    >
+                        Confirm & Execute <ArrowRightOnRectangle className="ml-2" />
+                    </Button>
+                ) : (
+                    <div className="text-center text-sm font-medium text-green-600 py-2 flex items-center justify-center gap-2">
+                        <CheckCircleSolid /> Action Completed
+                    </div>
+                )}
+            </div>
+        </motion.div>
+    )
+}
+
 const AIChatPage = () => {
     const navigate = useNavigate()
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
@@ -281,7 +343,9 @@ const AIChatPage = () => {
     const [showImageModal, setShowImageModal] = useState(false)
     const [modalImageSrc, setModalImageSrc] = useState<string | null>(null)
     const [editingSessionId, setEditingSessionId] = useState<string | null>(null)
+    const [activeInteraction, setActiveInteraction] = useState<any>(null)
     const [editTitle, setEditTitle] = useState("")
+
 
     // Model Config State
     const [model, setModel] = useState("gemini-2.5-flash")
@@ -791,19 +855,26 @@ const AIChatPage = () => {
                                             {m.role === 'model' && m.content.interactions && (
                                                 <div className="mb-4 space-y-2">
                                                     {m.content.interactions.map((interaction: any, idx: number) => (
-                                                        <ToolInteraction
-                                                            key={idx}
-                                                            interaction={interaction}
-                                                            isConfirming={confirmTools.isPending}
-                                                            onConfirm={(callId) => {
-                                                                if (!confirmEnabled) {
-                                                                    toast.error("Confirm mode is disabled")
-                                                                    return
-                                                                }
-                                                                confirmTools.mutate({ callIds: [callId] })
-                                                            }}
-                                                        />
-                                                    ))}
+                                                        {
+                                                            m.content.interactions.map((interaction: any, idx: number) => (
+                                                                <ToolInteraction
+                                                                    key={idx}
+                                                                    interaction={interaction}
+                                                                    isConfirming={confirmTools.isPending}
+                                                                    onConfirm={(callId) => {
+                                                                        if (!confirmEnabled) {
+                                                                            toast.error("Confirm mode is disabled")
+                                                                            return
+                                                                        }
+                                                                        confirmTools.mutate({ callIds: [callId] })
+                                                                    }}
+                                                                    onSelect={() => {
+                                                                        setActiveInteraction(interaction)
+                                                                        if (window.innerWidth < 768) setIsSidebarOpen(false)
+                                                                    }}
+                                                                />
+                                                            ))
+                                                        }
                                                 </div>
                                             )}
 
@@ -880,58 +951,84 @@ const AIChatPage = () => {
                     )}
                 </div>
 
-                {/* Input Area */}
+                {/* Enhanced Input Area (Composer) */}
                 {activeSessionId && (
-                    <div className="p-3 md:p-6 border-t bg-ui-bg-base/95 backdrop-blur-xl z-30">
-                        <div className="mx-auto max-w-5xl">
-                            {/* ... existing code ... */}
-                            {/* Attachment Previews */}
+                    <div className="p-4 border-t bg-ui-bg-base/95 backdrop-blur-xl z-30">
+                        <div className="mx-auto max-w-4xl flex flex-col gap-3">
+
+                            {/* Attachments Preview */}
                             {pendingImages.length > 0 && (
-                                <div className="flex gap-3 mb-4 p-2 bg-ui-bg-subtle/50 rounded-2xl border border-ui-border-base overflow-x-auto no-scrollbar">
+                                <div className="flex gap-3 p-2 bg-ui-bg-subtle/30 rounded-2xl border border-ui-border-base overflow-x-auto no-scrollbar">
                                     {pendingImages.map((img, i) => (
-                                        <div key={i} className="relative group shrink-0">
+                                        <div key={i} className="relative group shrink-0 w-20 h-20">
                                             <img
                                                 src={`data:${img.mimeType};base64,${img.data}`}
-                                                className="w-16 h-16 object-cover rounded-xl border border-ui-border-base shadow-sm group-hover:opacity-75 transition-opacity"
+                                                className="w-full h-full object-cover rounded-xl border border-ui-border-base shadow-sm"
                                                 alt=""
                                             />
                                             <button
                                                 onClick={() => setPendingImages(prev => prev.filter((_, idx) => idx !== i))}
-                                                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-ui-fg-error text-white rounded-full flex items-center justify-center text-[10px] shadow-sm hover:scale-110 active:scale-90 transition-transform"
+                                                className="absolute -top-2 -right-2 w-6 h-6 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors backdrop-blur-sm"
                                             >
-                                                ×
+                                                <XMark width={14} height={14} />
                                             </button>
                                         </div>
                                     ))}
-                                    {pendingImages.length < 3 && (
-                                        <button
-                                            onClick={() => fileInputRef.current?.click()}
-                                            className="w-16 h-16 rounded-xl border-2 border-dashed border-ui-border-strong flex items-center justify-center text-ui-fg-muted hover:border-ui-bg-interactive hover:text-ui-bg-interactive transition-all"
-                                        >
-                                            <Plus className="w-5 h-5" />
-                                        </button>
-                                    )}
                                 </div>
                             )}
 
-                            <div className="relative flex items-end gap-2 md:gap-3 bg-ui-bg-field border-2 border-transparent focus-within:border-ui-bg-interactive transition-all rounded-[28px] p-2 pr-2 md:pr-4 shadow-xl shadow-ui-bg-interactive/5">
-                                {/* ... existing code ... */}
-                                <input
-                                    type="file"
-                                    ref={fileInputRef}
-                                    className="hidden"
-                                    onChange={handleFileChange}
-                                    accept="image/*"
-                                    multiple
-                                />
+                            {/* Composer Controls */}
+                            <div className="flex items-end gap-3 bg-ui-bg-subtle border border-ui-border-base rounded-[24px] p-2 focus-within:ring-2 focus-within:ring-ui-bg-interactive/10 focus-within:border-ui-bg-interactive transition-all shadow-sm">
 
-                                <button
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="p-3.5 rounded-2xl text-ui-fg-subtle hover:bg-ui-bg-base-hover hover:text-ui-bg-interactive transition-all"
-                                    title="Attach images (Max 3)"
-                                >
-                                    <Photo className="w-6 h-6" />
-                                </button>
+                                <div className="flex items-center gap-1 pb-1.5 pl-1">
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        className="hidden"
+                                        onChange={handleFileChange}
+                                        accept="image/*"
+                                        multiple
+                                    />
+                                    <button
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="p-2 text-ui-fg-muted hover:text-ui-fg-base hover:bg-ui-bg-base-hover rounded-xl transition-colors"
+                                        title="Attach Image"
+                                    >
+                                        <Photo width={20} height={20} />
+                                    </button>
+
+                                    <div className="w-px h-5 bg-ui-border-base mx-1" />
+
+                                    <button
+                                        onClick={() => setSearchEnabled(!searchEnabled)}
+                                        className={`p-2 rounded-xl transition-colors ${searchEnabled ? 'bg-blue-500/10 text-blue-500' : 'text-ui-fg-muted hover:text-ui-fg-base hover:bg-ui-bg-base-hover'}`}
+                                        title="Start Search"
+                                    >
+                                        <GlobeEuropeSolid width={20} height={20} />
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            // Toggle map mode or just add prompt suggestion
+                                            if (!input.includes("Find places")) {
+                                                setInput(prev => "Find places in " + prev)
+                                                setSearchEnabled(true)
+                                            }
+                                        }}
+                                        className={`p-2 rounded-xl transition-colors ${input.includes("Find places") ? 'bg-green-500/10 text-green-500' : 'text-ui-fg-muted hover:text-ui-fg-base hover:bg-ui-bg-base-hover'}`}
+                                        title="Google Maps"
+                                    >
+                                        <Map width={20} height={20} />
+                                    </button>
+
+                                    <button
+                                        className="p-2 rounded-xl text-ui-fg-muted hover:text-purple-500 hover:bg-purple-500/10 transition-colors"
+                                        title="Improve Prompt"
+                                        onClick={() => toast.success("Magic improve active")}
+                                    >
+                                        <Sparkles width={20} height={20} />
+                                    </button>
+                                </div>
 
                                 <textarea
                                     value={input}
@@ -942,56 +1039,62 @@ const AIChatPage = () => {
                                             handleSend()
                                         }
                                     }}
-                                    placeholder="Ask me anything... (Type / for tools)"
-                                    className="flex-1 bg-transparent border-none focus:ring-0 resize-none py-2 px-1 text-sm max-h-32 min-h-[40px] leading-relaxed"
+                                    placeholder={searchEnabled ? "Ask Gemini to search..." : "Type a message..."}
+                                    className="flex-1 bg-transparent border-none focus:ring-0 resize-none py-3 px-2 text-sm max-h-32 min-h-[44px] leading-relaxed placeholder:text-ui-fg-muted"
+                                    rows={1}
                                 />
 
-                                {sendMessage.isPending || isTyping ? (
-                                    <button
-                                        onClick={() => {
-                                            if (abortController) {
-                                                abortController.abort()
-                                                setAbortController(null)
-                                            }
-                                            setIsTyping(false)
-                                        }}
-                                        className="p-2.5 rounded-xl bg-ui-bg-error/10 text-ui-fg-error hover:bg-ui-bg-error/20 transition-all flex items-center gap-2 group"
-                                        title="Stop generating"
-                                    >
-                                        <div className="w-2 h-2 bg-ui-fg-error rounded-sm animate-pulse" />
-                                        <span className="text-[10px] font-semibold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">Stop</span>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                        </svg>
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={handleSend}
-                                        disabled={(!input.trim() && pendingImages.length === 0) || isTyping}
-                                        className={`p-2.5 rounded-xl transition-all ${(!input.trim() && pendingImages.length === 0) || isTyping ? 'text-ui-fg-muted cursor-not-allowed' : 'bg-ui-bg-interactive text-ui-fg-on-color shadow-lg hover:shadow-ui-shadow-interactive'}`}
-                                    >
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                        </svg>
-                                    </button>
-                                )}
-                            </div>
-                            <div className="flex items-center justify-between mt-4 px-2">
-                                <div className="flex gap-4">
-                                    <div className="flex items-center gap-1.5 opacity-60">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                        <span className="text-[10px] font-semibold text-ui-fg-subtle">Ready</span>
-                                    </div>
+                                <div className="pb-0.5 pr-0.5">
+                                    {sendMessage.isPending || isTyping ? (
+                                        <button
+                                            onClick={() => {
+                                                if (abortController) {
+                                                    abortController.abort()
+                                                    setAbortController(null)
+                                                }
+                                                setIsTyping(false)
+                                            }}
+                                            className="p-2.5 rounded-xl bg-ui-bg-error/10 text-ui-fg-error hover:bg-ui-bg-error/20 transition-all shadow-sm"
+                                        >
+                                            <div className="w-2.5 h-2.5 bg-current rounded-sm mb-[1px]" />
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleSend}
+                                            disabled={(!input.trim() && pendingImages.length === 0) || isTyping}
+                                            className={`p-2.5 rounded-xl transition-all flex items-center justify-center ${(!input.trim() && pendingImages.length === 0) || isTyping ? 'bg-ui-bg-subtle text-ui-fg-muted cursor-not-allowed' : 'bg-ui-bg-interactive text-ui-fg-on-color shadow-lg shadow-ui-bg-interactive/20 hover:scale-105 active:scale-95'}`}
+                                        >
+                                            <RocketLaunch width={20} height={20} className={(!input.trim() && pendingImages.length === 0) ? "opacity-50" : ""} />
+                                        </button>
+                                    )}
                                 </div>
-                                <Text size="xsmall" className="text-ui-fg-subtle font-medium italic opacity-60">
-                                    Antigravity may provide info that should be verified.
-                                </Text>
+                            </div>
+
+                            <div className="flex justify-between px-2 text-[10px] text-ui-fg-muted font-medium">
+                                <span>{model}</span>
+                                <span>Press Enter to send, Shift + Enter for new line</span>
                             </div>
                         </div>
                     </div>
                 )}
             </div>
+
+            {/* Right Panel (Action Detail) */}
+            <AnimatePresence>
+                {activeInteraction && (
+                    <RightPanel
+                        interaction={activeInteraction}
+                        onClose={() => setActiveInteraction(null)}
+                        onConfirm={(callId) => {
+                            if (!confirmEnabled) {
+                                toast.error("Confirm mode is disabled")
+                                return
+                            }
+                            confirmTools.mutate({ callIds: [callId] })
+                        }}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Image Preview Modal */}
             {showImageModal && modalImageSrc && (
@@ -1041,6 +1144,23 @@ const AIChatPage = () => {
                     </div>
                 </div>
             )}
+
+            {/* Right Panel (Action Detail) */}
+            <AnimatePresence>
+                {activeInteraction && (
+                    <RightPanel
+                        interaction={activeInteraction}
+                        onClose={() => setActiveInteraction(null)}
+                        onConfirm={(callId) => {
+                            if (!confirmEnabled) {
+                                toast.error("Confirm mode is disabled")
+                                return
+                            }
+                            confirmTools.mutate({ callIds: [callId] })
+                        }}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     )
 }
