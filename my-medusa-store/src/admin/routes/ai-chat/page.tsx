@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ImageGenModal } from "./components/ImageGenModal"
+import { SettingsModal, type GenerationSettings } from "./components/SettingsModal"
 
 // --- Types ---
 type Message = {
@@ -388,6 +389,44 @@ const AIChatPage = () => {
     const [thinkingBudget, setThinkingBudget] = useState(0)
     const [agentEnabled, setAgentEnabled] = useState(true)
     const [confirmEnabled, setConfirmEnabled] = useState(true)
+
+    // --- Chat Settings (persisted in localStorage) ---
+    const DEFAULT_SETTINGS: GenerationSettings = {
+        temperature: 0.7,
+        topP: 0.95,
+        topK: 40,
+        maxOutputTokens: 2048,
+        aspectRatio: "1:1",
+        imageSize: "1K",
+        imageModel: "gemini-3-pro-image-preview",
+        outputProsCons: true,
+        apiKey: "",
+        medusaBaseUrl: "",
+        medusaPublishableKey: ""
+    }
+
+    const [settingsOpen, setSettingsOpen] = useState(false)
+    const [settings, setSettings] = useState<GenerationSettings>(() => {
+        if (typeof window === "undefined") return DEFAULT_SETTINGS
+        try {
+            const raw = window.localStorage.getItem("ai_chat_settings_v1")
+            if (!raw) return DEFAULT_SETTINGS
+            const parsed = JSON.parse(raw)
+            return { ...DEFAULT_SETTINGS, ...parsed }
+        } catch {
+            return DEFAULT_SETTINGS
+        }
+    })
+
+    useEffect(() => {
+        if (typeof window === "undefined") return
+        try {
+            window.localStorage.setItem("ai_chat_settings_v1", JSON.stringify(settings))
+        } catch {
+            // ignore
+        }
+    }, [settings])
+
     const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false)
     const modelDropdownRef = useRef<HTMLDivElement>(null)
 
@@ -421,6 +460,8 @@ const AIChatPage = () => {
             return res.json() as Promise<{ sessions: Session[] }>
         }
     })
+
+
 
     const { data: activeSessionData, refetch: refetchMessages } = useQuery({
         queryKey: ["ai_messages", activeSessionId],
@@ -457,6 +498,38 @@ const AIChatPage = () => {
             toast.success("New chat created")
         }
     })
+
+    // Auto-restore last open chat (so it won't ask you to "initialize" every time)
+    useEffect(() => {
+        const sessions = sessionsData?.sessions || []
+        if (activeSessionId) return
+        if (typeof window === "undefined") return
+
+        const last = window.localStorage.getItem("ai_chat_last_session_id")
+        if (last && sessions.some((s) => s.id === last)) {
+            setActiveSessionId(last)
+            return
+        }
+
+        if (sessions.length > 0) {
+            setActiveSessionId(sessions[0].id)
+            return
+        }
+
+        // No sessions? create one automatically.
+        if (!createSession.isPending) {
+            createSession.mutate("New Chat")
+        }
+    }, [sessionsData, activeSessionId])
+
+    useEffect(() => {
+        if (typeof window === "undefined") return
+        if (activeSessionId) {
+            window.localStorage.setItem("ai_chat_last_session_id", activeSessionId)
+        }
+    }, [activeSessionId])
+
+
 
     const deleteSession = useMutation({
         mutationFn: async (id: string) => {
@@ -500,7 +573,7 @@ const AIChatPage = () => {
                         prompt,
                         history,
                         images,
-                        config: { model, resolution, searchEnabled, thinkingBudget, agentMode: agentEnabled, confirmMode: confirmEnabled }
+                        config: { model, resolution, searchEnabled, thinkingBudget, agentMode: agentEnabled, confirmMode: confirmEnabled, apiKey: settings.apiKey, temperature: settings.temperature, topP: settings.topP, topK: settings.topK, maxOutputTokens: settings.maxOutputTokens, outputProsCons: settings.outputProsCons }
                     }),
                     signal: controller.signal
                 })
@@ -558,7 +631,7 @@ const AIChatPage = () => {
                         sessionId: activeSessionId,
                         confirmations: callIds,
                         history,
-                        config: { model, resolution, searchEnabled, thinkingBudget, agentMode: agentEnabled, confirmMode: confirmEnabled }
+                        config: { model, resolution, searchEnabled, thinkingBudget, agentMode: agentEnabled, confirmMode: confirmEnabled, apiKey: settings.apiKey, temperature: settings.temperature, topP: settings.topP, topK: settings.topK, maxOutputTokens: settings.maxOutputTokens, outputProsCons: settings.outputProsCons }
                     }),
                     signal: controller.signal
                 })
@@ -835,6 +908,11 @@ const AIChatPage = () => {
                             </div>
 
                             <div className="flex gap-2">
+                                <Button variant="secondary" size="small" onClick={() => setSettingsOpen(true)} className="gap-2 rounded-xl">
+                                    <span aria-hidden>⚙️</span>
+                                    Settings
+                                </Button>
+
                                 {/* Custom Model Dropdown */}
                                 <div className="relative" ref={modelDropdownRef}>
                                     <button
@@ -914,7 +992,7 @@ const AIChatPage = () => {
                                 <Text className="text-ui-fg-subtle mt-2 text-lg">Deep reasoning and image awareness built into your store.</Text>
                             </div>
                             <Button size="large" onClick={() => createSession.mutate("New Chat")} className="rounded-2xl px-8">
-                                Initialize Connection
+                                Start Chat
                             </Button>
                         </div>
                     ) : (
@@ -1221,11 +1299,24 @@ const AIChatPage = () => {
                 </div>
             )}
 
+            {/* Settings Modal */}
+            <SettingsModal
+                open={settingsOpen}
+                onOpenChange={setSettingsOpen}
+                settings={settings}
+                onSave={setSettings}
+            />
+
             {/* Image Gen Modal */}
             <ImageGenModal
                 open={showImageGenModal}
                 onOpenChange={setShowImageGenModal}
                 initialPrompt={promptForImageGen}
+                apiKey={settings.apiKey}
+                model={settings.imageModel}
+                defaultAspectRatio={settings.aspectRatio}
+                defaultImageSize={settings.imageSize}
+                onDefaultsChange={(next) => setSettings((prev) => ({ ...prev, ...next }))}
             />
         </div>
     )

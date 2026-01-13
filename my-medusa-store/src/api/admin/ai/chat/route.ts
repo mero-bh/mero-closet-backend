@@ -13,13 +13,31 @@ type RouteConfig = {
   agentMode?: boolean
   /** If true (default), mutating tools require explicit user confirmation before execution */
   confirmMode?: boolean
+  /** Optional: user-provided API key (stored locally in browser) */
+  apiKey?: string
+  /** Generation controls */
+  temperature?: number
+  topP?: number
+  topK?: number
+  maxOutputTokens?: number
+  /** If true, assistant prefers Pros/Cons sections when giving recommendations */
+  outputProsCons?: boolean
 }
 
 const AVAILABLE_GOOGLE_MODELS = [
+  // Gemini 3 (preview ids used in UI)
+  "gemini-3-pro-preview",
+  "gemini-3-flash-preview",
+  "gemini-3-pro-image-preview",
+
   // Gemini 2.5 (recommended)
   "gemini-2.5-flash",
   "gemini-2.5-pro",
   "gemini-2.5-flash-lite",
+
+  // Image generation / editing (as supported by your key)
+  "gemini-2.5-flash-image",
+  "gemini-2.0-flash-image",
 
   // Fallbacks
   "gemini-2.0-flash",
@@ -27,9 +45,13 @@ const AVAILABLE_GOOGLE_MODELS = [
 
 const MODEL_ALIASES: Record<string, string> = {
   // UI preview ids -> stable ids
+  "gemini-3-pro-preview": "gemini-3-pro-preview",
+  "gemini-3-flash-preview": "gemini-3-flash-preview",
+  "gemini-3-pro-image-preview": "gemini-3-pro-image-preview",
   "gemini-2.5-flash-preview": "gemini-2.5-flash",
   "gemini-2.5-pro-preview": "gemini-2.5-pro",
   "gemini-2.5-flash-lite-preview": "gemini-2.5-flash-lite",
+  "gemini-2.5-flash-thinking": "gemini-2.5-flash",
 
   // Common legacy ids seen in examples
   "gemini-2.0-flash-exp": "gemini-2.0-flash",
@@ -108,6 +130,61 @@ function buildMessageParts(text: string, images: ImagePart[]): any[] {
   return parts
 }
 
+
+function pickFirstSchema(schema: any): any {
+  if (!schema || typeof schema !== "object") return schema
+  const candidates = schema.anyOf || schema.oneOf || schema.allOf
+  if (Array.isArray(candidates) && candidates.length > 0) {
+    return pickFirstSchema(candidates[0])
+  }
+  return schema
+}
+
+/**
+ * Convert JSON Schema (common from MCP servers) into Gemini FunctionDeclaration schema.
+ * Gemini expects UPPERCASE types like "OBJECT", "STRING", etc.
+ */
+function toGeminiSchema(inputSchema: any): any {
+  const s = pickFirstSchema(inputSchema) || {}
+  const rawType = Array.isArray(s.type) ? s.type.find((t: any) => t && t !== "null") : s.type
+  const inferredType = rawType || (s.properties ? "object" : s.items ? "array" : undefined)
+
+  const mapType = (t: any) => {
+    const v = String(t || "").toLowerCase()
+    if (v === "object") return "OBJECT"
+    if (v === "string") return "STRING"
+    if (v === "number") return "NUMBER"
+    if (v === "integer") return "INTEGER"
+    if (v === "boolean") return "BOOLEAN"
+    if (v === "array") return "ARRAY"
+    if (v === "null") return "NULL"
+    return "STRING"
+  }
+
+  const out: any = {}
+  if (s.description) out.description = String(s.description)
+
+  const t = mapType(inferredType)
+  out.type = t
+
+  if (t === "OBJECT") {
+    const props = s.properties && typeof s.properties === "object" ? s.properties : {}
+    out.properties = Object.fromEntries(
+      Object.entries(props).map(([k, v]) => [k, toGeminiSchema(v)])
+    )
+    if (Array.isArray(s.required)) out.required = s.required.filter((x: any) => typeof x === "string")
+  }
+
+  if (t === "ARRAY") {
+    out.items = toGeminiSchema(s.items || { type: "string" })
+  }
+
+  if (Array.isArray(s.enum)) out.enum = s.enum
+
+  // Gemini schema is strict; avoid passing through draft-07 fields that can break validation
+  return out
+}
+
 function pickModel(requestedModel: unknown): string {
   const fallback = "gemini-2.5-flash"
 
@@ -153,9 +230,10 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     config: RouteConfig
   }
 
-  const apiKey = process.env.GOOGLE_AI_API_KEY
+  const envApiKey = process.env.GOOGLE_AI_API_KEY
+  const apiKey = typeof config.apiKey === "string" && config.apiKey.trim() ? config.apiKey.trim() : envApiKey
   if (!apiKey) {
-    return res.status(500).json({ message: "GOOGLE_AI_API_KEY is not set in environment" })
+    return res.status(500).json({ message: "No API key found. Set GOOGLE_AI_API_KEY in env or add it in Chat Settings." })
   }
 
   if (!sessionId) {
@@ -194,7 +272,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     const mcpFunctionDeclarations = mcpToolsList.map((t: any) => ({
       name: t.name,
       description: t.description,
-      parameters: t.inputSchema,
+      parameters: toGeminiSchema(t.inputSchema),
     }))
 
     const allFunctionDeclarations = [
@@ -221,15 +299,22 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     const model = genAI.getGenerativeModel({
       model: modelName,
       tools: tools.length > 0 ? tools : undefined,
-      generationConfig: isGemini25
-        ? {
+      generationConfig: (() => {
+        const gc: any = {}
+        if (typeof config.temperature === "number") gc.temperature = config.temperature
+        if (typeof config.topP === "number") gc.topP = config.topP
+        if (typeof config.topK === "number") gc.topK = config.topK
+        if (typeof config.maxOutputTokens === "number") gc.maxOutputTokens = config.maxOutputTokens
+
+        if (isGemini25) {
           // @ts-ignore - supported by latest Gemini API for thinking models
-          thinkingConfig: {
+          gc.thinkingConfig = {
             includeThoughts: true,
             ...(typeof thinkingBudget === "number" ? { thinkingBudget } : {}),
-          },
+          }
         }
-        : {},
+        return Object.keys(gc).length ? gc : undefined
+      })(),
       systemInstruction: `You are Antigravity, a professional AI assistant and specialized Store Agent for the Mero Closet Medusa Dashboard.
 
 CORE COMPETENCIES & INTERFACE CONTROL:
@@ -237,15 +322,22 @@ CORE COMPETENCIES & INTERFACE CONTROL:
 - **Documentation Expert**: Use 'get_documentation' for help.
 - **Store Management**: You manage products, prices, orders, customers.
 - **Image Intelligence**: Analyze images to extract details.
-- **System Tools**: You have access to these specific MCP tools: [${mcpToolNames}]. USE THEM. For example, to count products, use 'admin_list_products' and check the count property.
+- **System Tools**: You have access to these specific MCP tools: [${mcpToolNames}]. USE THEM.
+
+CRITICAL RULES FOR DATA ACCURACY:
+1. **NEVER GUESS COUNTS**: If asked "How many products?", you MUST call 'admin_list_products'.
+2. **CHECK THE 'count' FIELD**: The tool response will contain a 'count' field (e.g. "Total Count: 62"). USE THAT NUMBER. Do not count the items in the list manually as they might be paginated.
+3. **Double Check**: If the user challenges your number, call the tool again with a different limit or check 'db_list_tables' if available to verify directly from DB.
 
 ACTION GUIDELINES:
 1. **Control the View**: NAVIGATE to specific pages when relevant.
 2. **Consult Docs**: Use 'get_documentation' if unsure.
-3. **Execute Tools**: Don't guess. Use the tools provided in the "tools" definition. If you need to count products, use 'admin_list_products'.
+3. **Execute Tools**: Don't guess. Use the tools provided in the "tools" definition.
 4. **Be Proactive**: If you list products, offer to navigate to their details.
 
-Use Markdown for all formatting. Be concise, professional, and action-oriented.`,
+Use Markdown for all formatting. Be concise, professional, and action-oriented.
+
+${config.outputProsCons ? 'When giving recommendations, include a short Pros / Cons section.' : ''}`,
     })
 
     const pool = getPgPool()
