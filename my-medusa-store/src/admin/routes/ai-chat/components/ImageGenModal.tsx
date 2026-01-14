@@ -90,7 +90,8 @@ export const ImageGenModal = ({
           prompt,
           config: {
             apiKey: apiKey || "",
-            model: model || "gemini-3-pro-image-preview",
+            // Default to a compatible image model; can be overridden from Settings
+            model: model || "gemini-2.0-flash-image",
             aspectRatio,
             imageSize,
             mode,

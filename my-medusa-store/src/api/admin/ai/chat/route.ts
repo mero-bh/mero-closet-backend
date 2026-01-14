@@ -240,7 +240,9 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     return res.status(400).json({ message: "sessionId is required" })
   }
 
-  const modelName = pickModel(config.model)
+  // Some Gemini text-only models may reject inline image inputs. If the user attaches images,
+  // we automatically fall back to a vision-capable model for that request.
+  const requestedModelName = pickModel(config.model)
   const confirmMode = config.confirmMode !== false
   const confirmedCallIds = parseConfirmedCallIds(req.body)
 
@@ -252,6 +254,13 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     // Import MCP integration
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { listMcpTools, callMcpTool } = require("../../../../utils/mcp-integration")
+
+    const currentImages = sanitizeImages(images)
+    const hasInlineImages = (currentImages?.length ?? 0) > 0
+
+    const visionFallback = "gemini-2.5-flash"
+    const imageInputUnsupported = requestedModelName === "gemini-3-pro-preview"
+    const modelName = hasInlineImages && imageInputUnsupported ? visionFallback : requestedModelName
 
     const isGemini25 = modelName.startsWith("gemini-2.5-")
 
@@ -499,7 +508,7 @@ ${config.outputProsCons ? 'When giving recommendations, include a short Pros / C
 
     // Save user message and drive the first model step
     const promptText = normalizeText(prompt)
-    const currentImages = sanitizeImages(images)
+    // Reuse the already-sanitized images (declared earlier) to avoid TS shadowing issues.
 
     if (confirmedCallIds.length > 0) {
       await pool.query(

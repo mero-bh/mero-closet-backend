@@ -15,7 +15,8 @@ type ImageGenConfig = {
 }
 
 function pickImageModel(requestedModel: unknown): string {
-  const fallback = "gemini-2.0-flash"
+  // Prefer an image-capable fallback. If your key supports Gemini 3 Pro Image, you can select it from Settings.
+  const fallback = "gemini-2.0-flash-image"
   if (typeof requestedModel !== "string" || !requestedModel.trim()) return fallback
   return requestedModel.trim()
 }
@@ -37,54 +38,77 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({
-      model: modelName,
-      // NOTE: Using 'any' here to support imageConfig on image-capable models.
-      // If the model does not support image output, you'll just get text back.
-      generationConfig: {
-        // @ts-ignore
-        responseModalities: ["IMAGE", "TEXT"],
-        // @ts-ignore
-        imageConfig: {
-          aspectRatio: config.aspectRatio || "1:1",
-          imageSize: config.imageSize || "1K",
-        },
-      } as any,
-    })
-
     const mode = config.mode || "generate"
 
-    const parts: any[] = []
-
-    if (mode === "edit" && config.baseImage?.data) {
-      parts.push({
-        inlineData: {
-          mimeType: config.baseImage.mimeType || "image/png",
-          data: config.baseImage.data,
-        },
-      })
+    const buildParts = () => {
+      const parts: any[] = []
+      if (mode === "edit" && config.baseImage?.data) {
+        parts.push({
+          inlineData: {
+            mimeType: config.baseImage.mimeType || "image/png",
+            data: config.baseImage.data,
+          },
+        })
+      }
+      parts.push({ text: String(prompt) })
+      return parts
     }
 
-    parts.push({ text: String(prompt) })
+    const run = async (m: string) => {
+      const model = genAI.getGenerativeModel({
+        model: m,
+        // NOTE: Using 'any' here to support imageConfig on image-capable models.
+        generationConfig: {
+          // @ts-ignore
+          responseModalities: ["IMAGE", "TEXT"],
+          // @ts-ignore
+          imageConfig: {
+            aspectRatio: config.aspectRatio || "1:1",
+            imageSize: config.imageSize || "1K",
+          },
+        } as any,
+      })
 
-    const result = await model.generateContent(parts as any)
+      const result = await model.generateContent(buildParts() as any)
 
-    const images: { mimeType: string; data: string }[] = []
-    const candidates = (result as any)?.response?.candidates || []
-    const contentParts = candidates?.[0]?.content?.parts || []
+      const images: { mimeType: string; data: string }[] = []
+      const candidates = (result as any)?.response?.candidates || []
+      const contentParts = candidates?.[0]?.content?.parts || []
 
-    for (const p of contentParts) {
-      if (p?.inlineData?.data && p?.inlineData?.mimeType) {
-        images.push({ mimeType: p.inlineData.mimeType, data: p.inlineData.data })
+      for (const p of contentParts) {
+        if (p?.inlineData?.data && p?.inlineData?.mimeType) {
+          images.push({ mimeType: p.inlineData.mimeType, data: p.inlineData.data })
+        }
+      }
+
+      const text = (result as any)?.response?.text?.() || ""
+      return { images, text }
+    }
+
+    // First try the requested model. If it returns no images (or fails), retry once with a compatible fallback.
+    const fallbackModel = "gemini-2.0-flash-image"
+    let usedModel = modelName
+    let out: { images: { mimeType: string; data: string }[]; text: string }
+
+    try {
+      out = await run(modelName)
+      if ((out.images?.length ?? 0) === 0 && modelName !== fallbackModel) {
+        usedModel = fallbackModel
+        out = await run(fallbackModel)
+      }
+    } catch (e) {
+      if (modelName !== fallbackModel) {
+        usedModel = fallbackModel
+        out = await run(fallbackModel)
+      } else {
+        throw e
       }
     }
 
-    const text = (result as any)?.response?.text?.() || ""
-
     return res.json({
-      model: modelName,
-      images,
-      text,
+      model: usedModel,
+      images: out.images,
+      text: out.text,
     })
   } catch (error: any) {
     console.error("AI IMAGE GEN ERROR:", error)

@@ -398,7 +398,8 @@ const AIChatPage = () => {
         maxOutputTokens: 2048,
         aspectRatio: "1:1",
         imageSize: "1K",
-        imageModel: "gemini-3-pro-image-preview",
+        // Default to the most compatible image model. You can switch to Gemini 3 Pro Image in Settings if your key supports it.
+        imageModel: "gemini-2.0-flash-image",
         outputProsCons: true,
         apiKey: "",
         medusaBaseUrl: "",
@@ -660,8 +661,34 @@ const AIChatPage = () => {
     })
 
     // --- Handlers ---
+    const looksLikeImageRequest = (text: string) => {
+        const t = (text || "").trim().toLowerCase()
+        if (!t) return false
+
+        // Arabic + English keywords commonly used for image generation requests
+        const re = /(\b(generate|create|make|draw|image|picture|art)\b)|(?:صوره|صورة|صور|ارسم|رسم|صمّم|صمم|تصميم|انشئ|أنشئ|ولّد|توليد|generate\s+pic)/i
+        return re.test(t)
+    }
+
     const handleSend = () => {
         if ((!input.trim() && pendingImages.length === 0) || !activeSessionId || sendMessage.isPending) return
+
+        // If the user is clearly asking to generate an image, open Image Studio instead of sending as a normal chat message.
+        // This avoids the "text-only model" reply and matches the abayastore behavior.
+        if (pendingImages.length === 0 && looksLikeImageRequest(input)) {
+            // Map the top-right resolution selector to Image Studio defaults
+            const res = (resolution || "").toLowerCase()
+            const is2k = res.includes("2048")
+            const is4k = res.includes("4096")
+            const nextImageSize = is4k ? "4K" : is2k ? "2K" : "1K"
+
+            setSettings((p) => ({ ...p, imageSize: nextImageSize, aspectRatio: "1:1" }))
+            setPromptForImageGen(input)
+            setShowImageGenModal(true)
+            setInput("")
+            return
+        }
+
         const history = activeSessionData?.messages || []
         sendMessage.mutate({ prompt: input, history, images: pendingImages })
     }

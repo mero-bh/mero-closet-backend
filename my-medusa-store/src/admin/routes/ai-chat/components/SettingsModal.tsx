@@ -33,9 +33,9 @@ const ASPECT_RATIOS = ["1:1", "3:4", "4:3", "9:16", "16:9"]
 const IMAGE_SIZES = ["1K", "2K", "4K"]
 
 const IMAGE_MODELS = [
-  { id: "gemini-3-pro-image-preview", label: "Gemini 3 Pro Image (HQ)" },
-  { id: "gemini-2.5-flash-image", label: "Gemini 2.5 Flash Image (Fast)" },
   { id: "gemini-2.0-flash-image", label: "Gemini 2.0 Flash Image (Compat)" },
+  { id: "gemini-2.5-flash-image", label: "Gemini 2.5 Flash Image (Fast)" },
+  { id: "gemini-3-pro-image-preview", label: "Gemini 3 Pro Image (HQ)" },
 ]
 
 export const SettingsModal = ({ open, onOpenChange, settings, onSave }: Props) => {
